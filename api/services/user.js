@@ -137,8 +137,8 @@ class userServices {
             const COOKIE_EXPIRATION = process.env.COOKIE_EXPIRATION;
 
             res.cookie("refresh_token", REFRESH_TOKEN, {
-                secure: true,
-                sameSite: "none",
+                httpOnly: process.env.httpOnly,
+                sameSite: process.env.sameSite,
                 maxAge: COOKIE_EXPIRATION,
             });
 
@@ -178,8 +178,9 @@ class userServices {
 
             const COOKIE_EXPIRATION = process.env.COOKIE_EXPIRATION;
             res.clearCookie("refresh_token", {
-                secure: true,
-                sameSite: "none",
+                httpOnly: process.env.httpOnly,
+                sameSite: process.env.sameSite,
+                secure: process.env.secure,
                 maxAge: COOKIE_EXPIRATION,
             });
 
