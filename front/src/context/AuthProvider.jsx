@@ -63,16 +63,15 @@ export default function AuthProvider({ children }) {
     async function restoreSession() {
         try {
             const res = await api.post("/auth/session");
-            if (res.data) {
-                setAppState("done");
-            }
-
+            
             setUser(res.data.user);
             setAccessToken(res.data.access_token);
 
             return res;
         } catch (err) {
             return err?.response?.data;
+        } finally {
+            setAppState("done");
         }
     }
 
