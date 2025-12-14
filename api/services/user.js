@@ -139,6 +139,7 @@ class userServices {
             res.cookie("refresh_token", REFRESH_TOKEN, {
                 httpOnly: true,
                 secure: true,
+                sameSite: "none",
                 maxAge: COOKIE_EXPIRATION,
             });
 
@@ -180,6 +181,7 @@ class userServices {
             res.clearCookie("refresh_token", {
                 httpOnly: true,
                 secure: true,
+                sameSite: "none",
                 maxAge: COOKIE_EXPIRATION,
             });
 
