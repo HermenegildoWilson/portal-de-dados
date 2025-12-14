@@ -1,6 +1,6 @@
 import * as React from "react";
-import MyButton from "../components/MyButton";
-import { MyAlertContext } from "../App"
+import MyButton, { MyLinkButton } from "../components/MyButton";
+import { MyAlertContext } from "../App";
 import { useAuthProvider } from "../context/AuthProvider";
 import { Link, Navigate, useParams } from "react-router-dom";
 import MyLoader from "../components/MyLoader";
@@ -15,7 +15,7 @@ export default function Login() {
     });
     const [formState, setFormState] = React.useState("typing");
 
-    const { setOpenAlert } = React.useContext(MyAlertContext).state
+    const { setOpenAlert } = React.useContext(MyAlertContext).state;
 
     const { login, user } = useAuthProvider();
 
@@ -39,10 +39,14 @@ export default function Login() {
     const handleSubmit = async () => {
         setFormState("loading");
         const response = await login(formData);
-        
+
         if (response.success) {
             setFormState("done");
-            return setOpenAlert({ type: "SHOW", text: response.message, style: "success" });
+            return setOpenAlert({
+                type: "SHOW",
+                text: response.message,
+                style: "success",
+            });
         }
         setFormState("typing");
         setOpenAlert({ type: "SHOW", text: response.message, style: "error" });
@@ -53,9 +57,9 @@ export default function Login() {
     }
 
     return (
-        <div className="flex h-140 items-center justify-center">
+        <div className="flex h-110 items-center justify-center">
             <MyCard sx="w-80 md:w-100">
-                <h1 className="text-3xl mb-8 text-blue-500">
+                <h1 className="text-3xl mb-8 text-(--color-blue-claro)">
                     Entrar na plataforma
                 </h1>
                 <MyForm>
@@ -86,7 +90,7 @@ export default function Login() {
                     />
                     <Link
                         to={"/redefinirsenha"}
-                        className="text-blue-600 text-center mb-2 mt-2"
+                        className="text-blue-500 text-center mb-2 mt-2"
                     >
                         Esqueceu a senha?
                     </Link>
@@ -94,7 +98,7 @@ export default function Login() {
                     <div className="text-center mt-5">
                         <Link
                             to={"/cadastrar"}
-                            className="bg-(--color-green) text-white p-3 rounded-md"
+                            className={`bg-(--color-green) text-white p-3 rounded-md`}
                         >
                             Criar Conta
                         </Link>

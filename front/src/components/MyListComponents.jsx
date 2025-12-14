@@ -12,8 +12,8 @@ export function MyListItem({ children, sx, handleClick  }) {
     return <ListItem onClick={handleClick} sx={{ padding: "0", marginBottom: "6px", ...sx }}>{children}</ListItem>;
 }
 
-export function MyListItemButton({ children }) {
-    return <ListItemButton>{children}</ListItemButton>;
+export function MyListItemButton({ children, sx }) {
+    return <ListItemButton sx={sx}>{children}</ListItemButton>;
 } //disablePadding
 
 export function MyListItemText({ text }) {
@@ -23,9 +23,7 @@ export function MyListItemText({ text }) {
 export function MyListItemIcon({ Icon }) {
     return (
         <ListItemIcon>
-            <Icon size={20} className="text-blue-500" />
+            <Icon size={20} className="text-(--color-blue-claro)" />
         </ListItemIcon>
     );
 }
-
-//<Divider />

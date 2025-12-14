@@ -17,47 +17,93 @@ import {
     MyListItemText,
     MyListItemIcon,
 } from "../../components/MyListComponents";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Typography from "@mui/material/Typography";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 export default function OpcoesMenu({ toggleDrawer }) {
     const { user } = useAuthProvider();
     let menuOptions = optionsMenu[user?.role || "public"];
-
+    let profileOptions = optionsMenu["profile"];
     return (
         <>
             <Box
                 sx={{ width: 280 }}
                 role="presentation"
-                onClick={toggleDrawer(false)}
-                className="h-screen pt-5 border border-gray-300"
+                className="h-screen pt-4 border border-gray-300"
             >
                 <MyList>
-                    {(user) && (
+                    {user && (
                         <>
                             <MyListItem key={"profile"}>
-                                <MyListItemButton>
-                                    <MyListItemIcon
-                                        Icon={iconMapper["reg-circle-user"]}
-                                    ></MyListItemIcon>
-
-                                    <Link
-                                        to={"/perfil"}
-                                        className="-ml-5 w-full"
+                                <Accordion sx={{padding: 0, boxShadow: "none"}}>
+                                    <AccordionSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        aria-controls="panel1-content"
+                                        id="panel1-header"
+                                        sx={{padding: 0, width: 276}}
                                     >
-                                        <MyListItemText
-                                            text={user.nome}
-                                            className="text-gray-700"
-                                        />
-                                    </Link>
-                                </MyListItemButton>
+                                        <MyListItemButton >
+                                            <MyListItemIcon
+                                                Icon={
+                                                    iconMapper[
+                                                        "reg-circle-user"
+                                                    ]
+                                                }
+                                            ></MyListItemIcon>
+
+                                            <p className="-ml-5 w-full">
+                                                <MyListItemText
+                                                    text={user.nome}
+                                                />
+                                            </p>
+                                        </MyListItemButton>
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        <div className="ml-6 -mt-3">
+                                            {profileOptions.map((opt) => {
+                                                const Icon =
+                                                    iconMapper[opt.icone];
+                                                return (
+                                                    <MyListItem
+                                                        key={opt.descricao}
+                                                        handleClick={toggleDrawer(false)}
+                                                    >
+                                                        <MyListItemButton>
+                                                            <MyListItemIcon
+                                                                Icon={Icon}
+                                                            ></MyListItemIcon>
+
+                                                            <Link
+                                                                to={opt.link}
+                                                                className="-ml-5 w-full"
+                                                            >
+                                                                <MyListItemText
+                                                                    text={
+                                                                        opt.titulo
+                                                                    }
+                                                                />
+                                                            </Link>
+                                                        </MyListItemButton>
+                                                    </MyListItem>
+                                                );
+                                            })}
+                                        </div>
+                                    </AccordionDetails>
+                                </Accordion>
                             </MyListItem>
-                            <Link to={"/logout"}>Sair</Link>
-                            <Divider />
+                            <Divider sx={{marginTop: 1}} />
                         </>
                     )}
                     {menuOptions.map((opt) => {
                         const Icon = iconMapper[opt.icone];
                         return (
-                            <MyListItem key={opt.descricao}>
+                            <MyListItem
+                                key={opt.descricao}
+                                handleClick={toggleDrawer(false)}
+                            >
                                 <MyListItemButton>
                                     <MyListItemIcon
                                         Icon={Icon}
@@ -97,9 +143,7 @@ export function ButtonDetails() {
                                 key={opt.titulo}
                             >
                                 <MyListItemButton>
-                                    <Link to={opt.link}>
-                                        {opt.titulo}
-                                    </Link>
+                                    <Link to={opt.link}>{opt.titulo}</Link>
                                 </MyListItemButton>
                             </MyListItem>
                         ))}

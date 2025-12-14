@@ -10,9 +10,9 @@ export default function AppLayout({ children }) {
         <div className="h-screen flex">
             <NavBar state={{ open, setOpen }} />
 
-            <div className="flex-1 flex flex-col bg-gray-50">
+            <div className="flex-1 flex flex-col bg-(--color-branco-suave)">
                 <Header state={{ open, setOpen }} />
-                <main className=" flex-1 overflow-auto">
+                <main className="flex-1 overflow-auto">
                     {children}
                 </main>
             </div>

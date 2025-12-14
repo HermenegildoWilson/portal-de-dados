@@ -19,9 +19,50 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
-    --color-green: #42b72a;
+    /*Fundo principal*/
+    --color-branco-suave: #F9FAFB;
+
+    /*Bordas / divisores*/
+    --color-cinza-claro: #E5E7EB;
+
+    /*Texto principal*/
+    --color-cinza-escuro: #1F2937;
+
+    /*Texto secundário*/
+    --color-cinza-medio: #6B7280;
+
+
+    --color-green-deep: #1B5E20;
+
+    /*Acento (ações, alertas leves)*/
+    --color-green: #66BB6A;
+
+    /*Primária (branding, botões principais)*/
+    --color-blue: #1565C0;
+
+    /*Temperatura*/
+    --color-laranja: #F97316;
+
+    /*Humidade*/
+    --color-blue-claro: #38BDF8;
+
+    /*Pressão do Ar             */
+    --color-roxo-cuave: #8B5CF6;
+
+    /*Qualidade do Ar (Boa)     */
+    --color-verde: #22C55E;
+
+    /*Qualidade do Ar (Moderada)*/
+    --color-amarelo: #FACC15;
+
+    /*Qualidade do Ar (Ruim)    */
+    --color-vermelho: #EF4444;
 }
 
 html {
     scroll-behavior: smooth;
+}
+
+div {
+    color: var(text-(--color-cinza-escuro));
 }

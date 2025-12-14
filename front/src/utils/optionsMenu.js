@@ -1,17 +1,11 @@
 export const optionsMenu = {
     public: [
         {
-            titulo: "Portal de dados",
+            titulo: "Início",
             link: "/",
             descricao:
-                "Pagina inicial da plataforma.",
+                "Landing page / visão geral.",
             icone: "home",
-        },
-        {
-            titulo: "Contacto",
-            link: "/contacto",
-            descricao: "Informações de contacto institucional e localização.",
-            icone: "envelope",
         },
         {
             titulo: "Entrar",
@@ -21,26 +15,20 @@ export const optionsMenu = {
             icone: "login",
         }
     ],
-    visitor: [
+    user: [
         {
-            titulo: "Dashboard Geral",
-            link: "/diretor/dashboard",
+            titulo: "Dados em Tempo Real",
+            link: "/",
             descricao:
-                "Visão geral da escola: desempenho, frequências e indicadores.",
-            icone: "chart-line",
+                "Visualização atual dos sensores.",
+            icone: "speed",
         },
         {
-            titulo: "Gestão de Usuarios",
-            link: "/diretor/professores",
+            titulo: "Gráficos",
+            link: "/historico",
             descricao:
-                "Registo, gestão e atribuição de disciplinas aos docentes.",
-            icone: "user-tie",
-        },
-        {
-            titulo: "Gestão de Aparelhos",
-            link: "/diretor/turmas",
-            descricao: "Criação e administração de turmas, horários e cursos.",
-            icone: "layer-group",
+                "Análise visual (temperatura, humidade, etc.",
+            icone: "chart",
         },
         {
             titulo: "Notificações",
@@ -52,24 +40,25 @@ export const optionsMenu = {
     ],
     admin: [
         {
-            titulo: "Dashboard Geral",
-            link: "/diretor/dashboard",
+            titulo: "Dados em Tempo Real",
+            link: "/",
             descricao:
-                "Visão geral da escola: desempenho, frequências e indicadores.",
-            icone: "bell",
+                "Visualização atual dos sensores.",
+            icone: "speed",
+        },
+        {
+            titulo: "Gráficos",
+            link: "/historico",
+            descricao:
+                "Análise visual (temperatura, humidade, etc.",
+            icone: "chart",
         },
         {
             titulo: "Gestão de Usuarios",
             link: "/diretor/professores",
             descricao:
                 "Registo, gestão e atribuição de disciplinas aos docentes.",
-            icone: "bell",
-        },
-        {
-            titulo: "Gestão de Aparelhos",
-            link: "/diretor/turmas",
-            descricao: "Criação e administração de turmas, horários e cursos.",
-            icone: "bell",
+            icone: "people",
         },
         {
             titulo: "Notificações",
@@ -78,5 +67,21 @@ export const optionsMenu = {
                 "Envio de avisos e notas informativas para toda a comunidade escolar.",
             icone: "bell",
         },
+    ],
+    profile: [
+        {
+            titulo: "Meu Perfil",
+            link: "/perfil",
+            descricao:
+                "Visualização do perfil de usuario.",
+            icone: "perfil",
+        },
+        {
+            titulo: "Sair",
+            link: "/logout",
+            descricao:
+                "Sair da plataforma.",
+            icone: "logout",
+        }
     ],
 };
