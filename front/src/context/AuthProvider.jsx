@@ -63,6 +63,9 @@ export default function AuthProvider({ children }) {
     async function restoreSession() {
         try {
             const res = await api.post("/auth/session");
+            if (res.data) {
+                setAppState("done");
+            }
 
             setUser(res.data.user);
             setAccessToken(res.data.access_token);
@@ -126,7 +129,6 @@ export default function AuthProvider({ children }) {
     // Restauramos a sessão ao carregar app
     useEffect(() => {
         restoreSession();
-        setAppState("done");
     }, []);
 
     if (appState === "loading") {
