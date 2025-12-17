@@ -1,8 +1,7 @@
 import * as React from "react";
-import MyButton, { MyLinkButton } from "../components/MyButton";
 import { MyAlertContext } from "../App";
 import { useAuthProvider } from "../context/AuthProvider";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import MyLoader from "../components/MyLoader";
 import MyCard from "../components/MyCard";
 import MyForm, { MyInput } from "../components/MyFormComponents";
@@ -36,7 +35,8 @@ export default function Login() {
         });
     };
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         setFormState("loading");
         const response = await login(formData);
 
@@ -57,12 +57,16 @@ export default function Login() {
     }
 
     return (
-        <div className="flex h-110 items-center justify-center">
+        <div className="flex h-110 md:h-160 items-center justify-center">
             <MyCard sx="w-80 md:w-100">
                 <h1 className="text-3xl mb-8 text-(--color-blue-claro)">
                     Entrar na plataforma
                 </h1>
-                <MyForm>
+                <MyForm
+                    handleSubmit={(e) => {
+                        handleSubmit(e);
+                    }}
+                >
                     <MyInput
                         id="email"
                         label="Email"
@@ -83,11 +87,12 @@ export default function Login() {
                             handleChangeInput(e);
                         }}
                     />
-                    <MyButton
-                        title={titleButton}
+                    <button
+                        className={`bg-(--color-blue-claro) cursor-pointer text-white p-2 rounded-md flex justify-center items-center`}
                         disabled={formEmpty}
-                        handleClick={handleSubmit}
-                    />
+                    >
+                        {titleButton}
+                    </button>
                     <Link
                         to={"/redefinirsenha"}
                         className="text-blue-500 text-center mb-2 mt-2"

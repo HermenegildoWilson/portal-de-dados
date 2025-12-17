@@ -7,7 +7,7 @@ export default function Header({ state }) {
     const { user } = useAuthProvider();
 
     return (
-        <header className="bg-transparent h-20 flex justify-between pr-4 pt-3">
+        <header className="bg-transparent h-15 flex justify-between pr-4 pt-3 md:hidden">
             <div className="md:hidden">
                 <MyButton
                     type="text"
@@ -18,9 +18,11 @@ export default function Header({ state }) {
                     }}
                 />
             </div>
-            <div className="flex-1 text-right">
-                {!user && <MyLinkButton to={"/login"} title={"Entrar"} />}
-            </div>
+            {!user && (
+                <div className="flex-1 flex items-center justify-end">
+                    <MyLinkButton to={"/login"} title={"Entrar"} />
+                </div>
+            )}
         </header>
     );
 }

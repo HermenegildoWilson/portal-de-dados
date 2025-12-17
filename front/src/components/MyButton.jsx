@@ -8,7 +8,6 @@ export default function MyButton({
     disabled = false,
     args,
     sx,
-    href,
 }) {
     return (
         <Button
@@ -25,7 +24,7 @@ export default function MyButton({
 
 export function MyLinkButton({ sx, title, to }) {
     return (
-        <Link to={to} className={`bg-(--color-blue-claro) text-white p-3 rounded-md ${sx}`}>
+        <Link to={to} className={`bg-(--color-blue-claro) text-white p-2 rounded-md ${sx}`}>
             {title}
         </Link>
     );

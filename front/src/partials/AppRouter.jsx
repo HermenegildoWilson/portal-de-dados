@@ -7,6 +7,10 @@ import { useAuthProvider } from "../context/AuthProvider";
 import Login from "../pages/Login";
 import MyLoader from "../components/MyLoader";
 import Logout from "../pages/Logout";
+import Perfil from "../pages/Perfil";
+import Historico from "../pages/Historico";
+import Usuarios from "../pages/Usuarios";
+import Notificacoes from "../pages/Notificacoes";
 
 export default function AppRouter() {
     const { appState } = useAuthProvider();
@@ -17,6 +21,14 @@ export default function AppRouter() {
             <AppLayout>
                 <Routes> 
                     <Route path="/" element={<Main />} />
+
+                    <Route path="/historico" element={<Historico />} />
+
+                    <Route path="/notificacoes" element={<Notificacoes />} />
+
+                    <Route path="/usuarios" element={<Usuarios />} />
+
+                    <Route path="/perfil" element={<Perfil />} />
 
                     <Route path="/home" element={<Home />} />
 

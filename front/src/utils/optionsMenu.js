@@ -24,7 +24,7 @@ export const optionsMenu = {
             icone: "speed",
         },
         {
-            titulo: "Gráficos",
+            titulo: "Histórico",
             link: "/historico",
             descricao:
                 "Análise visual (temperatura, humidade, etc.",
@@ -32,7 +32,7 @@ export const optionsMenu = {
         },
         {
             titulo: "Notificações",
-            link: "/diretor/notificacoes",
+            link: "/notificacoes",
             descricao:
                 "Envio de avisos e notas informativas para toda a comunidade escolar.",
             icone: "bell",
@@ -47,22 +47,22 @@ export const optionsMenu = {
             icone: "speed",
         },
         {
-            titulo: "Gráficos",
+            titulo: "Histórico",
             link: "/historico",
             descricao:
                 "Análise visual (temperatura, humidade, etc.",
-            icone: "chart",
+            icone: "history",
         },
         {
             titulo: "Gestão de Usuarios",
-            link: "/diretor/professores",
+            link: "/usuarios",
             descricao:
                 "Registo, gestão e atribuição de disciplinas aos docentes.",
             icone: "people",
         },
         {
             titulo: "Notificações",
-            link: "/diretor/notificacoes",
+            link: "/notificacoes",
             descricao:
                 "Envio de avisos e notas informativas para toda a comunidade escolar.",
             icone: "bell",

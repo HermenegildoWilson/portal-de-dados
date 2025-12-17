@@ -1,8 +1,11 @@
 import { TextField } from "@mui/material";
 
-export default function MyForm({ children, sx }) {
+export default function MyForm({ children, sx, handleSubmit }) {
     return (
-        <form className={`grid gap-2 m-auto w-70 md:w-85 ${sx}`}>
+        <form
+            className={`grid gap-2 m-auto w-70 md:w-85 ${sx}`}
+            onSubmit={handleSubmit}
+        >
             {children}
         </form>
     );
@@ -16,7 +19,8 @@ export function MyInput({
     label,
     value,
     handleChangeInput,
-    hidden
+    hidden,
+    key
 }) {
     return (
         <TextField
@@ -25,8 +29,9 @@ export function MyInput({
             type={type}
             label={label}
             value={value}
-            sx={{...sx}}
+            sx={{ ...sx }}
             hidden={hidden}
+            key={key}
             onChange={(e) => {
                 handleChangeInput(e);
             }}

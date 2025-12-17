@@ -1,5 +1,14 @@
+import { Navigate } from "react-router-dom";
 import { MyLinkButton } from "../components/MyButton";
+import { useAuthProvider } from "../context/AuthProvider";
+
 export default function Home() {
+    const { user } = useAuthProvider();
+    
+    if (user) {
+        return <Navigate to="/" />;
+    }
+
     return (
         <div className="mt-3 p-3 grid gap-4">
             <h1 className="w-75 text-2xl pl-4 sm:text-4xl sm:w-110">

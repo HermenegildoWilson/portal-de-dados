@@ -4,20 +4,19 @@ import MyLoader from "../components/MyLoader";
 import { MyAlertContext } from "../App";
 
 const AuthContext = createContext(null);
+export const api = axios.create({
+    baseURL: import.meta.env.VITE_API_URL,
+    headers: {
+        "Content-Type": "application/json",
+    },
+    withCredentials: true,
+});
 
 export default function AuthProvider({ children }) {
     const [accessToken, setAccessToken] = useState(null);
     const [user, setUser] = useState(null);
     const [appState, setAppState] = useState("loading"); // error || loading || done
     const { setOpenAlert } = useContext(MyAlertContext).state;
-
-    const api = axios.create({
-        baseURL: import.meta.env.VITE_API_URL,
-        headers: {
-            "Content-Type": "application/json",
-        },
-        withCredentials: true,
-    });
 
     // Lógica para o login manual
     async function login(credencials, url = "/login") {
@@ -36,7 +35,7 @@ export default function AuthProvider({ children }) {
         try {
             const res = await api.post(url, { user: user });
             console.log(accessToken);
-            
+
             setUser(null);
             setAccessToken(null);
 
@@ -63,7 +62,7 @@ export default function AuthProvider({ children }) {
     async function restoreSession() {
         try {
             const res = await api.post("/auth/session");
-            
+
             setUser(res.data.user);
             setAccessToken(res.data.access_token);
 
@@ -75,18 +74,14 @@ export default function AuthProvider({ children }) {
         }
     }
 
-
-
     // Interceptamos todas as requisições para garantir o envio do access_token
     useEffect(() => {
-        const interceptor = api.interceptors.request.use(
-            async (config) => {
-                if (!accessToken) return config;
+        const interceptor = api.interceptors.request.use(async (config) => {
+            if (!accessToken) return config;
 
-                config.headers.Authorization = `Bearer ${accessToken}`;
-                return config;
-            }
-        );
+            config.headers.Authorization = `Bearer ${accessToken}`;
+            return config;
+        });
 
         return () => api.interceptors.request.eject(interceptor);
     }, [accessToken]);
@@ -112,12 +107,16 @@ export default function AuthProvider({ children }) {
     }, [accessToken]);
 
     ///Interceptamos todas as respostas, para o caso de receber um status 403 e redirecionar para a tela de login.
-    useEffect(() => {        
+    useEffect(() => {
         const interceptor = api.interceptors.response.use(
             (res) => res,
             async (err) => {
                 if (err.response?.status === 403) {
-                    setOpenAlert({ type: "SHOW", text: err.response?.data?.message, style: "warning" });
+                    setOpenAlert({
+                        type: "SHOW",
+                        text: err.response?.data?.message,
+                        style: "warning",
+                    });
                 }
                 return Promise.reject(err);
             }
