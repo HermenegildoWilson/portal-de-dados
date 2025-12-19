@@ -4,13 +4,15 @@ const env = require("../../config/env");
 const { createToken } = require("../auth/auth.service");
 const { token_model } = require("../../models/index");
 
-const isProd = process.env.NODE_ENV === "production";
+const isProd = env.node_env === "production"
+
 const cookieOptions = {
-    httpOnly: true,
-    secure: isProd,
-    sameSite: isProd ? "none" : "lax",
-    path: "/",
-};
+    httpOnly: isProd,
+    secure: !isProd,
+    maxAge: env.cookie_expiration,
+}
+console.log(cookieOptions);
+
 
 class userServices {
     /**
@@ -121,10 +123,7 @@ class userServices {
                 refresh_token: REFRESH_TOKEN,
             });
 
-            res.cookie("refresh_token", REFRESH_TOKEN, {
-                ...cookieOptions,
-                maxAge: env.cookie_expiration,
-            });
+            res.cookie("refresh_token", REFRESH_TOKEN, cookieOptions);
 
             return {
                 success: true,
@@ -153,9 +152,7 @@ class userServices {
                 refresh_token: refresh_token,
             });
 
-            res.clearCookie("refresh_token", {
-                ...cookieOptions,
-            });
+            res.clearCookie("refresh_token", cookieOptions);
 
             return {
                 success: true,
