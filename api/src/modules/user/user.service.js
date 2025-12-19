@@ -8,11 +8,10 @@ const isProd = env.node_env === "production"
 
 const cookieOptions = {
     httpOnly: isProd,
+    sameSite: "none",
     secure: !isProd,
     maxAge: env.cookie_expiration,
 }
-console.log(cookieOptions);
-
 
 class userServices {
     /**
