@@ -14,8 +14,7 @@ const env = {
     register_token_expiration: process.env.REGISTER_TOKEN_EXPIRATION,
 
     cookie_expiration: process.env.COOKIE_EXPIRATION,
-    http_only: process.env.HTTPONLY,
-    secure: process.env.SECURE,
+    node_env: process.env.NODE_ENV,
 
     app_url: process.env.APP_URL,
     redis_url: process.env.REDIS_URL,

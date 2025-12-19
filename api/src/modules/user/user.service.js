@@ -2,7 +2,15 @@ const argon2 = require("argon2");
 const model = require("./user.model");
 const env = require("../../config/env");
 const { createToken } = require("../auth/auth.service");
-const { token_model } = require("../../models/index")
+const { token_model } = require("../../models/index");
+
+const isProd = process.env.NODE_ENV === "production";
+const cookieOptions = {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? "none" : "lax",
+    path: "/",
+};
 
 class userServices {
     /**
@@ -114,8 +122,7 @@ class userServices {
             });
 
             res.cookie("refresh_token", REFRESH_TOKEN, {
-                httpOnly: env.http_only,
-                secure: env.secure,
+                ...cookieOptions,
                 maxAge: env.cookie_expiration,
             });
 
@@ -147,9 +154,7 @@ class userServices {
             });
 
             res.clearCookie("refresh_token", {
-                httpOnly: env.http_only,
-                secure: env.secure,
-                maxAge: env.cookie_expiration,
+                ...cookieOptions,
             });
 
             return {
