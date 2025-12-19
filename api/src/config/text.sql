@@ -24,9 +24,11 @@ CREATE TABLE sensor_readings (
   temperature REAL,
   humidity REAL,
   pressure REAL,
-  altitude REAL,
+  air_quality REAL,
   created_at TIMESTAMP DEFAULT NOW()
 );
 
 CREATE INDEX idx_sensor_time
 ON sensor_readings (sensor_id, created_at DESC);
+
+CREATE INDEX idx_sensor_created_at ON sensor_readings(sensor_id, created_at);

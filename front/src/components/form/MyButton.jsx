@@ -1,6 +1,4 @@
 import Button from "@mui/material/Button";
-import { Link } from "react-router-dom";
-
 export default function MyButton({
     title,
     type = "contained",
@@ -19,13 +17,5 @@ export default function MyButton({
         >
             {title}
         </Button>
-    );
-}
-
-export function MyLinkButton({ sx, title, to }) {
-    return (
-        <Link to={to} className={`bg-(--color-blue-claro) text-white p-2 rounded-md ${sx}`}>
-            {title}
-        </Link>
     );
 }

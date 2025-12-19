@@ -1,6 +1,4 @@
 import { Alert, Drawer } from "@mui/material";
-import Typography from "@mui/material/Typography";
-import { useAuthProvider } from "../context/AuthProvider";
 import {
     MyList,
     MyListItem,
@@ -10,11 +8,14 @@ import {
 } from "../components/MyListComponents";
 import { iconMapper } from "../utils/iconMapper";
 import { useEffect, useState } from "react";
-import MyForm, { MyInput } from "../components/MyFormComponents";
-import { PageTitle } from "../layouts/AppLayout";
+import MyInput from "../components//form/MyInput";
+import MyForm from "../components//form/MyForm";
+import PageTitle from "../components/typography/PageTitle";
+import { useAuth } from "../hooks/useAuth";
 
 export default function Perfil() {
-    const { user } = useAuthProvider();
+    const { user } = useAuth();
+
     const [formOptions, setFormOptions] = useState({
         show: false,
         data: "",
@@ -27,7 +28,7 @@ export default function Perfil() {
     ];
     return (
         <>
-            <PageTitle Title={"Perfil"}/>
+            <PageTitle Title={"Perfil"} />
 
             <div className="rounded-full w-30 h-30 flex justify-center items-center text-7xl bg-(--color-blue-claro) text-(--color-branco-suave) m-auto mb-10 mt-4">
                 {user.nome[0]}

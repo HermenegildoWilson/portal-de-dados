@@ -1,38 +1,38 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Navigate } from "react-router-dom";
-import { useAuthProvider } from "../context/AuthProvider";
-import MyLoader from "../components/MyLoader";
-import { MyAlertContext } from "../App"
-import { useContext } from "react";
+import { useAlert } from "../hooks/useAlert";
+import { useAuth } from "../hooks/useAuth";
+import AppLoader from "../components/feedback/AppLoader";
 
 export default function Logout() {
-    const { logout, user } = useAuthProvider();
-    const { setOpenAlert } = useContext(MyAlertContext).state
+    const { logout } = useAuth();
+    const { setAlert } = useAlert();
 
     useEffect(() => {
         const Logout = async () => {
             const response = await logout();
+            const data = response.data;
 
-            if (response.success) {
-                return setOpenAlert({ type: "SHOW", text: response.message, style: "success" });
+            if (data.success) {
+                return setAlert({
+                    type: "SHOW",
+                    text: data.message,
+                    style: "success",
+                });
             }
-            setOpenAlert({ type: "SHOW", text: response.message, style: "warning" });
+            setAlert({
+                type: "SHOW",
+                text: data.message,
+                style: "warning",
+            });
         };
         Logout();
     }, []);
 
-    if (!user) {
-        return (
-            <>
-                <Navigate to="/home" replace />
-            </>
-        );
-    }
-
     return (
         <section className="h-[90vh] flex flex-col items-center justify-center col-span-2">
             <p className="text-xl mb-4">Saindo...</p>
-            <MyLoader sx={"text-blue-500"} />
+            <AppLoader sx={"text-blue-500"} />
         </section>
     );
 }

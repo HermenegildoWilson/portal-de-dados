@@ -1,26 +1,29 @@
 import { Navigate } from "react-router-dom";
-import { MyLinkButton } from "../components/MyButton";
-import { useAuthProvider } from "../context/AuthProvider";
+import MyLinkButton from "../components/form/MyLinkButton";
+import PageTitle from "../components/typography/PageTitle";
+import { useAuth } from "../hooks/useAuth";
 
-export default function Home() {
-    const { user } = useAuthProvider();
-    
+export default function Page() {
+    const { user } = useAuth();
+
     if (user) {
         return <Navigate to="/" />;
     }
 
     return (
         <div className="mt-3 p-3 grid gap-4">
-            <h1 className="w-75 text-2xl pl-4 sm:text-4xl sm:w-110">
+            <PageTitle title="Dados do Sensor" />
+
+            <h1 className="text-2xl sm:text-4xl">
                 Monitorização Ambiental em Tempo Real
             </h1>
-            <p className="text-(--color-cinza-medio) p-4 pt-2 pb-6 pl-1">
+
+            <p className="text-(--color-cinza-medio)">
                 Acompanhe dados precisos de temperatura, humidade, pressão
                 atmosférica e qualidade do ar.
             </p>
-            <div>
-                <MyLinkButton title={"Ver dados em tempo real"} to={"/demo"} />
-            </div>
+
+            <MyLinkButton title="Ver dados em tempo real" to="/demo" />
         </div>
     );
 }

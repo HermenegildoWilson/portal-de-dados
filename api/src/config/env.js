@@ -19,7 +19,6 @@ const env = {
 
     app_url: process.env.APP_URL,
     redis_url: process.env.REDIS_URL,
-
 };
 
 module.exports = env;

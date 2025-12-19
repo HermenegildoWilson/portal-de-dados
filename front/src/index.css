@@ -40,23 +40,28 @@
     /*Primária (branding, botões principais)*/
     --color-blue: #1565C0;
 
-    /*Temperatura*/
-    --color-laranja: #F97316;
-
-    /*Humidade*/
-    --color-blue-claro: #38BDF8;
+    --color-blue-claro: #38BDF8;    
+    --color-blue-light: #38bff838;
 
     /*Pressão do Ar             */
     --color-roxo-cuave: #8B5CF6;
 
+
     /*Qualidade do Ar (Boa)     */
-    --color-verde: #22C55E;
+    --color-pressaodoar: #f6c85f;
 
     /*Qualidade do Ar (Moderada)*/
-    --color-amarelo: #FACC15;
+    --color-qualidadedoar: #22C55E;
 
     /*Qualidade do Ar (Ruim)    */
     --color-vermelho: #EF4444;
+
+    /*Temperatura*/
+    --color-temperatura: #F97316;
+
+    /*Humidade*/
+    --color-humidade: #38BDF8;
+
 }
 
 html {

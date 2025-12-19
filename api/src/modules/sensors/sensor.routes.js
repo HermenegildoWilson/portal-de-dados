@@ -1,24 +1,27 @@
-/**
- * @description MIDLEWARE DE AUTENTICAÇÃODE ROTAS, PARA ASSEGURAR O ACESSO A ROTAS PROTEGIDAS, E CONTROLE DE PREVILÉGIOS
- */
 const AuthMiddleware = require("../../shared/middlewares/auth.middleware");
 
-/**
- * @description OBJECTO DE CONTROLLERS
- */
 const sensorControllers = require("./sensor.controller");
 
-/**
- * @description OBJECTO DE ROTEAMENTO
- */
 const sensorsRouter = require("express").Router();
 
-sensorsRouter.post("/data", sensorControllers.createSensorData);
+sensorsRouter.post("/data", sensorControllers.receiveSensorReading);
 
 sensorsRouter.get(
     "/:sensorId/last",
     AuthMiddleware.authanticateAccess,
-    sensorControllers.getLastSensorData
+    sensorControllers.getLastSensorReading
+);
+
+sensorsRouter.get(
+    "/:sensorId/history", //?from=2025-12-01&to=2025-12-18&interval=5
+    //AuthMiddleware.authanticateAccess,
+    sensorControllers.getHistorySensorReading
+);
+
+sensorsRouter.get(
+    "/:sensorId/metrics", //?from=2025-12-01&to=2025-12-18&interval=5
+    //AuthMiddleware.authanticateAccess,
+    sensorControllers.getMetricsSensorReading
 );
 
 module.exports = { sensorsRouter };

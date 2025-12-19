@@ -1,13 +1,14 @@
 import MenuIcon from "@mui/icons-material/Menu";
-import { useAuthProvider } from "../../context/AuthProvider";
-import MyButton, { MyLinkButton } from "../../components/MyButton";
+import MyButton from "../../components/form/MyButton";
+import MyLinkButton from "../../components/form/MyLinkButton";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function Header({ state }) {
     const { open, setOpen } = state;
-    const { user } = useAuthProvider();
+    const { user } = useAuth();
 
     return (
-        <header className="bg-transparent h-15 flex justify-between pr-4 pt-3 md:hidden">
+        <header className="bg-transparent h-13 flex justify-between pr-4 pt-1 md:hidden">
             <div className="md:hidden">
                 <MyButton
                     type="text"

@@ -1,6 +1,3 @@
-/**
- * @description OBJECTO DE SERVIÇOS
- */
 const jwt = require("jsonwebtoken");
 const userServices = require("./user.service");
 const { createToken } = require("../auth/auth.service");
@@ -9,17 +6,6 @@ const REGISTER_TOKEN_EXPIRATION = process.env.REGISTER_TOKEN_EXPIRATION;
 
 
 class userControllers {
-    /**
-     * @param {Request} req - Objecto que contem a requisição e os elementos que ela traz.
-     * @param {Response} res - Objecto que controla a resposta.
-     * @returns {{
-     *      status: Number,
-     *      success: Boolean,
-     *      message: String,
-     *      data: JSON,
-     *      errors: undefined
-     * }}
-     */
     cadastrar = async (req, res) => {
         try {
             const usuario = req.body;
@@ -86,18 +72,7 @@ class userControllers {
         }
     };
 
-    /**
-     * @param {Request} req - Objecto que contem a requisição e os elementos que ela traz.
-     * @param {Response} res - Objecto que controla a resposta.
-     * @returns {{
-     *      status: Number,
-     *      success: Boolean,
-     *      message: String,
-     *      data: JSON,
-     *      errors: undefined
-     * }}
-     */
-    login = async (req, res) => {
+    login = async (req, res, next) => {
         try {
             const credencials = req.body;
 
@@ -120,7 +95,7 @@ class userControllers {
                     ...response,
                 });
             }
-
+            
             // Se chegamos até aqui é porque tudo tá OK
             return res.status(200).json({
                 status: 200,
@@ -138,17 +113,6 @@ class userControllers {
         }
     };
 
-    /**
-     * @param {Request} req - Objecto que contem a requisição e os elementos que ela traz.
-     * @param {Response} res - Objecto que controla a resposta.
-     * @returns {{
-     *      status: Number,
-     *      success: Boolean,
-     *      message: String,
-     *      data: JSON,
-     *      errors: undefined
-     * }}
-     */
     generateKeyRegister = async (req, res) => {
         try {
             const { role } = req.body;
@@ -177,17 +141,6 @@ class userControllers {
         }
     };
 
-    /**
-     * @param {Request} req - Objecto que contem a requisição e os elementos que ela traz.
-     * @param {Response} res - Objecto que controla a resposta.
-     * @returns {{
-     *      status: Number,
-     *      success: Boolean,
-     *      message: String,
-     *      data: JSON,
-     *      errors: undefined
-     * }}
-     */
     logout = async (req, res) => {
         try {
             const response = await userServices.logout(req, res);

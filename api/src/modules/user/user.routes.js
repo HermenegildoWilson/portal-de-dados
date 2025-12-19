@@ -1,16 +1,7 @@
-/**
- * @description MIDLEWARE DE AUTENTICAÇÃODE ROTAS, PARA ASSEGURAR O ACESSO A ROTAS PROTEGIDAS, E CONTROLE DE PREVILÉGIOS
- */
 const AuthMiddleware = require("../../shared/middlewares/auth.middleware");
 
-/**
- * @description OBJECTO DE CONTROLLERS
- */
 const userControllers = require("./user.controller");
 
-/**
- * @description OBJECTO DE ROTEAMENTO
- */
 const userRouter = require("express").Router();
 
 userRouter.post("/cadastrar/:registerKey", userControllers.cadastrar);

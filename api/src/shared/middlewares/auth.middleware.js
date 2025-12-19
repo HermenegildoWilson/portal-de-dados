@@ -35,9 +35,7 @@ class AutenticacaoMiddleware {
     };
 
     /**
-     *
-     * @param {Object} roles - Array contendo os roles (permissões) dque é recessária para acessar esta rota
-     *@description Autenticação de acesso a rotas protegidas, verificação do role
+     * @description Autenticação de acesso a rotas protegidas, verificação do role
      */
     verifyRole = (roles = []) => {
         return (req, res, next) => {
@@ -59,46 +57,6 @@ class AutenticacaoMiddleware {
                 status: 403,
                 success: false,
                 message: "Acesso negado!",
-            });
-        };
-    };
-
-    verifyApiKey = () => {
-        return (req, res, next) => {
-            const access_token = req.headers["authorization"]?.split(" ")[1];
-            const refresh_token = req.cookies.refresh_token;
-            // SE NÃO TIVER UM TOKEN DE ACESSO
-            if (!access_token) {
-                // SE NÃO TIVER UM TOKEN DE REFRESCO, FAÇA LOGIN
-                if (!refresh_token) {
-                    return res.status(403).json({
-                        status: 403,
-                        success: false,
-                        message: "Início de seção necessário!",
-                    });
-                }
-
-                return res.status(401).json({
-                    status: 401,
-                    success: false,
-                    message: "Seção expirada.",
-                });
-            }
-
-            // SETIVER UM TOKEN DE ACESSO, VERIFICAMO-LO COM A CHAVE.
-            jwt.verify(access_token, ACCESS_TOKEN_SECRET, (err, user) => {
-                //SE O TOKEN DE ACESSO TIVER EXPIRADO, avismos que o token espirou
-                if (err) {
-                    return res.status(401).json({
-                        status: 401,
-                        success: false,
-                        message: "Token inválido!",
-                    });
-                }
-
-                // SE O TOKEN DE ACESSO ESTIVER EM DIA, ENTÃO OK.
-                req.user = user.payload;
-                return next();
             });
         };
     };

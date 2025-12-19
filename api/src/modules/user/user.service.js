@@ -1,18 +1,12 @@
 const argon2 = require("argon2");
-const { usuario_model, token_model } = require("../../models");
+const model = require("./user.model");
 const env = require("../../config/env");
-
 const { createToken } = require("../auth/auth.service");
-//
+const { token_model } = require("../../models/index")
+
 class userServices {
     /**
-     * @param {Object} usuario - Objecto com os dados do novo usuario
-     * @returns {{
-     *      success: Boolean,
-     *      message: String,
-     *      user: JSON,
-     *      errors: undefined
-     * }} - Objecto contendo o novo usuario criado(em caso de sucesso), ou mensagens de erro em caso de insucesso.
+     * @description Objecto contendo o novo usuario criado(em caso de sucesso), ou mensagens de erro em caso de insucesso.
      */
     async cadastrar(usuario) {
         try {
@@ -34,7 +28,7 @@ class userServices {
              */
             const senhaHash = await this.createHash(usuario.senha);
 
-            const usuario_criado = await usuario_model.create({
+            const usuario_criado = await model.create({
                 nome: usuario.nome,
                 email: usuario.email,
                 role: usuario.role,
@@ -56,14 +50,7 @@ class userServices {
     }
 
     /**
-     * @param {Object} credencials - Objecto com as credencias do usuario
-     * @param {Response} res - Objecto que controla a resposta.
-     * @returns {{
-     *      success: Boolean,
-     *      message: String,
-     *      data: JSON,
-     *      errors: undefined
-     * }} - Objecto contendo o novo usuario criado(em caso de sucesso), ou mensagens de erro em caso de insucesso.
+     * @description - Objecto contendo o novo usuario criado(em caso de sucesso), ou mensagens de erro em caso de insucesso.
      */
     async login(credencials, res) {
         try {
@@ -148,14 +135,7 @@ class userServices {
     }
 
     /**
-     * @param {Request} req - Objecto que contem a requisição e os elementos que ela traz.
-     * @param {Response} res - Objecto que controla a resposta.
-     * @returns {{
-     *      success: Boolean,
-     *      message: String,
-     *      data: JSON,
-     *      errors: undefined
-     * }} - Objecto contendo o novo candidato criado(em caso de sucesso), ou mensagens de erro em caso de insucesso.
+     * @description Objecto contendo o novo candidato criado(em caso de sucesso), ou mensagens de erro em caso de insucesso.
      */
     async logout(req, res) {
         try {
@@ -187,19 +167,13 @@ class userServices {
     }
 
     /**
-     * @param {Object} param0
-     * @param {*} param0.email
-     * @param {*} param0.role
-     * @returns {{
-     *      success: Boolean,
-     *      data: JSON
-     * }} - Retorna true se já existe e false se ele não exite
+     * @description Retorna true se já existe e false se ele não exite
      */
     async verifyUserEmail({ email, role }) {
         /**
          * @description NESTE TRECHO VERIFICAMOS SE O EMAIL DO usuario ESTÁ DISPONÍVEL
          */
-        let usuario_encontrado = await usuario_model.selectOne({
+        let usuario_encontrado = await model.selectOne({
             email: email,
         });
 

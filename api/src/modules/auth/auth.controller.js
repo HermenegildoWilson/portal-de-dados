@@ -1,8 +1,5 @@
 const jwt = require("jsonwebtoken");
 
-/**
- * @description MODEL DE ITERAÇÃO COM A TABELA TOKENS
- */
 const { token_model } = require("../../models");
 
 const authServices = require("./auth.service");
@@ -12,10 +9,6 @@ const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
 const ACCESS_TOKEN_EXPIRATION = process.env.ACCESS_TOKEN_EXPIRATION;
 
 class AutenticacaoMiddleware {
-    /**
-     *@description Autenticação de acesso
-     *@route /auth/session
-     */
     refreshAccess = async (req, res) => {
         const refresh_token = req.cookies.refresh_token;
 

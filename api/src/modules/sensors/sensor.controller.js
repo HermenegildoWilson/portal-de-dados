@@ -1,16 +1,13 @@
-/**
- * @description MODEL DE ITERAÇÃO COM O DB DE SERVIÇOS
- */
-
-const { dados_model } = require("../../models");
 const sensorCache = require("./sensor.cache");
 const sensorService = require("./sensor.service");
+
 class userControllers {
-    createSensorData = async (req, res, next) => {
+    receiveSensorReading = async (req, res, next) => {
         try {
             const data = req.body;
+            console.log(`Dados do sensor:${data.sensor_id} recebidos...`);
 
-            const result = await sensorService.storeSensorData(data);
+            const result = await sensorService.storeSensorReading(data, req);
 
             return res.status(201).json({
                 success: true,
@@ -21,7 +18,7 @@ class userControllers {
         }
     };
 
-    getLastSensorData = async (req, res, next) => {
+    getLastSensorReading = async (req, res, next) => {
         try {
             const { sensorId } = req.params;
 
@@ -35,6 +32,63 @@ class userControllers {
             }
 
             return res.status(200).json({ success: true, data });
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    getHistorySensorReading = async (req, res, next) => {
+        try {
+            const { sensorId } = req.params;
+            if (!sensorId)
+                return res
+                    .status(400)
+                    .json({ error: "SensorId é obrigatório" });
+
+            const data = await sensorService.getHistoryReading(
+                sensorId,
+                req.query
+            );
+
+            if (!data) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Sem dados para este sensor",
+                });
+            }
+
+            return res
+                .status(200)
+                .json({ success: true, data: data.data, meta: data.meta });
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    getMetricsSensorReading = async (req, res, next) => {
+        try {
+            const { sensorId } = req.params;
+
+            if (!sensorId)
+                return res
+                    .status(400)
+                    .json({ error: "SensorId é obrigatório" });
+
+            const data = await sensorService.getMetricsReading(
+                sensorId,
+                req.query
+            );
+
+            if (!data) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Sem dados para este sensor",
+                });
+            }
+
+            return res
+                .status(200)
+                .json({ success: true, data: data.data.data, meta: data.meta });
         } catch (error) {
             next(error);
         }

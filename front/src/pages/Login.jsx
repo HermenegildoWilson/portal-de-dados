@@ -1,11 +1,15 @@
 import * as React from "react";
-import { MyAlertContext } from "../App";
-import { useAuthProvider } from "../context/AuthProvider";
 import { Link, Navigate } from "react-router-dom";
-import MyLoader from "../components/MyLoader";
+
+import AppLoader from "../components/feedback/AppLoader";
 import MyCard from "../components/MyCard";
-import MyForm, { MyInput } from "../components/MyFormComponents";
+import MyForm from "../components/form/MyForm";
+import MyFormButton from "../components/form/MyFormButton";
+import MyInput from "../components/form/MyInput";
+
 import { Divider } from "@mui/material";
+import { useAuth } from "../hooks/useAuth";
+import { useAlert } from "../hooks/useAlert";
 
 export default function Login() {
     const [formData, setFormData] = React.useState({
@@ -14,15 +18,15 @@ export default function Login() {
     });
     const [formState, setFormState] = React.useState("typing");
 
-    const { setOpenAlert } = React.useContext(MyAlertContext).state;
+    const { setAlert } = useAlert();
 
-    const { login, user } = useAuthProvider();
+    const { login, user } = useAuth();
 
     const formEmpty = !formData.email || !formData.senha;
     const titleButton =
         formState === "loading" ? (
             <>
-                Entrando... <MyLoader sx={"ml-3"} type={"small"} />
+                Entrando... <AppLoader sx={"ml-3"} type={"small"} />
             </>
         ) : (
             "Entrar"
@@ -42,14 +46,14 @@ export default function Login() {
 
         if (response.success) {
             setFormState("done");
-            return setOpenAlert({
+            return setAlert({
                 type: "SHOW",
                 text: response.message,
                 style: "success",
             });
         }
         setFormState("typing");
-        setOpenAlert({ type: "SHOW", text: response.message, style: "error" });
+        setAlert({ type: "SHOW", text: response.message, style: "error" });
     };
 
     if (user) {
@@ -87,12 +91,10 @@ export default function Login() {
                             handleChangeInput(e);
                         }}
                     />
-                    <button
-                        className={`bg-(--color-blue-claro) cursor-pointer text-white p-2 rounded-md flex justify-center items-center`}
+                    <MyFormButton
+                        titleButton={titleButton}
                         disabled={formEmpty}
-                    >
-                        {titleButton}
-                    </button>
+                    />
                     <Link
                         to={"/redefinirsenha"}
                         className="text-blue-500 text-center mb-2 mt-2"

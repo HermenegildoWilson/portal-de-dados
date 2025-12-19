@@ -1,4 +1,4 @@
-import { PageTitle } from "../layouts/AppLayout";
+import PageTitle from "../components/typography/PageTitle";
 
 export default function Notificacoes() {
     return (

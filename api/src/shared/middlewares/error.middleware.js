@@ -1,9 +1,9 @@
 export function errorMiddleware(error, req, res, next) {
-  console.error(error);
+  console.error("Meu cara em acção: "+error);
 
   return res.status(500).json({
     success: false,
     error: error,
-    message: error.message || "Erro interno do servidor",
+    message: error.message || "Erro interno do servidor...",
   });
 }

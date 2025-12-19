@@ -25,7 +25,7 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.REAL,
                 allowNull: true,
             },
-            altitude: {
+            air_quality: {
                 type: DataTypes.REAL,
                 allowNull: true,
             },

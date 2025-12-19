@@ -1,39 +1,20 @@
-import { createContext, useReducer } from "react";
-import AuthProvider from "./context/AuthProvider";
 import "./index.css";
 import AppRouter from "./partials/AppRouter";
-import MyAlert from "./components/MyAlert";
-export const MyAlertContext = createContext(null);
+import AlertProvider from "./providers/AlertProvider";
+import AuthProvider from "./providers/AuthProvider";
+import AuthGate from "./gates/AuthGate";
+import AuthenticatedProviders from "./providers/AuthenticatedProviders";
 
 export default function App() {
-    const [openAlert, setOpenAlert] = useReducer(alertRedutor, {
-        text: "",
-        style: "success", // warning || error || success || info
-        show: false, // true || false
-    });
-
     return (
-        <MyAlertContext.Provider value={{ state: { openAlert, setOpenAlert } }}>
-            <MyAlert />
+        <AlertProvider>
             <AuthProvider>
-                <AppRouter />
+                <AuthGate>
+                    <AuthenticatedProviders>
+                        <AppRouter />
+                    </AuthenticatedProviders>
+                </AuthGate>
             </AuthProvider>
-        </MyAlertContext.Provider>
+        </AlertProvider>
     );
-}
-
-function alertRedutor(state, action) {
-    switch (action.type) {
-        case "SHOW":
-            return {
-                text: action.text || "Informação",
-                style: action.style || "success",
-                show: true,
-            };
-
-        case "HIDE":
-            return { ...state, show: false };
-        default:
-            return state;
-    }
 }

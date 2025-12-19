@@ -1,15 +1,14 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-
+import { Link } from "react-router-dom";
 import Menu from "@mui/material/Menu";
 import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
 import { Divider } from "@mui/material";
 
-import { Link } from "react-router-dom";
-import { useAuthProvider } from "../../context/AuthProvider";
+import { useAuth } from "../../hooks/useAuth";
 import { optionsMenu } from "../../utils/optionsMenu";
 import { iconMapper } from "../../utils/iconMapper";
-import MyButton from "../../components/MyButton";
+import MyButton from "../../components/form/MyButton";
 import {
     MyList,
     MyListItem,
@@ -20,11 +19,10 @@ import {
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
-import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 export default function OpcoesMenu({ toggleDrawer }) {
-    const { user } = useAuthProvider();
+    const { user } = useAuth();
     let menuOptions = optionsMenu[user?.role || "public"];
     let profileOptions = optionsMenu["profile"];
     return (
@@ -38,14 +36,16 @@ export default function OpcoesMenu({ toggleDrawer }) {
                     {user && (
                         <>
                             <MyListItem key={"profile"}>
-                                <Accordion sx={{padding: 0, boxShadow: "none"}}>
+                                <Accordion
+                                    sx={{ padding: 0, boxShadow: "none" }}
+                                >
                                     <AccordionSummary
                                         expandIcon={<ExpandMoreIcon />}
                                         aria-controls="panel1-content"
                                         id="panel1-header"
-                                        sx={{padding: 0, width: 276}}
+                                        sx={{ padding: 0, width: 276 }}
                                     >
-                                        <MyListItemButton >
+                                        <MyListItemButton>
                                             <MyListItemIcon
                                                 Icon={
                                                     iconMapper[
@@ -69,7 +69,9 @@ export default function OpcoesMenu({ toggleDrawer }) {
                                                 return (
                                                     <MyListItem
                                                         key={opt.descricao}
-                                                        handleClick={toggleDrawer(false)}
+                                                        handleClick={toggleDrawer(
+                                                            false
+                                                        )}
                                                     >
                                                         <MyListItemButton>
                                                             <MyListItemIcon
@@ -94,7 +96,7 @@ export default function OpcoesMenu({ toggleDrawer }) {
                                     </AccordionDetails>
                                 </Accordion>
                             </MyListItem>
-                            <Divider sx={{marginTop: 1}} />
+                            <Divider sx={{ marginTop: 1 }} />
                         </>
                     )}
                     {menuOptions.map((opt) => {

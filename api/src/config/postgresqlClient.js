@@ -39,6 +39,6 @@ function conectModels() {
     return initModels(sequelize);
 }
 
-module.exports = { conectDB, conectModels };
+module.exports = { conectDB, conectModels, sequelize };
 
 //npx sequelize-auto -o "./models" -d plataforma -h localhost -u postgres -p 5432 -x senha -e postgres --schema public

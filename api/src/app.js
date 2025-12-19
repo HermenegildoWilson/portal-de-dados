@@ -1,16 +1,19 @@
 const express = require("express");
+const helmet = require("helmet");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const { router } = require("./index.routes");
+
 const { conectDB } = require("./config/postgresqlClient");
-//import { errorMiddleware } from "./shared/middlewares/error.middleware.js";
+const env = require("../src/config/env");
 
 function createApp() {
     const app = express();
 
+    app.use(helmet());
+
     app.use(
         cors({
-            origin: process.env.APP_URL,
+            origin: env.app_url,
             credentials: true,
             methods: ["GET", "POST", "PUT", "DELETE"],
             allowedHeaders: ["Content-Type", "Authorization"],
@@ -20,10 +23,6 @@ function createApp() {
     app.use(cookieParser());
 
     app.use(express.json());
-
-    app.use(router);
-
-    //  app.use(errorMiddleware);
 
     /**
      * @description INICIALIZAÇÃO DA CONEXÃO COM O BANCO
