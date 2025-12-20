@@ -8,7 +8,7 @@ const isProd = env.node_env === "production"
 
 const cookieOptions = {
     httpOnly: isProd,
-    sameSite: "none",
+    sameSite: isProd ? null : "none",
     secure: !isProd,
     maxAge: env.cookie_expiration,
 }

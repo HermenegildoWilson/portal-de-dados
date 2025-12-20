@@ -97,7 +97,7 @@ export default function MySensorDisplay({ chartsData }) {
                             title="Temperatura"
                             value={displayedData.at(-1)?.Temperatura}
                             unit="°C"
-                            bg="temperatura"
+                            bg="#F97316"
                         />
                     </Grid>
                     <Grid item xs={6} md={3}>
@@ -105,7 +105,7 @@ export default function MySensorDisplay({ chartsData }) {
                             title="Humidade"
                             value={displayedData.at(-1)?.Humidade}
                             unit="%"
-                            bg="humidade"
+                            bg="#38BDF8"
                         />
                     </Grid>
                     <Grid item xs={6} md={3}>
@@ -113,15 +113,16 @@ export default function MySensorDisplay({ chartsData }) {
                             title="Pressão do Ar"
                             value={displayedData.at(-1)?.["Pressao do Ar"]}
                             unit="hPa"
-                            bg="pressaodoar"
+                            bg="#f6c85f"
                         />
                     </Grid>
+                    
                     <Grid item xs={6} md={3}>
                         <SimpleCard
                             title="Qualidade do Ar"
                             value={displayedData.at(-1)?.["Qualidade do Ar"]}
                             unit=""
-                            bg="qualidadedoar"
+                            bg="#22C55E"
                         />
                     </Grid>
                 </Grid>
@@ -132,7 +133,7 @@ export default function MySensorDisplay({ chartsData }) {
 
 function SimpleCard({ title, value, unit, bg }) {
     return (
-        <div className={`border border-gray-300 bg-(--color-${bg}) rounded-md p-3 h-full flex flex-col justify-between`}>
+        <div className={`border border-gray-300 rounded-md p-3 h-full flex flex-col justify-between`} style={{backgroundColor: bg}}>
             <p className="text-sm text-gray-600">{title}</p>
             <p className="text-xl font-medium">
                 {value ?? "—"} {unit}
