@@ -79,53 +79,62 @@ export default function MySensorDisplay({ chartsData }) {
         );
     }
 
+    const lastDate =
+        new Date(displayedData.at(-1)?.timestamp).toJSON().slice(0, 10) +
+        ", " +
+        new Date(displayedData.at(-1)?.timestamp).toJSON().slice(11, 19);
+
     return (
         <Card elevation={3}>
             <CardContent>
                 <Typography
-                    variant="h6"
-                    sx={{ textAlign: "center" }}
+                    variant="subtitle1"
+                    sx={{ textAlign: "right" }}
                     gutterBottom
                 >
-                    Dados dos Sensores
+                    Última actualização {lastDate}
                 </Typography>
 
-                <Grid container spacing={2} sx={{ mt: 2 }}>
-                    {/* cards com últimos valores */}
-                    <Grid item xs={6} md={3}>
-                        <SimpleCard
-                            title="Temperatura"
-                            value={displayedData.at(-1)?.Temperatura}
-                            unit="°C"
-                            bg="#F97316"
-                        />
+                <div className="p-4 flex justify-center">
+                    <Grid container spacing={2} sx={{ mt: 2, gap: 3 }}>
+                        {/* cards com últimos valores */}
+                        <Grid item xs={6} md={3}>
+                            <SimpleCard
+                                title="Temperatura"
+                                value={displayedData.at(-1)?.Temperatura}
+                                unit="°C"
+                                bg="#F97316"
+                            />
+                        </Grid>
+                        <Grid item xs={6} md={3}>
+                            <SimpleCard
+                                title="Humidade"
+                                value={displayedData.at(-1)?.Humidade}
+                                unit="%"
+                                bg="#38BDF8"
+                            />
+                        </Grid>
+                        <Grid item xs={6} md={3}>
+                            <SimpleCard
+                                title="Pressão do Ar"
+                                value={displayedData.at(-1)?.["Pressao do Ar"]}
+                                unit="hPa"
+                                bg="#f6c85f"
+                            />
+                        </Grid>
+
+                        <Grid item xs={6} md={3}>
+                            <SimpleCard
+                                title="Qualidade do Ar"
+                                value={
+                                    displayedData.at(-1)?.["Qualidade do Ar"]
+                                }
+                                unit=""
+                                bg="#22C55E"
+                            />
+                        </Grid>
                     </Grid>
-                    <Grid item xs={6} md={3}>
-                        <SimpleCard
-                            title="Humidade"
-                            value={displayedData.at(-1)?.Humidade}
-                            unit="%"
-                            bg="#38BDF8"
-                        />
-                    </Grid>
-                    <Grid item xs={6} md={3}>
-                        <SimpleCard
-                            title="Pressão do Ar"
-                            value={displayedData.at(-1)?.["Pressao do Ar"]}
-                            unit="hPa"
-                            bg="#f6c85f"
-                        />
-                    </Grid>
-                    
-                    <Grid item xs={6} md={3}>
-                        <SimpleCard
-                            title="Qualidade do Ar"
-                            value={displayedData.at(-1)?.["Qualidade do Ar"]}
-                            unit=""
-                            bg="#22C55E"
-                        />
-                    </Grid>
-                </Grid>
+                </div>
             </CardContent>
         </Card>
     );
@@ -133,7 +142,10 @@ export default function MySensorDisplay({ chartsData }) {
 
 function SimpleCard({ title, value, unit, bg }) {
     return (
-        <div className={`border border-gray-300 rounded-md p-3 h-full flex flex-col justify-between`} style={{backgroundColor: bg}}>
+        <div
+            className={`border border-gray-300 rounded-md p-5 h-full flex flex-col justify-between`}
+            style={{ backgroundColor: bg }}
+        >
             <p className="text-sm text-gray-600">{title}</p>
             <p className="text-xl font-medium">
                 {value ?? "—"} {unit}
