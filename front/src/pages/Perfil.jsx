@@ -1,4 +1,4 @@
-import { Alert, Drawer } from "@mui/material";
+import { Alert, Drawer, Typography } from "@mui/material";
 import {
     MyList,
     MyListItem,
@@ -10,8 +10,8 @@ import { iconMapper } from "../utils/iconMapper";
 import { useEffect, useState } from "react";
 import MyInput from "../components//form/MyInput";
 import MyForm from "../components//form/MyForm";
-import PageTitle from "../components/typography/PageTitle";
 import { useAuth } from "../hooks/useAuth";
+import PageHeader from "../components/typography/PageHeader";
 
 export default function Perfil() {
     const { user } = useAuth();
@@ -28,7 +28,9 @@ export default function Perfil() {
     ];
     return (
         <>
-            <PageTitle Title={"Perfil"} />
+            <PageHeader>
+                <Typography variant={"h6"}>Perfil</Typography>
+            </PageHeader>
 
             <div className="rounded-full w-30 h-30 flex justify-center items-center text-7xl bg-(--color-blue-claro) text-(--color-branco-suave) m-auto mb-10 mt-4">
                 {user.nome[0]}

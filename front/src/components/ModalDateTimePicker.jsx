@@ -157,9 +157,17 @@ export default function DateTimePickerValue({
                             />
 
                             {/* DATE PICKERS */}
-                            
-                            <MobileDateTimePicker label="Início" value={start} onChange={(v) => setStart(v)} />
-                            <MobileDateTimePicker label="Fim" value={end} onChange={(v) => setEnd(v)} />
+
+                            <MobileDateTimePicker
+                                label="Início"
+                                value={start}
+                                onChange={(v) => setStart(v)}
+                            />
+                            <MobileDateTimePicker
+                                label="Fim"
+                                value={end}
+                                onChange={(v) => setEnd(v)}
+                            />
 
                             {invalid && (
                                 <Alert severity="warning">

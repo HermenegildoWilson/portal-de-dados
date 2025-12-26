@@ -12,6 +12,7 @@ class SensorService {
             humidity,
             pressure,
             air_quality,
+            created_at: new Date(),
         };
 
         // Validação mínima (pode evoluir depois)
@@ -25,7 +26,6 @@ class SensorService {
         // 2. Atualiza Redis (estado atual)
         await sensorCache.setLastReading(sensor_id, {
             ...sensorReading,
-            created_at: saved.created_at,
         });
 
         // 3. Emite evento WebSocket para salas corretas

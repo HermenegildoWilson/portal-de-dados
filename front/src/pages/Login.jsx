@@ -40,20 +40,23 @@ export default function Login() {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        setFormState("loading");
-        const response = await login(formData);
+        try {
+            e.preventDefault();
+            setFormState("loading");
+            const response = await login(formData);
 
-        if (response.success) {
-            setFormState("done");
-            return setAlert({
-                type: "SHOW",
-                text: response.message,
-                style: "success",
-            });
+            if (response.success) {
+                setFormState("done");
+                return setAlert({
+                    type: "SHOW",
+                    text: response.message,
+                    style: "success",
+                });
+            }
+        } catch (error) {
+            setFormState("typing");
+            setAlert({ type: "SHOW", text: error.response.data.message, style: "error" });
         }
-        setFormState("typing");
-        setAlert({ type: "SHOW", text: response.message, style: "error" });
     };
 
     if (user) {

@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 
-import PageTitle from "../components/typography/PageTitle";
 import { api } from "../api/axios";
 import ModalDateTimePicker from "../components/ModalDateTimePicker";
 import MyLineChart from "../components/chart/MyLineChart";
+import PageHeader from "../components/typography/PageHeader";
+import { Typography } from "@mui/material";
 
 export default function Historico() {
     const [charts, setCharts] = useState([]);
@@ -31,7 +32,7 @@ export default function Historico() {
         } else {
             return 5;
         }
-    }
+    };
 
     useEffect(() => {
         getSensorHistory();
@@ -39,10 +40,10 @@ export default function Historico() {
 
     return (
         <>
-            <PageTitle Title="Histórico de Monitorização Ambiental" />
-            <ModalDateTimePicker
-                onApply={getSensorHistory}
-            />
+            <PageHeader>
+                <Typography variant={"h6"}>Histórico de Monitorização Ambiental</Typography>
+            </PageHeader>
+            <ModalDateTimePicker onApply={getSensorHistory} />
 
             <MyLineChart chartsData={charts} points={getPoints()} />
         </>

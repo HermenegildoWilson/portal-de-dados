@@ -1,7 +1,8 @@
 import { Navigate } from "react-router-dom";
 import MyLinkButton from "../components/form/MyLinkButton";
-import PageTitle from "../components/typography/PageTitle";
 import { useAuth } from "../hooks/useAuth";
+import PageHeader from "../components/typography/PageHeader";
+import { Typography } from "@mui/material";
 
 export default function Page() {
     const { user } = useAuth();
@@ -12,7 +13,9 @@ export default function Page() {
 
     return (
         <div className="mt-3 p-3 grid gap-4">
-            <PageTitle title="Dados do Sensor" />
+            <PageHeader>
+                <Typography variant={"h6"}>Dados do Sensor</Typography>
+            </PageHeader>
 
             <h1 className="text-2xl sm:text-4xl">
                 Monitorização Ambiental em Tempo Real
