@@ -1,7 +1,7 @@
-const sensorRepository = require("./sensor.repository");
-const sensorCache = require("./sensor.cache");
+import SensorRepository from "./sensor.repository.js";
+import SensorCache from "./sensor.cache.js";
 
-class SensorService {
+class classSensorService {
     async storeSensorReading(body, req) {
         const { sensor_id, temperature, humidity, pressure, air_quality } =
             body;
@@ -21,10 +21,10 @@ class SensorService {
         }
 
         // 1. Grava no PostgreSQL
-        const saved = await sensorRepository.create(sensorReading);
+        const saved = await SensorRepository.create(sensorReading);
 
         // 2. Atualiza Redis (estado atual)
-        await sensorCache.setLastReading(sensor_id, {
+        await SensorCache.setLastReading(sensor_id, {
             ...sensorReading,
         });
 
@@ -46,7 +46,7 @@ class SensorService {
                 endDate,
                 interval: `${interval} minutos`,
             },
-            data: await sensorRepository.selectHistory(
+            data: await SensorRepository.selectHistory(
                 sensor_id,
                 startDate,
                 endDate,
@@ -81,7 +81,7 @@ class SensorService {
                 to,
                 dateTrunc: `À cada ${dateTrunc}`,
             },
-            data: await sensorRepository.selectMetrics(
+            data: await SensorRepository.selectMetrics(
                 sensor_id,
                 dateTrunc,
                 resolution,
@@ -101,5 +101,5 @@ class SensorService {
         return "day";
     }
 }
-
-module.exports = new SensorService();
+const SensorService = new classSensorService()
+export default SensorService;

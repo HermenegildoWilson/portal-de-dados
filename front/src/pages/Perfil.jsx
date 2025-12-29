@@ -1,201 +1,131 @@
-import { Alert, Drawer, Typography } from "@mui/material";
 import {
-    MyList,
-    MyListItem,
-    MyListItemButton,
-    MyListItemIcon,
-    MyListItemText,
-} from "../components/MyListComponents";
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    Typography,
+} from "@mui/material";
 import { iconMapper } from "../utils/iconMapper";
-import { useEffect, useState } from "react";
-import MyInput from "../components//form/MyInput";
-import MyForm from "../components//form/MyForm";
 import { useAuth } from "../hooks/useAuth";
-import PageHeader from "../components/typography/PageHeader";
+import MiniMenu from "../components/modal/MiniMenu";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import AppLoader from "../components/feedback/AppLoader";
+import { api } from "../api/axios";
+import { FaQuestionCircle } from "react-icons/fa";
 
 export default function Perfil() {
     const { user } = useAuth();
+    const { id } = useParams();
+    const [userPerfil, setUserPerfil] = useState(null);
+    const [pageState, setPageState] = useState("loading");
+    async function getPeople() {
+        try {
+            const url = "/user/usuarios";
 
-    const [formOptions, setFormOptions] = useState({
-        show: false,
-        data: "",
-    });
+            const { data } = await api.get(url, {
+                params: { id: id },
+            });
+            const people = data.data[0];
 
-    const dataOptions = [
-        { value: user.email, icon: "email", label: "Email" },
-        { value: user.nome, icon: "perfil", label: "Nome" },
-        { value: "*  *  *  *  *  *  *  *", icon: "password", label: "Senha" },
-    ];
-    return (
-        <>
-            <PageHeader>
-                <Typography variant={"h6"}>Perfil</Typography>
-            </PageHeader>
+            if (people) {
+                return setUserPerfil(data.data[0]);
+            } else {
+                return setUserPerfil(null);
+            }
+        } catch (error) {
+            setUserPerfil(null);
+        } finally {
+            setPageState("done");
+        }
+    }
 
-            <div className="rounded-full w-30 h-30 flex justify-center items-center text-7xl bg-(--color-blue-claro) text-(--color-branco-suave) m-auto mb-10 mt-4">
-                {user.nome[0]}
+    useEffect(() => {
+        if (id) {
+            getPeople();
+        } else {
+            setUserPerfil(user);
+            setPageState("done");
+        }
+    }, []);
+
+    if (pageState === "loading") {
+        return (
+            <div className="flex-1 flex flex-col items-center justify-center gap-3">
+                <p>Carregando ...</p>
+                <AppLoader />
             </div>
-            <MyList sx={{ padding: "10px", maxWidth: 400, margin: "auto" }}>
-                {dataOptions.map((opt) => (
-                    <MyListItem
-                        key={opt.email}
-                        handleClick={() => {
-                            setFormOptions({
-                                show: true,
-                                label: opt.label,
-                            });
-                        }}
-                    >
-                        <MyListItemButton sx={{ borderRadius: 2 }}>
-                            <MyListItemIcon
-                                Icon={iconMapper[opt.icon]}
-                            ></MyListItemIcon>
-                            <div className="-ml-4">
-                                <p>{opt.label}</p>
-                                <MyListItemText
-                                    sx={{ margin: 0 }}
-                                    text={opt.value}
-                                />
-                            </div>
-                        </MyListItemButton>
-                    </MyListItem>
-                ))}
-            </MyList>
+        );
+    }
 
-            <FormEdit state={{ formOptions, setFormOptions }} />
-        </>
+    let perfilObject = { keys: [], values: [] };
+    let formDelete;
+
+    if (userPerfil) {
+        perfilObject.keys = Object.keys(userPerfil).map((key) => {
+            return key[0].charAt(0).toUpperCase() + key.slice(1);
+        });
+        perfilObject.values = Object.values(userPerfil).map((value) => value);
+        formDelete = "Excluir perfil";
+    }
+
+    return (
+        <div className="flex-1 " style={{ margin: 0, padding: 0 }}>
+            <div className="flex-auto flex relative justify-center mt-2">
+                <div className="rounded-full w-30 h-30 flex justify-center items-center text-7xl bg-(--color-primary) text-[#f4f6f8] mt-4 mb-2">
+                    {userPerfil?.nome[0] || <FaQuestionCircle />}
+                </div>
+                <div className="absolute right-0">
+                    <MiniMenu
+                        options={[formDelete || "Acção indisponível..."]}
+                        sx={{ marginLeft: -1 }}
+                    />
+                </div>
+            </div>
+            <div className="flex justify-center mt-8">
+                <List sx={{ padding: 0, margin: 0 }}>
+                    {userPerfil ? (
+                        <PeoplePerfilItem
+                            values={perfilObject.values}
+                            keys={perfilObject.keys}
+                        />
+                    ) : (
+                        <Typography variant="h5">
+                            Perfil inexistente...
+                        </Typography>
+                    )}
+                </List>
+            </div>
+        </div>
     );
 }
 
-function FormEdit({ state }) {
-    const { formOptions, setFormOptions } = state;
-    const toggleDrawer = (newOpen) => () => {
-        setFormOptions({
-            ...formOptions,
-            show: newOpen,
-        });
-    };
-
-    //error  success
-    const [openAlert, setOpenAlert] = useState({
-        show: false,
-        text: "",
-        type: "",
-    });
-
-    const getInitialValues = () => {
-        if (formOptions.label !== "Senha") {
-            return { value: "" };
-        } else {
-            return {
-                senhaactual: "",
-                novasenha: "",
-                confirmacaosenha: "",
-            };
-        }
-    };
-
-    const [formEdit, setFormEdit] = useState(getInitialValues());
-
-    useEffect(() => {
-        setFormEdit(getInitialValues());
-    }, [formOptions.label]);
-
+export function PeoplePerfilItem({ values, keys }) {
     return (
-        <Drawer
-            open={formOptions.show}
-            onClose={toggleDrawer(false)}
-            anchor="bottom"
-        >
-            <div className="p-4 pt-6 h-100">
-                <MyForm
-                    handleSubmit={(e) => {
-                        e.preventDefault();
-                        setOpenAlert({
-                            show: true,
-                            text: "Funcionalidade em construção!",
-                            type: "warning",
-                        });
-                    }}
-                >
-                    <h1 className="text-xl mb-3 text-(--color-blue-claro)">
-                        Editar {formOptions.label}
-                    </h1>
-                    {openAlert.show && (
-                        <Alert severity={openAlert.type} sx={{ mb: 2 }}>
-                            {openAlert.text}
-                        </Alert>
-                    )}
-                    {formOptions.label !== "Senha" ? (
-                        <MyInput
-                            id={formOptions.label}
-                            label={`Novo ${formOptions.label}`}
-                            type={
-                                formOptions.label === "Email" ? "email" : "text"
-                            }
-                            key={formOptions.label}
-                            name={formOptions.label}
-                            value={formEdit.value}
-                            handleChangeInput={(e) => {
-                                setFormEdit({
-                                    ...formEdit,
-                                    value: e.target.value,
-                                });
-                            }}
-                        />
-                    ) : (
-                        <>
-                            <MyInput
-                                id="senhaactual"
-                                label={`Senha Actual`}
-                                type={"text"}
-                                name={"senhaactual"}
-                                value={formEdit.senhaactual}
-                                handleChangeInput={(e) => {
-                                    setFormEdit({
-                                        ...formEdit,
-                                        senhaactual: e.target.value,
-                                    });
-                                }}
-                            />
-
-                            <MyInput
-                                id="novasenha"
-                                label={`Nova Senha`}
-                                type={"text"}
-                                name={"novasenha"}
-                                value={formEdit.novasenha}
-                                handleChangeInput={(e) => {
-                                    setFormEdit({
-                                        ...formEdit,
-                                        novasenha: e.target.value,
-                                    });
-                                }}
-                            />
-
-                            <MyInput
-                                id="confirmacaosenha"
-                                label={`Confirmar Senha`}
-                                type={"text"}
-                                name={"confirmacaosenha"}
-                                value={formEdit.confirmacaosenha}
-                                handleChangeInput={(e) => {
-                                    setFormEdit({
-                                        ...formEdit,
-                                        confirmacaosenha: e.target.value,
-                                    });
-                                }}
-                            />
-                        </>
-                    )}
-                    <button
-                        className={`bg-(--color-blue-claro) cursor-pointer text-white p-2 rounded-md flex justify-center items-center`}
-                        //disabled={formEmpty}
-                    >
-                        Salvar
-                    </button>
-                </MyForm>
-            </div>
-        </Drawer>
+        <>
+            {values.map((value, index) => {
+                const Icon = iconMapper[keys[index].toLowerCase()];
+                return (
+                    <ListItem sx={{ p: 0, marginBottom: "2px" }} key={keys}>
+                        <ListItemButton sx={{ borderRadius: 2 }}>
+                            <ListItemIcon>
+                                <Icon
+                                    size={20}
+                                    className="text-gray-600"
+                                />
+                            </ListItemIcon>
+                            <div className="-ml-5">
+                                <p>{keys[index]}</p>
+                                <ListItemText
+                                    sx={{ margin: 0 }}
+                                    primary={value}
+                                />
+                            </div>
+                        </ListItemButton>
+                    </ListItem>
+                );
+            })}
+        </>
     );
 }

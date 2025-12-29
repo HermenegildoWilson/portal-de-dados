@@ -1,24 +1,37 @@
-const AuthMiddleware = require("../../shared/middlewares/auth.middleware");
+import AuthMiddleware from "../../shared/middlewares/auth.middleware.js";
+import UserControllers from "./user.controller.js";
 
-const userControllers = require("./user.controller");
+import { Router } from "express";
+const userRouter = Router();
 
-const userRouter = require("express").Router();
+userRouter.post(
+    "/cadastrar",
+    AuthMiddleware.authanticateAccess,
+    AuthMiddleware.verifyRole(["admin"]),
+    UserControllers.cadastrar
+);
 
-userRouter.post("/cadastrar/:registerKey", userControllers.cadastrar);
-
-userRouter.post("/login", userControllers.login);
+userRouter.post("/session", UserControllers.refreshSession);
 
 userRouter.post(
     "/logout",
     AuthMiddleware.authanticateAccess,
-    userControllers.logout
+    UserControllers.logout
 );
+
+userRouter.post("/login", UserControllers.login);
 
 userRouter.post(
     "/generatekeyregister",
     AuthMiddleware.authanticateAccess,
     AuthMiddleware.verifyRole(["admin"]),
-    userControllers.generateKeyRegister
+    UserControllers.generateKeyRegister
 );
 
-module.exports = { userRouter };
+userRouter.get(
+    "/usuarios", //?id=Number
+    AuthMiddleware.authanticateAccess,
+    UserControllers.getUsuarios
+);
+
+export default userRouter;

@@ -1,9 +1,34 @@
+import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
 
-export default function MyLinkButton({ sx, title, to }) {
+export default function MyLinkButton({
+    children,
+    sx,
+    to,
+    type,
+    disabled,
+    handleClick,
+    endIcon,
+    customClass
+}) {
     return (
-        <Link to={to} className={`bg-(--color-blue-claro) text-white p-2 rounded-md ${sx}`}>
-            {title}
-        </Link>
+        <div className={customClass}>
+            <Link to={to}>
+                <Button
+                    endIcon={endIcon}
+                    variant={type}
+                    disabled={disabled}
+                    onClick={handleClick}
+                    sx={{
+                        textTransform: "none",
+                        width: "100%",
+                        //backgroundColor: "var(--color-primary)",
+                        ...sx,
+                    }}
+                >
+                    {children}
+                </Button>
+            </Link>
+        </div>
     );
 }

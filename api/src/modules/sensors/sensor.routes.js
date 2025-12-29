@@ -1,27 +1,26 @@
-const AuthMiddleware = require("../../shared/middlewares/auth.middleware");
+import AuthMiddleware from "../../shared/middlewares/auth.middleware.js";
+import SensorControllers from "./sensor.controller.js";
 
-const sensorControllers = require("./sensor.controller");
-
-const sensorsRouter = require("express").Router();
-
-sensorsRouter.post("/data", sensorControllers.receiveSensorReading);
+import { Router } from "express";
+const sensorsRouter = Router()
+sensorsRouter.post("/data", SensorControllers.receiveSensorReading);
 
 sensorsRouter.get(
     "/:sensorId/last",
     AuthMiddleware.authanticateAccess,
-    sensorControllers.getLastSensorReading
+    SensorControllers.getLastSensorReading
 );
 
 sensorsRouter.get(
     "/:sensorId/history", //?from=2025-12-01&to=2025-12-18&interval=5
     //AuthMiddleware.authanticateAccess,
-    sensorControllers.getHistorySensorReading
+    SensorControllers.getHistorySensorReading
 );
 
 sensorsRouter.get(
     "/:sensorId/metrics", //?from=2025-12-01&to=2025-12-18&interval=5
     //AuthMiddleware.authanticateAccess,
-    sensorControllers.getMetricsSensorReading
+    SensorControllers.getMetricsSensorReading
 );
 
-module.exports = { sensorsRouter };
+export default sensorsRouter;

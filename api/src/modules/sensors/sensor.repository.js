@@ -1,11 +1,11 @@
-const { Op, fn, col, literal, QueryTypes } = require("sequelize");
-const models = require("../../config/postgresqlClient").conectModels();
-const { sequelize } = require("../../config/postgresqlClient");
+import { Op, fn, col, literal, QueryTypes } from "sequelize";
+import { getModels } from "../../config/postgresqlClient.js";
+const { sensor_readings: sensor_readings_model } = getModels();
 
-const repository = {
+const SensorRepository = {
     async create(data) {
         try {
-            const result = await models.sensor_readings.create(data);
+            const result = await sensor_readings_model.create(data);
             return result;
         } catch (error) {
             console.error("ERRO DETALHADO DO POSTGRES:", error.parent); // Isso mostrará o erro real do SQL
@@ -15,7 +15,7 @@ const repository = {
     },
 
     async select(condition) {
-        const dados_encontrados = await models.sensor_readings.findAll({
+        const dados_encontrados = await sensor_readings_model.findAll({
             where: condition,
             raw: true,
         });
@@ -27,7 +27,7 @@ const repository = {
         try {
             const intervalSeconds = minuteInterval * 60; // 5 minutos
 
-            const rows = await models.sensor_readings.findAll({
+            const rows = await sensor_readings_model.findAll({
                 attributes: [
                     [
                         literal(
@@ -88,8 +88,7 @@ const repository = {
         ROUND(AVG("temperature")::numeric, 2) AS "Temperatura",
         ROUND(AVG("humidity")::numeric, 2) AS "Humidade",
         ROUND(AVG("air_quality")::numeric, 2) AS "Qualidade do Ar",
-        ROUND(AVG("pressure")::numeric, 2) AS "Pressao do Ar"
-    FROM sensor_readings
+        ROUND(AVG("pressure")::numeric, 2) AS "Pressao do Ar"sensor_readings_model
     WHERE sensor_id = 'esp32_01'
     AND created_at BETWEEN '2025-12-01' AND '2025-12-19'
     GROUP BY period
@@ -112,4 +111,4 @@ const repository = {
     },
 };
 
-module.exports = repository;
+export default SensorRepository;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { authService } from "../api/auth.service";
+import { userService } from "../services/user.service";
 import { api } from "../api/axios";
 import { useAlert } from "../hooks/useAlert";
 
@@ -12,7 +12,7 @@ export default function AuthProvider({ children }) {
     const { setAlert } = useAlert();
 
     async function login(credentials) {
-        const res = await authService.login(credentials);
+        const res = await userService.login(credentials);
         setUser(res.data.user);
         setAccessToken(res.data.access_token);
         return res.data;
@@ -20,7 +20,7 @@ export default function AuthProvider({ children }) {
 
     async function logout() {
         try {
-            await authService.logout(user);
+            await userService.logout(user);
         } finally {
             setUser(null);
             setAccessToken(null);
@@ -29,10 +29,24 @@ export default function AuthProvider({ children }) {
 
     async function restoreSession() {
         try {
-            const res = await authService.refresh();
+            const res = await userService.refresh();
             setUser(res.data.user);
             setAccessToken(res.data.access_token);
-        } catch {
+        } catch (error) {
+            if (error.code === "ERR_NETWORK") {
+                setAlert({
+                    type: "SHOW",
+                    text: error.message || err.response?.data?.message,
+                    style: "error",
+                });
+            } else {
+                setAlert({
+                    type: "SHOW",
+                    text: err.response?.data?.message || error.message,
+                    style: "warning",
+                });
+            }
+
             setUser(null);
             setAccessToken(null);
         } finally {
@@ -61,12 +75,11 @@ export default function AuthProvider({ children }) {
 
                 if (status === 401) {
                     try {
-                        const res = await authService.refresh();
+                        const res = await userService.refresh();
                         setAccessToken(res.data.access_token);
                         setUser(res.data.user);
 
-                        err.config.headers.Authorization =
-                            `Bearer ${res.data.access_token}`;
+                        err.config.headers.Authorization = `Bearer ${res.data.access_token}`;
 
                         return api(err.config);
                     } catch {

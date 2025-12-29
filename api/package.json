@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "description": "Implementação de um sistema de gestão de notas.",
     "main": "server.js",
+    "type": "module",
     "scripts": {
         "dev": "nodemon server.js",
         "start": "node server.js"

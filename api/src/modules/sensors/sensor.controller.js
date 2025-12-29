@@ -1,13 +1,13 @@
-const sensorCache = require("./sensor.cache");
-const sensorService = require("./sensor.service");
+import SensorCache from "./sensor.cache.js";
+import SensorService from "./sensor.service.js";
 
-class userControllers {
+class classSensorControllers {
     receiveSensorReading = async (req, res, next) => {
         try {
             const data = req.body;
             console.log(`Dados do sensor:${data.sensor_id} recebidos...`);
 
-            const result = await sensorService.storeSensorReading(data, req);
+            const result = await SensorService.storeSensorReading(data, req);
 
             return res.status(201).json({
                 success: true,
@@ -22,7 +22,7 @@ class userControllers {
         try {
             const { sensorId } = req.params;
 
-            const data = await sensorCache.getLastReading(sensorId);
+            const data = await SensorCache.getLastReading(sensorId);
 
             if (!data) {
                 return res.status(404).json({
@@ -45,7 +45,7 @@ class userControllers {
                     .status(400)
                     .json({ error: "SensorId é obrigatório" });
 
-            const data = await sensorService.getHistoryReading(
+            const data = await SensorService.getHistoryReading(
                 sensorId,
                 req.query
             );
@@ -74,7 +74,7 @@ class userControllers {
                     .status(400)
                     .json({ error: "SensorId é obrigatório" });
 
-            const data = await sensorService.getMetricsReading(
+            const data = await SensorService.getMetricsReading(
                 sensorId,
                 req.query
             );
@@ -95,4 +95,6 @@ class userControllers {
     };
 }
 
-module.exports = new userControllers();
+const SensorControllers = new classSensorControllers();
+
+export default SensorControllers;

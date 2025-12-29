@@ -1,5 +1,5 @@
-const { createClient } = require("redis");
-const env = require("./env");
+import { createClient } from "redis";
+import env from "./env.js";
 
 const redisClient = createClient({ url: env.redis_url });
 
@@ -15,4 +15,4 @@ redisClient.connect().catch((err) => {
     console.error("Erro ao conectar no Redis:", err);
 });
 
-module.exports = { redisClient };
+export default redisClient;

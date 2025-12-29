@@ -1,44 +1,30 @@
-const Sequelize = require("sequelize");
-const env = require("./env");
+import Sequelize from "sequelize";
+import initModels from "../models/init-models.js";
+import env from "./env.js";
 
-/**
- * @description LÓGICA PARA CONECTARMO-NOS AO BANCO DE DADOS E VERIFICARMOS O STATUS DA CONEXÃO
- */
-const sequelize = new Sequelize(
-  env.database_url,
-  {
+const sequelize = new Sequelize(env.database_url, {
     dialect: "postgres",
     dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false, // ignora certificado autoassinado
-      },
+        ssl: {
+            require: true,
+            rejectUnauthorized: false, // ignora certificado autoassinado
+        },
     },
     logging: false, // opcional
-  }
-);
+});
 
-function conectDB() {
-    return sequelize
-        .authenticate()
-        .then(() => {
-            console.log(`CONECTADO AO BANCO...`);
-            return true;
-        })
-        .catch((error) => {
-            console.log(`ERRO DE CONEXÃO AO BANCO... ${error}`);
-            return false;
-        });
+export async function connectDB() {
+    try {
+        await sequelize.authenticate();
+        console.log("📦 Conectado ao PostgreSQL com sucesso.");
+    } catch (error) {
+        console.error("❌ Erro na conexão com o banco:", error.message);
+        process.exit(1);
+    }
 }
 
-/**
- * @description CONECTAMOS O OBJECTO DE CONEXÃO AO BANCO DE DADOS COM OS MODELS DE ITERAÇÃO COM O BANCO
-*/ 
-const { initModels } = require("../models/init-models");
-function conectModels() {
+export function getModels() {
     return initModels(sequelize);
 }
-
-module.exports = { conectDB, conectModels, sequelize };
 
 //npx sequelize-auto -o "./models" -d plataforma -h localhost -u postgres -p 5432 -x senha -e postgres --schema public

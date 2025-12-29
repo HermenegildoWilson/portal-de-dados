@@ -1,40 +1,38 @@
-import * as React from "react";
-import { Link, Navigate } from "react-router-dom";
-
+import { Card, Container, Typography } from "@mui/material";
+import { useState } from "react";
 import AppLoader from "../components/feedback/AppLoader";
-import MyCard from "../components/MyCard";
-import MyForm from "../components/form/MyForm";
-import MyFormButton from "../components/form/MyFormButton";
-import MyInput from "../components/form/MyInput";
-
-import { Divider } from "@mui/material";
-import { useAuth } from "../hooks/useAuth";
+import MyButton from "../components/form/MyButton";
 import { useAlert } from "../hooks/useAlert";
+import { useAuth } from "../hooks/useAuth";
+import MyInput from "../components/form/MyInput";
+import { Navigate } from "react-router-dom";
 
-export default function Login() {
-    const [formData, setFormData] = React.useState({
+const inputOptions = [{}]
+export default function Login({}) {
+    const { login, user } = useAuth();
+    const { setAlert } = useAlert();
+
+    const [credencials, setCredencials] = useState({
         email: "",
         senha: "",
     });
-    const [formState, setFormState] = React.useState("typing");
+    const [formState, setFormState] = useState("typing");
 
-    const { setAlert } = useAlert();
+    const formDisabled =
+        !credencials.email || !credencials.senha || formState === "loading";
 
-    const { login, user } = useAuth();
-
-    const formEmpty = !formData.email || !formData.senha;
     const titleButton =
-        formState === "loading" ? (
-            <>
-                Entrando... <AppLoader sx={"ml-3"} type={"small"} />
-            </>
-        ) : (
+        formState === "typing" ? (
             "Entrar"
+        ) : (
+            <>
+                Entrando... <AppLoader type={"small"} />
+            </>
         );
 
     const handleChangeInput = (e) => {
-        setFormData({
-            ...formData,
+        setCredencials({
+            ...credencials,
             [e.target.name]: e.target.value,
         });
     };
@@ -43,9 +41,9 @@ export default function Login() {
         try {
             e.preventDefault();
             setFormState("loading");
-            const response = await login(formData);
+            const response = await login(credencials);
 
-            if (response.success) {
+            if (response?.success) {
                 setFormState("done");
                 return setAlert({
                     type: "SHOW",
@@ -54,32 +52,46 @@ export default function Login() {
                 });
             }
         } catch (error) {
+            if (error.code === "ERR_NETWORK") {
+                setAlert({
+                    type: "SHOW",
+                    text: error.message,
+                    style: "error",
+                });
+            } else {
+                setAlert({
+                    type: "SHOW",
+                    text: error.response?.data?.message,
+                    style: "warning",
+                });
+            }
+
             setFormState("typing");
-            setAlert({ type: "SHOW", text: error.response.data.message, style: "error" });
         }
     };
 
-    if (user) {
-        return <Navigate replace to="/" />;
+    if (user || formState === "done") {
+        return <Navigate to={"/"} />;
     }
-
     return (
-        <div className="flex h-110 md:h-160 items-center justify-center">
-            <MyCard sx="w-80 md:w-100">
-                <h1 className="text-3xl mb-8 text-(--color-blue-claro)">
-                    Entrar na plataforma
-                </h1>
-                <MyForm
-                    handleSubmit={(e) => {
-                        handleSubmit(e);
-                    }}
-                >
+        <form
+            className="h-full flex justify-center items-center"
+            onSubmit={handleSubmit}
+        >
+            <Card
+                elevation={3}
+                sx={{ width: { xs: 320, sm: 450 }, borderRadius: "9px" }}
+            >
+                <Typography variant="h4" sx={{ p: 2, paddingLeft: 3 }}>
+                    Login
+                </Typography>
+                <Container sx={{ p: 3, pt: 1, pb: 5, display: "grid", gap: 3 }}>
                     <MyInput
                         id="email"
                         label="Email"
                         type="email"
                         name="email"
-                        value={formData.email}
+                        value={credencials.email}
                         handleChangeInput={(e) => {
                             handleChangeInput(e);
                         }}
@@ -89,32 +101,17 @@ export default function Login() {
                         label="Senha"
                         type="password"
                         name="senha"
-                        value={formData.senha}
+                        value={credencials.senha}
                         handleChangeInput={(e) => {
                             handleChangeInput(e);
                         }}
                     />
-                    <MyFormButton
-                        titleButton={titleButton}
-                        disabled={formEmpty}
-                    />
-                    <Link
-                        to={"/redefinirsenha"}
-                        className="text-blue-500 text-center mb-2 mt-2"
-                    >
-                        Esqueceu a senha?
-                    </Link>
-                    <Divider />
-                    <div className="text-center mt-5">
-                        <Link
-                            to={"/cadastrar"}
-                            className={`bg-(--color-green) text-white p-3 rounded-md`}
-                        >
-                            Criar Conta
-                        </Link>
-                    </div>
-                </MyForm>
-            </MyCard>
-        </div>
+
+                    <MyButton sx={{ borderRadius: 5 }} disabled={formDisabled}>
+                        {titleButton}
+                    </MyButton>
+                </Container>
+            </Card>
+        </form>
     );
 }

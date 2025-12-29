@@ -3,7 +3,8 @@ import Alert from "@mui/material/Alert";
 import IconButton from "@mui/material/IconButton";
 import Collapse from "@mui/material/Collapse";
 import CloseIcon from "@mui/icons-material/Close";
-import { useAlert } from "../../hooks/useAlert"
+import { useAlert } from "../../hooks/useAlert";
+import { Snackbar } from "@mui/material";
 
 export default function AppAlert() {
     const { alert, setAlert } = useAlert();
@@ -16,9 +17,9 @@ export default function AppAlert() {
             return () => clearTimeout(timer);
         }
     }, [alert]);
-
+    //className="absolute bottom-8 left-5"
     return (
-        <div className="absolute bottom-8 left-5">
+        <Snackbar open={alert.show} >
             <Collapse in={alert.show}>
                 <Alert
                     severity={alert.style}
@@ -39,6 +40,6 @@ export default function AppAlert() {
                     {alert.text}
                 </Alert>
             </Collapse>
-        </div>
+        </Snackbar>
     );
 }

@@ -1,17 +1,10 @@
-const AuthMiddleware = require("./shared/middlewares/auth.middleware");
+import { Router } from "express";
+import userRouter from "./modules/user/user.routes.js";
+import sensorsRouter from "./modules/sensors/sensor.routes.js";
 
-const router = require("express").Router();
+const router = Router();
 
-const { authRouter } = require("./modules/auth/auth.routes");
-router.use("/auth", authRouter);
-
-/**
- * @description INTEGRAÇÃO DO ROUTER DE USUÁRIO
- */
-const { userRouter } = require("./modules/user/user.routes");
-router.use("/", userRouter);
-
-const { sensorsRouter } = require("./modules/sensors/sensor.routes");
+router.use("/user", userRouter);
 router.use("/api/sensors", sensorsRouter);
 
-module.exports = { router };
+export default router;

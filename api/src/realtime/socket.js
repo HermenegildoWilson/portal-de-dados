@@ -1,10 +1,12 @@
-const { Server } = require("socket.io");
-const env = require("../config/env");
-const { getLastReading } = require("../modules/sensors/sensor.cache.js");
+import { Server } from "socket.io";
+import env from "../config/env.js";
+import  SensorCache from "../modules/sensors/sensor.cache.js";
 
 let io;
 
-class SocketIO {
+
+//{ getLastReading }
+class socketIO {
     initSocket(server) {
         io = new Server(server, {
             cors: {
@@ -34,7 +36,7 @@ class SocketIO {
                 const sensorStates = {};
 
                 for (const sensor_id of sensors) {
-                    const last = await getLastReading(sensor_id);
+                    const last = await SensorCache.getLastReading(sensor_id);
                     if (last) sensorStates[sensor_id] = last;
                 }
 
@@ -52,4 +54,6 @@ class SocketIO {
     }
 }
 
-module.exports = new SocketIO();
+const SocketIO = new socketIO()
+
+export default SocketIO;

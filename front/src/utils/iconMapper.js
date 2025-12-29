@@ -1,28 +1,33 @@
 import {
-    FaHouse,
     FaEnvelope,
-    FaBell,
-    FaRegCircleUser,
-    FaRegUser,
     FaUser,
     FaUserLock,
+    FaIdCard,
+    FaUserShield,
 } from "react-icons/fa6";
-import { MdSpeed, MdShowChart, MdManageAccounts, MdEmail } from "react-icons/md";
-import { LuLogIn, LuLogOut, LuHistory } from "react-icons/lu";
+import { MdSpeed, MdEmail } from "react-icons/md";
+import { LuHistory, LuMail } from "react-icons/lu";
+import { Dashboard, People, Mail, Settings, Notifications, AccountCircle, Home, Login, Logout, PersonAdd, History, Person, Email,  } from "@mui/icons-material";
 
 export const iconMapper = {
-    "reg-circle-user": FaRegCircleUser,
-    "perfil": FaRegUser,
-    "home": FaHouse,
-    "login": LuLogIn,
+    "id": FaIdCard,
+    "nome": Person,
+    "email": Email,
+    "role": FaUserShield,
+    "perfil": AccountCircle,
+    "home": Home,
+    "login": Login,
     "envelope": FaEnvelope,
-    "bell": FaBell,
-    "login": LuLogIn,
-    "logout": LuLogOut,
-    "chart": MdShowChart,
+    "bell": Notifications,
+    "logout": Logout,
+    "cadastrar": PersonAdd,
+    "chart": History,
     "history": LuHistory,
     "speed": MdSpeed,
-    "people": MdManageAccounts,
     "password": FaUserLock,
     "email": MdEmail,
+    "dashboard": Dashboard,
+    "people": People,
+    "mail": Mail,
+    "configuracoes": Settings,
 };

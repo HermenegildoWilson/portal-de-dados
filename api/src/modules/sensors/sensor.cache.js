@@ -1,6 +1,6 @@
-const { redisClient } = require("../../config/redis");
+import redisClient from "../../config/redis.js";
 
-class SensorCache {
+class classSensorCache {
     async setLastReading(sensor_id, data) {
         const key = `sensor:${sensor_id}:last`;
         await redisClient.set(key, JSON.stringify(data));
@@ -14,4 +14,6 @@ class SensorCache {
     }
 }
 
-module.exports = new SensorCache();
+const SensorCache = new classSensorCache();
+
+export default SensorCache;

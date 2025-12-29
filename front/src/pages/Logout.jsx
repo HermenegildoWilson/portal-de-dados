@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { Navigate } from "react-router-dom";
 import { useAlert } from "../hooks/useAlert";
 import { useAuth } from "../hooks/useAuth";
 import AppLoader from "../components/feedback/AppLoader";

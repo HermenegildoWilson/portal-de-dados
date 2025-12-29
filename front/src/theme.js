@@ -1,9 +1,13 @@
 import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
-  typography: {
-    fontFamily: "Lato, Arial, sans-serif"
-  }
+    palette: {
+        primary: { main: "#1976d2" },
+        background: { default: "#f4f6f8" },
+    },
+    typography: {
+        fontFamily: "Lato, Arial, sans-serif",
+    },
 });
 
 export default theme;

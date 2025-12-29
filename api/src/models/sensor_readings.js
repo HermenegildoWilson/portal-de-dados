@@ -1,5 +1,5 @@
-const Sequelize = require("sequelize");
-module.exports = function (sequelize, DataTypes) {
+import Sequelize from "sequelize";
+export default function sensor_readings(sequelize, DataTypes) {
     return sequelize.define(
         "sensor_readings",
         {
@@ -57,4 +57,4 @@ module.exports = function (sequelize, DataTypes) {
             ],
         }
     );
-};
+}

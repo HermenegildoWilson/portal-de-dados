@@ -1,12 +1,11 @@
-const express = require("express");
-const helmet = require("helmet");
-const cors = require("cors");
-const cookieParser = require("cookie-parser");
+import express from "express";
+import helmet from "helmet";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import env from "./config/env.js";
+import { connectDB } from "./config/postgresqlClient.js";
 
-const { conectDB } = require("./config/postgresqlClient");
-const env = require("../src/config/env");
-
-function createApp() {
+export function createApp() {
     const app = express();
 
     app.use(helmet());
@@ -24,12 +23,9 @@ function createApp() {
 
     app.use(express.json());
 
-    /**
-     * @description INICIALIZAÇÃO DA CONEXÃO COM O BANCO
-     */
-    conectDB();
+    app.use(cookieParser());
+
+    connectDB();
 
     return app;
 }
-
-module.exports = { createApp };

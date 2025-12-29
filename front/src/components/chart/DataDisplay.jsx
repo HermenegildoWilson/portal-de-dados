@@ -1,201 +1,147 @@
+import React, { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
-import { useMemo } from "react";
+import { Thermostat, WaterDrop, Air, Speed } from "@mui/icons-material";
 
 export const parameterOptions = {
     Temperatura: {
+        key: "Temperatura",
+        field: "temperature",
         name: "Temperatura",
+        icon: <Thermostat fontSize="small" />,
         min_value: 0,
         max_value: 50,
-        warning_value: 35,
-        high_value: 40,
-        unit: " °C",
-        importance:
-            "A temperatura influencia diretamente o conforto térmico, a saúde pública, o desempenho no trabalho, o consumo de energia, a agricultura e a segurança em situações de calor ou frio extremo.",
+        warning_value: 30,
+        high_value: 38,
+        unit: "°C",
+        color: "#EF4444",
     },
     Humidade: {
+        key: "Humidade",
+        field: "humidity",
         name: "Humidade",
+        icon: <WaterDrop fontSize="small" />,
         min_value: 0,
         max_value: 100,
         warning_value: 70,
         high_value: 85,
-        unit: " %",
-        importance:
-            "A humidade afeta a qualidade do ar, o risco de doenças respiratórias, o crescimento de fungos, a conservação de alimentos e bens materiais, além de impactar o conforto e a saúde da população.",
+        unit: "%",
+        color: "#3B82F6",
     },
     "Pressão do Ar": {
+        key: "Pressão do Ar",
+        field: "pressure",
         name: "Pressão do Ar",
+        icon: <Speed fontSize="small" />,
         min_value: 900,
         max_value: 1050,
         warning_value: 985,
         high_value: 975,
-        unit: " hPa",
-        importance:
-            "A pressão atmosférica está ligada a mudanças climáticas, tempestades, variações meteorológicas e pode afetar pessoas sensíveis, especialmente indivíduos com problemas respiratórios e cardiovasculares.",
+        unit: "hPa",
+        color: "#8B5CF6",
     },
     "Qualidade do Ar": {
+        key: "Qualidade do Ar",
+        field: "air_quality",
         name: "Qualidade do Ar",
+        icon: <Air fontSize="small" />,
         min_value: 0,
         max_value: 300,
         warning_value: 100,
         high_value: 150,
-        unit: " AQI",
-        importance:
-            "A qualidade do ar impacta diretamente a saúde respiratória e cardiovascular, produtividade escolar e laboral, expectativa de vida, além de ser um indicador crítico para políticas ambientais e urbanas.",
+        unit: "AQI",
+        color: "#10B981",
     },
 };
 
+export const MedidorIndividual = React.memo(({ value, config }) => {
+    const { warning_value, high_value, unit, min_value, max_value, key } = config;
 
-export function MedidorIndividual({
-    value,
-    warning_value,
-    high_value,
-    unit,
-    min_value,
-    max_value,
-}) {
-    const color =
-        value >= high_value
-            ? "#EF4444" // vermelho
-            : value >= warning_value
-            ? "#f9a825" // amarelo
-            : "#22C55E"; // verde
+    const statusColor = useMemo(() => {
+        const v = parseFloat(value);
+        /*if (key === "Pressão do Ar")
+            return v <= high_value ? "#EF4444" :
+                   v <= warning_value ? "#F59E0B" : "#10B981";*/
 
-    const option = {
-        animation: true,
+        return v >= high_value ? "#EF4444" :
+               v >= warning_value ? "#F59E0B" : "#10B981";
+    }, [value, warning_value, high_value, key]);
 
-        // IMPORTANTE: reduz margens globais
-        grid: {
-            top: 0,
-            bottom: 0,
-            left: 0,
-            right: 0,
-        },
-
-        series: [
-            {
-                type: "gauge",
-                min: min_value,
-                max: max_value,
-
-                center: ["50%", "60%"],
-                radius: "105%",
-
-                axisLine: {
-                    lineStyle: {
-                        width: 14,
-                        color: [[1, "#e0e0e0"]], // faixa base cinza
+    return (
+        <ReactECharts
+            option={{
+                series: [{
+                    type: "gauge",
+                    min: min_value,
+                    max: max_value,
+                    radius: "95%",
+                    center: ["50%", "60%"],
+                    startAngle: 200,
+                    endAngle: -20,
+                    axisLine: { lineStyle: { width: 10, color: [[1, "#E5E7EB"]] } },
+                    progress: { show: true, width: 10, itemStyle: { color: statusColor } },
+                    pointer: { show: true, length: "15%", width: 6, itemStyle: { color: statusColor } },
+                    axisTick: { show: false },
+                    splitLine: { show: false },
+                    axisLabel: { show: false },
+                    detail: {
+                        valueAnimation: true,
+                        formatter: `{value}${unit}`,
+                        fontSize: 22,
+                        fontWeight: "bold",
+                        offsetCenter: [0, "30%"],
+                        color: "#1F2937",
                     },
-                },
-
-                progress: {
-                    show: true,
-                    width: 14,
-                    itemStyle: { color },
-                },
-
-                pointer: {
-                    itemStyle: { color },
-                },
-
-                detail: {
-                    valueAnimation: true,
-                    formatter: `{value} ${unit}`,
-                    fontSize: 20,
-                    offsetCenter: [0, "66%"],
-                    color,
-                },
-
-                data: [{ value }],
-            },
-        ],
-    };
-
-    return (
-        <ReactECharts
-            option={option}
-            style={{ height: "195px", width: "100%", marginTop: -10 }} // RESPONSIVO
-            opts={{ renderer: "svg" }} // melhora responsividade
-        />
-    );
-}
-
-export function GraficoTemporal({
-    labels,
-    values,
-    warning_value,
-    high_value,
-    unit,
-}) {
-    const last = values[values.length - 1] || 0;
-
-    const min = Math.min(...values);
-    const max = Math.max(...values);
-
-    const margin = 2; // FAIXA MAIS ABRANGENTE
-
-    const option = {
-        grid: {
-            left: "6%",
-            right: "4%",
-            top: "8%",
-            bottom: "12%",
-        },
-
-        xAxis: {
-            type: "category",
-            data: labels,
-            boundaryGap: false,
-            axisLabel: { rotate: 30 },
-        },
-
-        yAxis: {
-            type: "value",
-            min: +(min - margin).toFixed(1),
-            max: +(max + margin).toFixed(1),
-            splitNumber: 8,
-            minInterval: 0.1,
-            axisLabel: {
-                formatter: (v) => v.toFixed(1) + `${unit}`,
-            },
-        },
-
-        series: [
-            {
-                type: "line",
-                smooth: true,
-                data: values,
-
-                lineStyle: {
-                    width: 3,
-                    color:
-                        last >= high_value
-                            ? "#EF4444"
-                            : last >= warning_value
-                            ? "#f9a825"
-                            : "#22C55E",
-                },
-
-                itemStyle: {
-                    color:
-                        last >= high_value
-                            ? "#EF4444"
-                            : last >= warning_value
-                            ? "#f9a825"
-                            : "#22C55E",
-                },
-
-                areaStyle: {
-                    opacity: 0.25,
-                },
-            },
-        ],
-    };
-
-    return (
-        <ReactECharts
-            option={option}
-            style={{ height: "290px", width: "100%" }} // RESPONSIVO
+                    data: [{ value }],
+                }],
+            }}
+            style={{ height: 180 }}
             opts={{ renderer: "svg" }}
         />
     );
-}
+});
+
+export const GraficoTemporal = React.memo(({ labels, values, config }) => (
+    <ReactECharts
+        option={{
+            grid: { top: 20, right: 20, bottom: 40, left: 50 },
+            tooltip: { trigger: "axis" },
+            xAxis: {
+                type: "category",
+                data: labels,
+                boundaryGap: false,
+                axisLabel: { color: "#9CA3AF", fontSize: 11 },
+            },
+            yAxis: {
+                type: "value",
+                axisLabel: {
+                    formatter: `{value}${config.unit}`,
+                    color: "#9CA3AF",
+                    fontSize: 11,
+                },
+                splitLine: { lineStyle: { type: "dashed", color: "#F3F4F6" } },
+            },
+            series: [{
+                data: values,
+                type: "line",
+                smooth: true,
+                symbol: "circle",
+                symbolSize: 8,
+                itemStyle: { color: config.color },
+                lineStyle: { width: 3, color: config.color },
+                areaStyle: {
+                    color: {
+                        type: "linear",
+                        x: 0, y: 0, x2: 0, y2: 1,
+                        colorStops: [
+                            { offset: 0, color: config.color },
+                            { offset: 1, color: "transparent" },
+                        ],
+                    },
+                    opacity: .1,
+                },
+            }],
+        }}
+        style={{ height: 250 }}
+        opts={{ renderer: "svg" }}
+    />
+));

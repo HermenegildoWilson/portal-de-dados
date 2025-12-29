@@ -1,4 +1,4 @@
-const dotenv = require("dotenv");
+import dotenv from "dotenv";
 dotenv.config();
 
 const env = {
@@ -20,4 +20,4 @@ const env = {
     redis_url: process.env.REDIS_URL,
 };
 
-module.exports = env;
+export default env;

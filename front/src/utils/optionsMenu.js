@@ -1,87 +1,39 @@
-export const optionsMenu = {
+import { iconMapper } from "./iconMapper";
+export const menuItems = {
+    admin: [
+        { text: "Dashboard", path: "/", icon: iconMapper.dashboard },
+        { text: "Histórico", path: "/historico", icon: iconMapper.chart,},
+        { text: "Usuários", path: "/usuarios", icon: iconMapper.people },
+        //{ text: "Configurações", path: "/configuracoes", icon: iconMapper.configuracoes, },
+        { text: "Notificações", path: "/notificacoes", icon: iconMapper.bell },
+        { text: "Perfil", path: "/perfil", icon: iconMapper.perfil, },
+        { text: "Sair", path: "/logout", icon: iconMapper.logout, },
+    ],
+    visitor: [
+        { text: "Dashboard", path: "/", icon: iconMapper.dashboard },
+        { text: "Histórico", path: "/historico", icon: iconMapper.chart, },
+        { text: "Notificações", path: "/notificacoes", icon: iconMapper.bell },
+        { text: "Perfil", path: "/perfil", icon: iconMapper.perfil, },
+        { text: "Sair", path: "/logout", icon: iconMapper.logout, },
+    ],
     public: [
         {
-            titulo: "Início",
-            link: "/",
-            descricao:
-                "Landing page / visão geral.",
-            icone: "home",
+            text: "Início",
+            path: "/home",
+            descricao: "Landing page / visão geral.",
+            icon: iconMapper.home,
         },
         {
-            titulo: "Entrar",
-            link: "/login",
-            descricao:
-                "Acesso ao portal atraves de uma conta.",
-            icone: "login",
-        }
-    ],
-    user: [
-        {
-            titulo: "Dados em Tempo Real",
-            link: "/",
-            descricao:
-                "Visualização atual dos sensores.",
-            icone: "speed",
+            text: "Entrar",
+            path: "/login",
+            descricao: "Acesso ao portal atraves de uma conta.",
+            icon: iconMapper.login,
         },
         {
-            titulo: "Histórico",
-            link: "/historico",
-            descricao:
-                "Análise visual (temperatura, humidade, etc.",
-            icone: "chart",
+            text: "Criar conta",
+            path: "/cadastrar",
+            descricao: "Acesso ao portal atraves de uma conta.",
+            icon: iconMapper.cadastrar,
         },
-        {
-            titulo: "Notificações",
-            link: "/notificacoes",
-            descricao:
-                "Envio de avisos e notas informativas para toda a comunidade escolar.",
-            icone: "bell",
-        },
-    ],
-    admin: [
-        {
-            titulo: "Dados em Tempo Real",
-            link: "/",
-            descricao:
-                "Visualização atual dos sensores.",
-            icone: "speed",
-        },
-        {
-            titulo: "Histórico",
-            link: "/historico",
-            descricao:
-                "Análise visual (temperatura, humidade, etc.",
-            icone: "history",
-        },
-        {
-            titulo: "Gestão de Usuarios",
-            link: "/usuarios",
-            descricao:
-                "Registo, gestão e atribuição de disciplinas aos docentes.",
-            icone: "people",
-        },
-        {
-            titulo: "Notificações",
-            link: "/notificacoes",
-            descricao:
-                "Envio de avisos e notas informativas para toda a comunidade escolar.",
-            icone: "bell",
-        },
-    ],
-    profile: [
-        {
-            titulo: "Meu Perfil",
-            link: "/perfil",
-            descricao:
-                "Visualização do perfil de usuario.",
-            icone: "perfil",
-        },
-        {
-            titulo: "Sair",
-            link: "/logout",
-            descricao:
-                "Sair da plataforma.",
-            icone: "logout",
-        }
     ],
 };

@@ -1,11 +1,7 @@
-const jwt = require("jsonwebtoken");
-const env = require("../../config/env");
+import jwt from "jsonwebtoken";
+import env from "../../config/env.js";
 
-class AutenticacaoMiddleware {
-    /**
-     *@description Autenticação de acesso a rotas protegidas
-     *@route /auth/acces
-     */
+class classAutenticacaoMiddleware {
     authanticateAccess = (req, res, next) => {
         const access_token = req.headers["authorization"]?.split(" ")[1];
         // SE NÃO TIVER UM TOKEN DE ACESSO
@@ -34,9 +30,6 @@ class AutenticacaoMiddleware {
         });
     };
 
-    /**
-     * @description Autenticação de acesso a rotas protegidas, verificação do role
-     */
     verifyRole = (roles = []) => {
         return (req, res, next) => {
             const userRole = req?.user?.role;
@@ -62,4 +55,6 @@ class AutenticacaoMiddleware {
     };
 }
 
-module.exports = new AutenticacaoMiddleware();
+const AutenticacaoMiddleware = new classAutenticacaoMiddleware();
+
+export default AutenticacaoMiddleware;
