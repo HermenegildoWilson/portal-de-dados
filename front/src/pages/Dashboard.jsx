@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useSensors } from "../hooks/useSensors";
 import {
     GraficoTemporal,
+    initialHistory,
     MedidorIndividual,
     parameterOptions,
 } from "../components/chart/DataDisplay";
@@ -20,6 +21,7 @@ import {
     AccessTime,
     LocationOn,
     MyLocation,
+    Verified,
     WarningAmber,
 } from "@mui/icons-material";
 
@@ -27,13 +29,7 @@ export default function Dashboard() {
     const { sensors } = useSensors();
 
     const maxPoints = 10;
-
     const [activeKey, setActiveKey] = useState("Temperatura");
-
-    const initialHistory = Object.keys(parameterOptions).reduce(
-        (acc, key) => ({ ...acc, [key]: [] }),
-        { labels: [] }
-    );
 
     const [reading, setReading] = useState({});
     const [history, setHistory] = useState(initialHistory);
@@ -176,7 +172,6 @@ export default function Dashboard() {
                         display: "flex",
                         flexWrap: "wrap",
                         justifyContent: "space-between",
-                        
                         gap: 2,
                         pb: 2,
                     }}
@@ -238,7 +233,7 @@ export default function Dashboard() {
                         sx={{
                             flex: "auto",
                             borderRadius: 4,
-                            minWidth: 400,
+                            minWidth: { md: 400 },
                             borderColor: "divider",
                             mx: "auto",
                         }}
@@ -257,14 +252,22 @@ export default function Dashboard() {
                                 }}
                             >
                                 <Typography variant="h6" fontWeight="bold">
-                                    Tendência (Últimas Leituras)
+                                    Últimas Leituras
                                 </Typography>
                                 {Number(reading[activeKey]) >=
-                                    config.warning_value && (
+                                config.warning_value ? (
                                     <Chip
                                         icon={<WarningAmber />}
                                         label="Nível Elevado"
                                         color="warning"
+                                        size="small"
+                                        sx={{ fontWeight: "bold" }}
+                                    />
+                                ) : (
+                                    <Chip
+                                        icon={<Verified />}
+                                        label="Nível Normal"
+                                        color="success"
                                         size="small"
                                         sx={{ fontWeight: "bold" }}
                                     />

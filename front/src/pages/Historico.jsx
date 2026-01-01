@@ -5,167 +5,159 @@ import { WarningAmber, InfoOutlined } from "@mui/icons-material";
 import ModalDateTimePicker from "../components/modal/ModalDateTimePicker";
 import {
     GraficoTemporal,
+    initialHistory,
     parameterOptions,
 } from "../components/chart/DataDisplay";
+import AppLoader from "../components/feedback/AppLoader";
 
 export default function Historico() {
-    const [charts, setCharts] = useState([]);
-    const [sensorId, setSensorId] = useState("esp32_01");
-    const [dateRange, setDateRange] = useState({ start: null, end: null });
+    const maxPoints = 10;
+    const [history, setHistory] = useState({});
     const [activeParam, setActiveParam] = useState("Temperatura");
-    const [loading, setLoading] = useState(false);
+
+    const [pageState, setPageState] = useState("loading");
 
     const config = useMemo(() => parameterOptions[activeParam], [activeParam]);
 
     // Buscar histórico do sensor
-    async function getSensorHistory(params = {}) {
+    async function getSensorHistory(sensorId, params = {}) {
         try {
-            setLoading(true);
             const { data } = await api.get(`/api/sensors/${sensorId}/history`, {
                 params,
             });
-
-            setCharts(data.data || []);
-            setLoading(false);
+            const newHistory = {
+                labels: [],
+                Temperatura: [],
+                Humidade: [],
+                "Pressão do Ar": [],
+                "Qualidade do Ar": [],
+            };
+            data.data.forEach((reading) => {
+                Object.keys(newHistory).map((key) => {
+                    key === "labels"
+                        ? newHistory[key].push(
+                              new Date(reading["timestamp"]).toLocaleTimeString(
+                                  "pt-PT",
+                                  {
+                                      hour12: false,
+                                  }
+                              )
+                          )
+                        : newHistory[key].push(Number(reading[key]));
+                });
+            });
+            setHistory(newHistory);
+            setPageState("done");
         } catch (error) {
             console.error("Erro ao buscar histórico:", error);
-            setLoading(false);
+            setPageState("error");
         }
     }
 
     useEffect(() => {
-        getSensorHistory();
-    }, [sensorId]);
+        getSensorHistory("esp32_01");
+    }, []);
 
-    // Preparar dados para o gráfico
-    const history = useMemo(() => {
-        const labels = charts.map((item) =>
-            new Date(item.created_at).toLocaleString("pt-PT", { hour12: false })
+    if (pageState === "loading") {
+        return (
+            <div>
+                <p>Buscando dados...</p>
+                <AppLoader />
+            </div>
         );
-        const values = charts.map((item) => item[config.key.toLowerCase()]); // supondo que o campo da API está em minúscula
-        return { labels, values };
-    }, [charts, config.key]);
+    }
 
-    // Maior e menor valor
-    const maxValue = history.values.length ? Math.max(...history.values) : null;
-    const minValue = history.values.length ? Math.min(...history.values) : null;
+    const maxValue = history[activeParam]?.length
+        ? Math.max(...history[activeParam])
+        : null;
+
+    const minValue = history[activeParam]?.length
+        ? Math.min(...history[activeParam])
+        : null;
+
+    const mediaValue = history[activeParam]?.length
+        ? history[activeParam].reduce(
+              (acumulador, valorAtual) => acumulador + valorAtual,
+              0
+          ) / history[activeParam].length
+        : null;
 
     return (
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 4, p: 2 }}>
-            {/* Seleção de parâmetro */}
-            <Box
+        <Box
+            sx={{
+                bgcolor: "background.default",
+                display: "flex",
+                flexFlow: "column",
+            }}
+        >
+            <Card
+                elevation={2}
                 sx={{
-                    display: "flex",
-                    gap: 1,
-                    flexWrap: "wrap",
-                    overflowX: "auto",
+                    flex: "auto",
+                    borderRadius: 4,
+                    border: "1px solid",
+                    borderColor: "divider",
                 }}
             >
-                {Object.keys(parameterOptions).map((key) => (
-                    <Chip
-                        key={key}
-                        label={key}
-                        onClick={() => setActiveParam(key)}
-                        color={activeParam === key ? "primary" : "default"}
-                        variant={activeParam === key ? "filled" : "outlined"}
-                        icon={parameterOptions[key].icon}
-                        sx={{ fontWeight: "bold", flexShrink: 0 }}
-                    />
-                ))}
-            </Box>
-
-            {/* Filtro de datas */}
-            <ModalDateTimePicker value={dateRange} onChange={setDateRange} />
-
-            {/* Gráfico */}
-            {history.labels.length ? (
-                <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                        <Card
-                            sx={{
-                                p: 2,
-                                borderRadius: 2,
-                                border: "1px solid",
-                                borderColor: "divider",
-                            }}
-                        >
-                            <Box
-                                sx={{
-                                    display: "flex",
-                                    justifyContent: "space-between",
-                                    mb: 1,
-                                }}
-                            >
-                                <Typography variant="h6" fontWeight="bold">
-                                    {config.name} - Histórico
-                                </Typography>
-                                {maxValue >= config.warning_value && (
-                                    <Chip
-                                        icon={<WarningAmber />}
-                                        label="Valor elevado"
-                                        color="warning"
-                                        size="small"
-                                        sx={{ fontWeight: "bold" }}
-                                    />
-                                )}
-                            </Box>
-
+                <Box
+                    sx={{
+                        p: 2,
+                    }}
+                >
+                    <Box
+                        sx={{
+                            mb: 2,
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                        }}
+                    >
+                        <Typography variant="h6" fontWeight="bold">
+                            Tendência (Últimas Leituras){" "}
+                            {history[activeParam].at(-1)}
+                        </Typography>
+                        {mediaValue >= config.warning_value && (
+                            <Chip
+                                icon={<WarningAmber />}
+                                label="Nível Elevado"
+                                color="warning"
+                                size="small"
+                                sx={{ fontWeight: "bold" }}
+                            />
+                        )}
+                    </Box>
+                    <Box sx={{ overflowX: "scroll" }}>
+                        <div className="min-w-600">
                             <GraficoTemporal
                                 labels={history.labels}
-                                values={history.values}
+                                values={history[activeParam]}
                                 config={config}
                             />
-
-                            <Divider sx={{ my: 1 }} />
-
-                            <Box
-                                sx={{
-                                    display: "flex",
-                                    justifyContent: "space-between",
-                                    mt: 1,
-                                }}
-                            >
-                                <Typography variant="body2">
-                                    <InfoOutlined
-                                        sx={{
-                                            fontSize: 16,
-                                            verticalAlign: "middle",
-                                            mr: 0.5,
-                                        }}
-                                    />
-                                    Máx:{" "}
-                                    <b>
-                                        {maxValue ?? "--"}
-                                        {config.unit}
-                                    </b>
-                                </Typography>
-                                <Typography variant="body2">
-                                    <InfoOutlined
-                                        sx={{
-                                            fontSize: 16,
-                                            verticalAlign: "middle",
-                                            mr: 0.5,
-                                        }}
-                                    />
-                                    Mín:{" "}
-                                    <b>
-                                        {minValue ?? "--"}
-                                        {config.unit}
-                                    </b>
-                                </Typography>
-                            </Box>
-                        </Card>
-                    </Grid>
-                </Grid>
-            ) : (
-                <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{ mt: 4 }}
-                >
-                    Nenhum dado disponível para o período selecionado.
-                </Typography>
-            )}
+                        </div>
+                    </Box>
+                    <Divider sx={{ my: 2 }} />
+                    <Box
+                        sx={{
+                            mt: 1,
+                            p: 1.5,
+                            bgcolor: "grey.50",
+                            borderRadius: 2,
+                        }}
+                    >
+                        <Typography
+                            variant="caption"
+                            color="text.secondary"
+                            display="block"
+                        >
+                            Exibindo os últimos {maxPoints} pontos de dados
+                            processados.
+                        </Typography>
+                    </Box>
+                    Valor Mínimo:{minValue}
+                    Valor Máximo:{maxValue}
+                    Valor Médio:{mediaValue}
+                </Box>
+            </Card>
         </Box>
     );
 }

@@ -46,7 +46,7 @@ const SensorRepository = {
                     ],
                     [
                         literal(`ROUND(AVG("pressure")::numeric, 2)`),
-                        "Pressao do Ar",
+                        "Pressão do Ar",
                     ],
                 ],
                 where: {

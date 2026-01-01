@@ -53,8 +53,14 @@ export const parameterOptions = {
     },
 };
 
+export const initialHistory = Object.keys(parameterOptions).reduce(
+    (acc, key) => ({ ...acc, [key]: [] }),
+    { labels: [] }
+);
+
 export const MedidorIndividual = React.memo(({ value, config }) => {
-    const { warning_value, high_value, unit, min_value, max_value, key } = config;
+    const { warning_value, high_value, unit, min_value, max_value, key } =
+        config;
 
     const statusColor = useMemo(() => {
         const v = parseFloat(value);
@@ -62,37 +68,53 @@ export const MedidorIndividual = React.memo(({ value, config }) => {
             return v <= high_value ? "#EF4444" :
                    v <= warning_value ? "#F59E0B" : "#10B981";*/
 
-        return v >= high_value ? "#EF4444" :
-               v >= warning_value ? "#F59E0B" : "#10B981";
+        return v >= high_value
+            ? "#EF4444"
+            : v >= warning_value
+            ? "#F59E0B"
+            : "#10B981";
     }, [value, warning_value, high_value, key]);
 
     return (
         <ReactECharts
             option={{
-                series: [{
-                    type: "gauge",
-                    min: min_value,
-                    max: max_value,
-                    radius: "95%",
-                    center: ["50%", "60%"],
-                    startAngle: 200,
-                    endAngle: -20,
-                    axisLine: { lineStyle: { width: 10, color: [[1, "#E5E7EB"]] } },
-                    progress: { show: true, width: 10, itemStyle: { color: statusColor } },
-                    pointer: { show: true, length: "15%", width: 6, itemStyle: { color: statusColor } },
-                    axisTick: { show: false },
-                    splitLine: { show: false },
-                    axisLabel: { show: false },
-                    detail: {
-                        valueAnimation: true,
-                        formatter: `{value}${unit}`,
-                        fontSize: 22,
-                        fontWeight: "bold",
-                        offsetCenter: [0, "30%"],
-                        color: "#1F2937",
+                series: [
+                    {
+                        type: "gauge",
+                        min: min_value,
+                        max: max_value,
+                        radius: "95%",
+                        center: ["50%", "60%"],
+                        startAngle: 200,
+                        endAngle: -20,
+                        axisLine: {
+                            lineStyle: { width: 10, color: [[1, "#E5E7EB"]] },
+                        },
+                        progress: {
+                            show: true,
+                            width: 10,
+                            itemStyle: { color: statusColor },
+                        },
+                        pointer: {
+                            show: true,
+                            length: "15%",
+                            width: 6,
+                            itemStyle: { color: statusColor },
+                        },
+                        axisTick: { show: false },
+                        splitLine: { show: false },
+                        axisLabel: { show: false },
+                        detail: {
+                            valueAnimation: true,
+                            formatter: `{value}${unit}`,
+                            fontSize: 22,
+                            fontWeight: "bold",
+                            offsetCenter: [0, "30%"],
+                            color: "#1F2937",
+                        },
+                        data: [{ value }],
                     },
-                    data: [{ value }],
-                }],
+                ],
             }}
             style={{ height: 180 }}
             opts={{ renderer: "svg" }}
@@ -120,26 +142,31 @@ export const GraficoTemporal = React.memo(({ labels, values, config }) => (
                 },
                 splitLine: { lineStyle: { type: "dashed", color: "#F3F4F6" } },
             },
-            series: [{
-                data: values,
-                type: "line",
-                smooth: true,
-                symbol: "circle",
-                symbolSize: 8,
-                itemStyle: { color: config.color },
-                lineStyle: { width: 3, color: config.color },
-                areaStyle: {
-                    color: {
-                        type: "linear",
-                        x: 0, y: 0, x2: 0, y2: 1,
-                        colorStops: [
-                            { offset: 0, color: config.color },
-                            { offset: 1, color: "transparent" },
-                        ],
+            series: [
+                {
+                    data: values,
+                    type: "line",
+                    smooth: true,
+                    symbol: "circle",
+                    symbolSize: 8,
+                    itemStyle: { color: config.color },
+                    lineStyle: { width: 3, color: config.color },
+                    areaStyle: {
+                        color: {
+                            type: "linear",
+                            x: 0,
+                            y: 0,
+                            x2: 0,
+                            y2: 1,
+                            colorStops: [
+                                { offset: 0, color: config.color },
+                                { offset: 1, color: "transparent" },
+                            ],
+                        },
+                        opacity: 0.1,
                     },
-                    opacity: .1,
                 },
-            }],
+            ],
         }}
         style={{ height: 250 }}
         opts={{ renderer: "svg" }}

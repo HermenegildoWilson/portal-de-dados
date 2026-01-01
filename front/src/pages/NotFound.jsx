@@ -1,22 +1,29 @@
 import React from "react";
-import { Box, Typography, Paper } from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
 
 export default function NotFound() {
     return (
-        <Box>
-            <Typography variant="h4" gutterBottom>
-                Não Encontrada.
-            </Typography>
+        <Box
+            sx={{
+                height: "85vh",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+            }}
+        >
             <Paper
                 sx={{
                     p: 3,
-                    height: 300,
+                    flex: "auto",
+                    height: "90%",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                 }}
             >
-                Not Found...
+                <Typography variant="h4">
+                    Page Not Found...
+                </Typography>
             </Paper>
         </Box>
     );
