@@ -19,6 +19,7 @@ export async function connectDB() {
         console.log("📦 Conectado ao PostgreSQL com sucesso.");
     } catch (error) {
         console.error("❌ Erro na conexão com o banco:", error.message);
+        console.error("❌ Erro na conexão com o banco:", error);
         process.exit(1);
     }
 }
