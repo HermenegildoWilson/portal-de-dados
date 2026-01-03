@@ -37,13 +37,13 @@ class classUserServices {
             };
         }
 
-        const senhaHash = await this.createHash(usuario.telefone);
+        const senhaHash = await this.createHash(usuario.senha);
 
         const usuario_criado = await user_model.create({
             nome: usuario.nome,
             telefone: usuario.telefone,
             email: usuario.email,
-            role: usuario.role,
+            role: "admin",
             senha: senhaHash,
         });
 

@@ -36,13 +36,13 @@ export default function AuthProvider({ children }) {
             if (error.code === "ERR_NETWORK") {
                 setAlert({
                     type: "SHOW",
-                    text: error.message || err.response?.data?.message,
+                    text: error.message || error.response?.data?.message,
                     style: "error",
                 });
             } else {
                 setAlert({
                     type: "SHOW",
-                    text: err.response?.data?.message || error.message,
+                    text: error.response?.data?.message || error.message,
                     style: "warning",
                 });
             }

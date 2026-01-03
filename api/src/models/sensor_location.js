@@ -1,11 +1,10 @@
-import Sequelize from "sequelize";
-export default function sensor_readings(sequelize, DataTypes) {
+export default function sensor_location(sequelize, DataTypes) {
     return sequelize.define(
-        "sensor_readings",
+        "sensor_location",
         {
             id: {
                 autoIncrement: true,
-                type: DataTypes.BIGINT,
+                type: DataTypes.INTEGER,
                 allowNull: false,
                 primaryKey: true,
             },
@@ -17,25 +16,24 @@ export default function sensor_readings(sequelize, DataTypes) {
                     key: "id",
                 },
             },
-            time: {
-                type: DataTypes.DATE,
-                allowNull: false,
-                defaultValue: Sequelize.Sequelize.fn("now"),
-            },
-            temperature: {
-                type: DataTypes.REAL,
+            pais: {
+                type: DataTypes.STRING(100),
                 allowNull: true,
             },
-            humidity: {
-                type: DataTypes.REAL,
+            provincia: {
+                type: DataTypes.STRING(100),
                 allowNull: true,
             },
-            pressure: {
-                type: DataTypes.REAL,
+            cidade: {
+                type: DataTypes.STRING(100),
                 allowNull: true,
             },
-            air_quality: {
-                type: DataTypes.REAL,
+            latitude: {
+                type: DataTypes.DOUBLE,
+                allowNull: true,
+            },
+            longitude: {
+                type: DataTypes.DOUBLE,
                 allowNull: true,
             },
             created_at: {
@@ -46,19 +44,12 @@ export default function sensor_readings(sequelize, DataTypes) {
         },
         {
             sequelize,
-            tableName: "sensor_readings",
+            tableName: "sensor_location",
             schema: "public",
             timestamps: false,
             indexes: [
                 {
-                    name: "idx_sensor_readings_sensor_time",
-                    fields: [
-                        { name: "sensor_id" },
-                        { name: "time", order: "DESC" },
-                    ],
-                },
-                {
-                    name: "sensor_readings_pkey",
+                    name: "sensor_location_pkey",
                     unique: true,
                     fields: [{ name: "id" }],
                 },

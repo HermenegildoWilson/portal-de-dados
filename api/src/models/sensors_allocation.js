@@ -1,7 +1,7 @@
 import Sequelize from "sequelize";
-export default function usuario(sequelize, DataTypes) {
+export default function sensor_location(sequelize, DataTypes) {
     return sequelize.define(
-        "usuario",
+        "sensors_allocation",
         {
             id: {
                 autoIncrement: true,
@@ -9,26 +9,23 @@ export default function usuario(sequelize, DataTypes) {
                 allowNull: false,
                 primaryKey: true,
             },
-            nome: {
-                type: DataTypes.STRING(100),
+            sensor_id: {
+                type: DataTypes.INTEGER,
                 allowNull: false,
+                references: {
+                    model: "sensors",
+                    key: "id",
+                },
+                unique: "unique_sensor_usuario",
             },
-            role: {
-                type: DataTypes.STRING(40),
+            id_usuario: {
+                type: DataTypes.INTEGER,
                 allowNull: false,
-            },
-            email: {
-                type: DataTypes.STRING(150),
-                allowNull: false,
-                unique: "usuario_email_key",
-            },
-            senha: {
-                type: DataTypes.STRING(1000),
-                allowNull: false,
-            },
-            telefone: {
-                type: DataTypes.STRING(15),
-                allowNull: true,
+                references: {
+                    model: "usuario",
+                    key: "id",
+                },
+                unique: "unique_sensor_usuario",
             },
             created_at: {
                 type: DataTypes.DATE,
@@ -38,19 +35,19 @@ export default function usuario(sequelize, DataTypes) {
         },
         {
             sequelize,
-            tableName: "usuario",
+            tableName: "sensors_allocation",
             schema: "public",
             timestamps: false,
             indexes: [
                 {
-                    name: "usuario_email_key",
-                    unique: true,
-                    fields: [{ name: "email" }],
-                },
-                {
-                    name: "usuario_pkey",
+                    name: "sensors_allocation_pkey",
                     unique: true,
                     fields: [{ name: "id" }],
+                },
+                {
+                    name: "unique_sensor_usuario",
+                    unique: true,
+                    fields: [{ name: "sensor_id" }, { name: "id_usuario" }],
                 },
             ],
         }

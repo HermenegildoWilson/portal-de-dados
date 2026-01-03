@@ -6,8 +6,8 @@ const userRouter = Router();
 
 userRouter.post(
     "/cadastrar",
-    AuthMiddleware.authanticateAccess,
-    AuthMiddleware.verifyRole(["admin"]),
+    //AuthMiddleware.authanticateAccess,
+    //AuthMiddleware.verifyRole(["admin"]),
     UserControllers.cadastrar
 );
 

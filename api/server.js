@@ -22,5 +22,5 @@ app.use(router);
 app.use(errorMiddleware);
 
 server.listen(env.port, () => {
-    console.log(`Servidor a rodar na porta ${env.port}`);
+    console.log(`🚀 Servidor a rodar na porta ${env.port}`);
 });

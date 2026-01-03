@@ -3,7 +3,6 @@ import {
     Box,
     Card,
     Typography,
-    TextField,
     Button,
     IconButton,
     InputAdornment,
@@ -13,17 +12,20 @@ import {
     Divider,
 } from "@mui/material";
 import {
+    PersonOutline,
     MailOutline,
     LockOutlined,
+    PhoneOutlined,
     Visibility,
     VisibilityOff,
     ArrowForward,
 } from "@mui/icons-material";
+import { StyledInput } from "../components/form/MyInput";
+import { Link, Navigate } from "react-router-dom";
 import { useAlert } from "../hooks/useAlert";
 import { useAuth } from "../hooks/useAuth";
-import { Link, Navigate } from "react-router-dom";
+import { api } from "../api/axios";
 import AppLoader from "../components/feedback/AppLoader";
-import { StyledInput } from "../components/form/MyInput";
 
 const STATUS = {
     IDLE: "idle",
@@ -31,11 +33,13 @@ const STATUS = {
     SUCCESS: "success",
 };
 
-export default function Login() {
-    const { login, user } = useAuth();
+export default function Register() {
+    const { user, login } = useAuth();
     const { setAlert } = useAlert();
-    const [credentials, setCredentials] = useState({
+    const [form, setForm] = useState({
+        nome: "",
         email: "",
+        telefone: "",
         senha: "",
     });
 
@@ -43,11 +47,15 @@ export default function Login() {
     const [status, setStatus] = useState(STATUS.IDLE);
 
     const isLoading = status === STATUS.LOADING;
+
     const isFormValid =
-        credentials.email.includes("@") && credentials.senha.length >= 4;
+        form.nome.length >= 3 &&
+        form.email.includes("@") &&
+        form.telefone.length >= 9 &&
+        form.senha.length >= 4;
 
     const handleChange = ({ target }) => {
-        setCredentials((prev) => ({
+        setForm((prev) => ({
             ...prev,
             [target.name]: target.value,
         }));
@@ -57,17 +65,32 @@ export default function Login() {
         try {
             e.preventDefault();
             setStatus(STATUS.LOADING);
-            const response = await login(credentials);
+            const { data } = await api.post("/user/cadastrar", form);
 
-            if (response?.success) {
-                setStatus(STATUS.SUCCESS);
-                return setAlert({
+            if (data?.success) {
+                setAlert({
                     type: "SHOW",
-                    text: response.message,
+                    text: data.message,
                     style: "success",
                 });
+
+                const response = await login({
+                    email: form.email,
+                    senha: form.senha,
+                });
+
+                if (response?.success) {
+                    setStatus(STATUS.SUCCESS);
+                    return setAlert({
+                        type: "SHOW",
+                        text: response.message,
+                        style: "success",
+                    });
+                }
             }
         } catch (error) {
+            console.log(error);
+
             if (error.code === "ERR_NETWORK") {
                 setAlert({
                     type: "SHOW",
@@ -93,21 +116,23 @@ export default function Login() {
     return (
         <Box
             sx={{
-                height: "100%",
+                minHeight: "100%",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
+                p: 2,
             }}
         >
             <Fade in timeout={600}>
                 <Card
                     sx={{
                         width: "100%",
-                        maxWidth: 440,
+                        maxWidth: 460,
                         borderRadius: "24px",
                         boxShadow: "0 20px 40px rgba(0,0,0,.1)",
                     }}
                 >
+                    {/* Header */}
                     <Box sx={{ p: 4, textAlign: "center" }}>
                         <Box
                             sx={{
@@ -123,17 +148,18 @@ export default function Login() {
                                 mb: 1,
                             }}
                         >
-                            <LockOutlined />
+                            <PersonOutline />
                         </Box>
 
                         <Typography variant="h4" fontWeight={700}>
-                            Bem-vindo
+                            Criar conta
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                            Acesse sua conta para continuar
+                            Preencha os dados para se cadastrar
                         </Typography>
                     </Box>
 
+                    {/* Form */}
                     <Box
                         component="form"
                         onSubmit={handleSubmit}
@@ -141,12 +167,31 @@ export default function Login() {
                     >
                         <Stack spacing={2}>
                             <StyledInput
+                                label="Nome completo"
+                                name="nome"
+                                value={form.nome}
+                                onChange={handleChange}
+                                icon={<PersonOutline fontSize="small" />}
+                                required
+                            />
+
+                            <StyledInput
                                 label="E-mail"
                                 name="email"
                                 type="email"
-                                value={credentials.email}
+                                value={form.email}
                                 onChange={handleChange}
                                 icon={<MailOutline fontSize="small" />}
+                                required
+                            />
+
+                            <StyledInput
+                                label="Telefone"
+                                name="telefone"
+                                type="tel"
+                                value={form.telefone}
+                                onChange={handleChange}
+                                icon={<PhoneOutlined fontSize="small" />}
                                 required
                             />
 
@@ -154,7 +199,7 @@ export default function Login() {
                                 label="Senha"
                                 name="senha"
                                 type={showPassword ? "text" : "password"}
-                                value={credentials.senha}
+                                value={form.senha}
                                 onChange={handleChange}
                                 icon={<LockOutlined fontSize="small" />}
                                 required
@@ -187,34 +232,34 @@ export default function Login() {
                                 disabled={!isFormValid || isLoading}
                                 endIcon={!isLoading && <ArrowForward />}
                                 sx={{
-                                    borderRadius: "8px",
+                                    borderRadius: "12px",
                                     py: 1.4,
                                     textTransform: "none",
                                 }}
                             >
                                 {isLoading ? (
                                     <>
-                                        Entrando...
+                                        Criando sua conta...
                                         <AppLoader type={"small"} />
                                     </>
                                 ) : (
-                                    "Entrar na plataforma"
+                                    "Criar conta"
                                 )}
                             </Button>
                         </Stack>
 
                         <Box sx={{ my: 2 }}>
-                            <Divider>OU</Divider>
+                            <Divider />
                         </Box>
 
                         <Typography align="center" variant="body2">
-                            Não tem uma conta?{" "}
+                            Já tem uma conta?{" "}
                             <Typography
                                 component="span"
                                 color="primary"
                                 fontWeight={600}
                             >
-                                <Link to={"/cadastrar"}>Cadastre-se agora</Link>
+                                <Link to={"/login"}>Entrar</Link>
                             </Typography>
                         </Typography>
                     </Box>

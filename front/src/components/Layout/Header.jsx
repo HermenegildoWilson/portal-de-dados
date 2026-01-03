@@ -1,6 +1,6 @@
 //Header.jsx
 import React from "react";
-import { AppBar, Toolbar, IconButton, Typography, Box } from "@mui/material";
+import { AppBar, Toolbar, IconButton, Typography, Box, Tooltip } from "@mui/material";
 import {
     Menu as MenuIcon,
     Notifications as NotificationsIcon,
@@ -42,7 +42,21 @@ export default function Header({ open, toggleDrawer, isMobile }) {
                         edge="start"
                         sx={{ mr: 2 }}
                     >
-                        {open ? <ArrowLeftSharp /> : <MenuIcon />}
+                        {open ? (
+                            <Tooltip
+                                title={"Fechar Menu"}
+                                placement="right"
+                            >
+                                <ArrowLeftSharp />
+                            </Tooltip>
+                        ) : (
+                            <Tooltip
+                                title={"Abrir Menu"}
+                                placement="right"
+                            >
+                                <MenuIcon />
+                            </Tooltip>
+                        )}
                     </IconButton>
                 )}
 
@@ -66,7 +80,12 @@ export default function Header({ open, toggleDrawer, isMobile }) {
                         </>
                     ) : (
                         <>
-                            <MyLinkButton to={"/login"} sx={{backgroundColor: "white",}} >Entrar</MyLinkButton>
+                            <MyLinkButton
+                                to={"/login"}
+                                sx={{ backgroundColor: "white" }}
+                            >
+                                Entrar
+                            </MyLinkButton>
                         </>
                     )}
                 </Box>

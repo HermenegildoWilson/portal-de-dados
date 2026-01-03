@@ -11,6 +11,7 @@ import Dashboard from "../pages/Dashboard";
 import Usuarios from "../pages/Usuarios";
 import Notificacoes from "../pages/Notificacoes";
 import Perfil from "../pages/Perfil";
+import Cadastrar from "../pages/Cadastrar.jsx";
 
 export default function AppRoutes() {
     return (
@@ -28,7 +29,7 @@ export default function AppRoutes() {
 
                 <Route path="/home" element={<Home />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/cadastrar" element={<>Cadastrar</>} />
+                <Route path="/cadastrar" element={<Cadastrar />} />
                 <Route path="*" element={<NotFound />} />
             </Route>
         </Routes>
