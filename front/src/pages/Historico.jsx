@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { api } from "../api/axios";
 import { Box, Card, Typography, Divider, Grid, Chip } from "@mui/material";
-import { WarningAmber, InfoOutlined } from "@mui/icons-material";
+import { WarningAmber, InfoOutlined, AccessTime, MyLocation } from "@mui/icons-material";
 import ModalDateTimePicker from "../components/modal/ModalDateTimePicker";
 import {
     GraficoTemporal,
@@ -90,6 +90,89 @@ export default function Historico() {
                 flexFlow: "column",
             }}
         >
+            {/* CABEÇALHO */}
+            <Box
+                sx={{
+                    backgroundColor: "background.default",
+                    py: 1,
+                    zIndex: (theme) => theme.zIndex.appBar + 1,
+                }}
+            >
+                <Box
+                    sx={{
+                        backgroundColor: "background.paper",
+                        borderBottom: "1px solid",
+                        borderColor: "divider",
+                        py: 1,
+                        px: 2,
+                        borderRadius: "10px",
+                        display: "flex",
+                        flexWrap: "wrap",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        gap: 2,
+                    }}
+                >
+                    <Box>
+                        <Typography
+                            variant="h5"
+                            fontWeight="800"
+                            color="primary.main"
+                        >
+                            Histórico
+                        </Typography>
+                        <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 0.5,
+                            }}
+                        >
+                            <AccessTime sx={{ fontSize: 16 }} />
+                            Data: {history[activeParam]?.at(-1)?.timestamp ?? "--"}
+                        </Typography>
+                        <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 0.5,
+                            }}
+                        >
+                            <MyLocation sx={{ fontSize: 16 }} />
+                            Região: {history[activeParam]?.at(-1)?.sensor_id ?? "--"}
+                        </Typography>
+                    </Box>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flex: "auto",
+                            justifyContent: "end",
+                            flexWrap: "wrap",
+                            gap: 1,
+                        }}
+                    >
+                        {Object.keys(parameterOptions).map((key) => (
+                            <Chip
+                                key={key}
+                                label={key}
+                                icon={parameterOptions[key].icon}
+                                onClick={() => setActiveParam(key)}
+                                color={
+                                    activeParam === key ? "primary" : "default"
+                                }
+                                variant={
+                                    activeParam === key ? "filled" : "outlined"
+                                }
+                                sx={{ fontWeight: "bold" }}
+                            />
+                        ))}
+                    </Box>
+                </Box>
+            </Box>
             <Card
                 elevation={2}
                 sx={{
@@ -113,8 +196,8 @@ export default function Historico() {
                         }}
                     >
                         <Typography variant="h6" fontWeight="bold">
-                            Tendência (Últimas Leituras){" "}
-                            {history[activeParam].at(-1)}
+                            Últimas Leituras
+                            {history[activeParam]?.at(-1)}
                         </Typography>
                         {mediaValue >= config.warning_value && (
                             <Chip
@@ -127,7 +210,7 @@ export default function Historico() {
                         )}
                     </Box>
                     <Box sx={{ overflowX: "scroll" }}>
-                        <div className="min-w-600">
+                        <div className="min-w-250">
                             <GraficoTemporal
                                 labels={history.labels}
                                 values={history[activeParam]}
@@ -135,7 +218,7 @@ export default function Historico() {
                             />
                         </div>
                     </Box>
-                    <Divider sx={{ my: 2 }} />
+                    <Divider sx={{ my: 1 }} />
                     <Box
                         sx={{
                             mt: 1,
@@ -149,8 +232,7 @@ export default function Historico() {
                             color="text.secondary"
                             display="block"
                         >
-                            Exibindo os últimos {maxPoints} pontos de dados
-                            processados.
+                            Exibindo dados de DD-MM-AAAA
                         </Typography>
                     </Box>
                     Valor Mínimo:{minValue}

@@ -7,12 +7,13 @@ import {
 } from "react-icons/fa6";
 import { MdSpeed, MdEmail } from "react-icons/md";
 import { LuHistory, LuMail } from "react-icons/lu";
-import { Dashboard, People, Mail, Settings, Notifications, AccountCircle, Home, Login, Logout, PersonAdd, History, Person, Email,  } from "@mui/icons-material";
+import { Dashboard, People, Mail, Settings, Notifications, AccountCircle, Home, Login, Logout, PersonAdd, History, Person, Email, Phone,  } from "@mui/icons-material";
 
 export const iconMapper = {
     "id": FaIdCard,
     "nome": Person,
     "email": Email,
+    "telefone": Phone,
     "role": FaUserShield,
     "perfil": AccountCircle,
     "home": Home,

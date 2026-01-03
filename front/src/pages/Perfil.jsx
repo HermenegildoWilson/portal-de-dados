@@ -107,7 +107,7 @@ export function PeoplePerfilItem({ values, keys }) {
             {values.map((value, index) => {
                 const Icon = iconMapper[keys[index].toLowerCase()];
                 return (
-                    <ListItem sx={{ p: 0, marginBottom: "2px" }} key={keys}>
+                    <ListItem sx={{ p: 0, marginBottom: "2px" }} key={keys[index]}>
                         <ListItemButton sx={{ borderRadius: 2 }}>
                             <ListItemIcon>
                                 <Icon
