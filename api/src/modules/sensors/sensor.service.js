@@ -1,13 +1,106 @@
 import SensorRepository from "./sensor.repository.js";
 import SensorCache from "./sensor.cache.js";
+import { getModels } from "../../config/postgresqlClient.js";
+import { col } from "sequelize";
+const {
+    sensor_readings: sensor_readings_model,
+    sensors: sensor_model,
+    sensor_location: location_model,
+} = getModels();
 
 class classSensorService {
+    async registerLocation(body) {
+        const {
+            pais,
+            provincia,
+            cidade,
+            latitude = 0.0,
+            longitude = 0.0,
+        } = body;
+
+        // 1. Grava no PostgreSQL
+        const saved = await location_model.create({
+            pais: pais,
+            provincia: provincia,
+            cidade: cidade,
+            latitude: latitude,
+            longitude: longitude,
+        });
+
+        return { message: "Região registrada com sucesso!", data: saved };
+    }
+
+    async registerSensor(body) {
+        const { sensor_code, id_location } = body;
+
+        const sensor_code_exist = await sensor_model.findOne({
+            where: { sensor_code: sensor_code },
+            raw: true,
+        });
+
+        if (sensor_code_exist) {
+            return {
+                success: false,
+                status: 409,
+                message: "Còdigo do sensor indisponível!",
+            };
+        }
+
+        const sensor_location_exist = await location_model.findOne({
+            where: { id: id_location },
+            raw: true,
+        });
+
+        if (!sensor_location_exist) {
+            return {
+                success: false,
+                status: 404,
+                message: "Còdigo da região inválido!",
+            };
+        }
+
+        // 1. Grava no PostgreSQL
+        const saved = await sensor_model.create({
+            sensor_code: sensor_code,
+            id_location: id_location,
+        });
+
+        return { message: "Sensor registrado com sucesso!", data: saved };
+    }
+
     async storeSensorReading(body, req) {
-        const { sensor_id, temperature, humidity, pressure, air_quality } =
+        const { sensor_code, temperature, humidity, pressure, air_quality } =
             body;
 
+        const sensor_id_exist = await sensor_model.findOne({
+            attributes: {
+                include: [
+                    [col("sensors.sensor_code"), "sensor_code"],
+                    [col("id_location_sensor_location.pais"), "pais"],
+                    [col("id_location_sensor_location.provincia"), "provincia"],
+                    [col("id_location_sensor_location.cidade"), "cidade"],
+                    [col("id_location_sensor_location.latitude"), "latitude"],
+                    [col("id_location_sensor_location.longitude"), "longitude"],
+                ],
+            },
+            include: {
+                model: location_model,
+                as: "id_location_sensor_location",
+                attributes: [],
+            },
+            where: { sensor_code: sensor_code },
+            raw: true,
+        });
+
+        if (!sensor_id_exist) {
+            return {
+                success: false,
+                status: 404,
+                message: "Còdigo do sensor inválido!",
+            };
+        }
+
         const sensorReading = {
-            sensor_id,
             temperature,
             humidity,
             pressure,
@@ -15,47 +108,56 @@ class classSensorService {
             created_at: new Date(),
         };
 
-        // Validação mínima (pode evoluir depois)
-        if (!sensor_id === undefined) {
-            throw new Error("Dados do sensor inválidos");
-        }
-
         // 1. Grava no PostgreSQL
-        const saved = await SensorRepository.create(sensorReading);
-
-        // 2. Atualiza Redis (estado atual)
-        await SensorCache.setLastReading(sensor_id, {
+        const saved = await sensor_readings_model.create({
+            sensor_id: sensor_id_exist.id,
             ...sensorReading,
         });
+        const cacheReading = {
+            Temperatura: sensorReading.temperature,
+            Humidade: sensorReading.humidity,
+            "Pressão do Ar": sensorReading.pressure,
+            "Qualidade do Ar": sensorReading.air_quality,
+            timestamp: sensorReading.created_at,
+            sensor_code: sensor_code,
+            location: {
+                pais: sensor_id_exist.pais,
+                provincia: sensor_id_exist.provincia,
+                cidade: sensor_id_exist.cidade,
+                latitude: sensor_id_exist.latitude,
+                longitude: sensor_id_exist.longitude,
+            },
+        };
+
+        // 2. Atualiza Redis (estado atual)
+        await SensorCache.setLastReading(sensor_code, cacheReading);
 
         // 3. Emite evento WebSocket para salas corretas
-        req.io.to(`sensor:${sensor_id}`).emit("sensor:update", sensorReading);
-
-        return saved;
-    }
-
-    async getHistoryReading(sensor_id, queries) {
-        const { from = new Date(0), to = new Date(), interval = 5 } = queries;
-
-        const startDate = from ? new Date(from) : new Date(0);
-        const endDate = to ? new Date(to) : new Date();
+        req.io.to(`sensor:${sensor_code}`).emit("sensor:update", cacheReading);
 
         return {
-            meta: {
-                startDate,
-                endDate,
-                interval: `${interval} minutos`,
-            },
-            data: await SensorRepository.selectHistory(
-                sensor_id,
-                startDate,
-                endDate,
-                interval
-            ),
+            message: "Leitura registrada com sucesso!",
+            data: sensorReading,
         };
     }
 
-    async getMetricsReading(sensor_id, queries) {
+    async getHistoryReading(sensor_code, queries) {
+        const { data = new Date() } = queries;
+        const response = await SensorRepository.selectHistory(
+            sensor_code,
+            data
+        );
+
+        return {
+            meta: {
+                location: response.location,
+                data: response.history[0]?.timestamp,
+            },
+            data: response.history,
+        };
+    }
+
+    async getMetricsReading(sensor_code, queries) {
         const { from = new Date(0), to = new Date() } = queries;
 
         const resolution = this.getResolution(from, to);
@@ -101,5 +203,5 @@ class classSensorService {
         return "day";
     }
 }
-const SensorService = new classSensorService()
+const SensorService = new classSensorService();
 export default SensorService;

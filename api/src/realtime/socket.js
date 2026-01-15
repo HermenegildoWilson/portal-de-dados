@@ -26,8 +26,8 @@ class socketIO {
                 console.log("📡 Subscribe recebido: ");
 
                 // Salas por sensor
-                sensors.forEach((sensor_id) => {
-                    socket.join(`sensor:${sensor_id}`);
+                sensors.forEach((sensor_code) => {
+                    socket.join(`sensor:${sensor_code}`);
                 });
 
                 console.log("🟦 Salas atuais:", [...socket.rooms]);
@@ -35,9 +35,9 @@ class socketIO {
                 // Estado inicial apenas dos sensores pedidos
                 const sensorStates = {};
 
-                for (const sensor_id of sensors) {
-                    const last = await SensorCache.getLastReading(sensor_id);
-                    if (last) sensorStates[sensor_id] = last;
+                for (const sensor_code of sensors) {
+                    const last = await SensorCache.getLastReading(sensor_code);
+                    if (last) sensorStates[sensor_code] = last;
                 }
 
                 socket.emit("sensor:initial", {

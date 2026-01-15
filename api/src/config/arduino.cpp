@@ -3,42 +3,24 @@
 #include <Wire.h>
 #include <Adafruit_BME680.h>
 
-/* =====================================================
-   CONFIGURAÇÕES GERAIS
-   ===================================================== */
+/* ===========================
+   CONFIGURAÇÕES
+   =========================== */
 
-// Wi-Fi
 constexpr const char* WIFI_SSID     = "hermenegildowilson7";
 constexpr const char* WIFI_PASSWORD = "wilsonPanzo";
 
-// API
-constexpr const char* API_URL = "http://10.19.161.236:3000/api/sensors/data";
+constexpr const char* API_URL = "http://10.231.211.236:3000/sensors/register/reading";
+constexpr const char* SENSOR_CODE = "esp32_01";
 
-// Identificação do sensor
-constexpr const char* SENSOR_ID = "esp32_01";
-
-// Pinos I2C
 constexpr uint8_t I2C_SDA = 18;
 constexpr uint8_t I2C_SCL = 19;
 
-/* =====================================================
-   LIMITES DE MUDANÇA SIGNIFICATIVA
-   ===================================================== */
-
-constexpr float TEMP_THRESHOLD        = 0.5;   // °C
-constexpr float HUM_THRESHOLD         = 2.0;   // %
-constexpr float PRESSURE_THRESHOLD    = 1.0;   // hPa
-constexpr float AIR_QUALITY_THRESHOLD = 10.0;  // kΩ
-
-/* =====================================================
+/* ===========================
    OBJETO GLOBAL
-   ===================================================== */
+   =========================== */
 
 Adafruit_BME680 bme;
-
-/* =====================================================
-   ESTRUTURAS
-   ===================================================== */
 
 struct SensorData {
   float temperature;
@@ -47,12 +29,9 @@ struct SensorData {
   float airQuality;
 };
 
-SensorData lastSentData;
-bool hasSentOnce = false;
-
-/* =====================================================
-   FUNÇÕES AUXILIARES
-   ===================================================== */
+/* ===========================
+   FUNÇÕES
+   =========================== */
 
 void connectWiFi() {
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
@@ -76,7 +55,6 @@ bool initBME680() {
     return false;
   }
 
-  // Configurações recomendadas
   bme.setTemperatureOversampling(BME680_OS_8X);
   bme.setHumidityOversampling(BME680_OS_2X);
   bme.setPressureOversampling(BME680_OS_4X);
@@ -101,19 +79,6 @@ bool readSensors(SensorData& data) {
   return true;
 }
 
-bool hasSignificantChange(const SensorData& current, const SensorData& last) {
-  Serial.println("temperature: " + String(last.temperature, 2));
-  Serial.println("humidity: " + String(last.humidity, 2));
-  Serial.println("pressure: " + String(last.pressure, 2));
-  Serial.println("air_quality: " + String(last.airQuality, 2));
-
-  return
-    abs(current.temperature - last.temperature) >= TEMP_THRESHOLD ||
-    abs(current.humidity    - last.humidity)    >= HUM_THRESHOLD ||
-    abs(current.pressure    - last.pressure)    >= PRESSURE_THRESHOLD ||
-    abs(current.airQuality  - last.airQuality)  >= AIR_QUALITY_THRESHOLD;
-}
-
 void sendDataToServer(const SensorData& data) {
   if (WiFi.status() != WL_CONNECTED) {
     Serial.println("Wi-Fi desconectado. Dados não enviados.");
@@ -125,7 +90,7 @@ void sendDataToServer(const SensorData& data) {
   http.addHeader("Content-Type", "application/json");
 
   String payload = "{";
-  payload += "\"sensor_id\":\"" + String(SENSOR_ID) + "\",";
+  payload += "\"sensor_code\":\"" + String(SENSOR_CODE) + "\",";
   payload += "\"temperature\":" + String(data.temperature, 2) + ",";
   payload += "\"humidity\":"    + String(data.humidity, 2) + ",";
   payload += "\"pressure\":"    + String(data.pressure, 2) + ",";
@@ -140,9 +105,9 @@ void sendDataToServer(const SensorData& data) {
   http.end();
 }
 
-/* =====================================================
+/* ===========================
    SETUP
-   ===================================================== */
+   =========================== */
 
 void setup() {
   Serial.begin(115200);
@@ -154,28 +119,17 @@ void setup() {
   connectWiFi();
 }
 
-/* =====================================================
+/* ===========================
    LOOP
-   ===================================================== */
+   =========================== */
 
 void loop() {
-  SensorData currentData;
+  SensorData data;
 
-  if (!readSensors(currentData)) {
-    delay(2000);
-    return;
+  if (readSensors(data)) {
+    sendDataToServer(data);
+    Serial.println("Dados enviados (modo teste: 5s fixos).");
   }
 
-  if (!hasSentOnce || hasSignificantChange(currentData, lastSentData)) {
-    sendDataToServer(currentData);
-
-    lastSentData = currentData;
-    hasSentOnce = true;
-
-    Serial.println("Dados enviados (mudança significativa).");
-  } else {
-    Serial.println("Sem mudança significativa. Envio ignorado.");
-  }
-
-  delay(2000);
+  delay(3000);  // 3 segundos
 }

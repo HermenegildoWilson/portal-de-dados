@@ -2,24 +2,29 @@ import AuthMiddleware from "../../shared/middlewares/auth.middleware.js";
 import SensorControllers from "./sensor.controller.js";
 
 import { Router } from "express";
-const sensorsRouter = Router()
-sensorsRouter.post("/data", SensorControllers.receiveSensorReading);
+const sensorsRouter = Router();
+
+sensorsRouter.post("/register/location", SensorControllers.registerLocation);
+
+sensorsRouter.post("/register/sensor", SensorControllers.registerSensor);
+
+sensorsRouter.post("/register/reading", SensorControllers.receiveSensorReading);
 
 sensorsRouter.get(
-    "/:sensorId/last",
+    "/:sensorCode/last",
     AuthMiddleware.authanticateAccess,
     SensorControllers.getLastSensorReading
 );
 
 sensorsRouter.get(
-    "/:sensorId/history", //?from=2025-12-01&to=2025-12-18&interval=5
-    //AuthMiddleware.authanticateAccess,
+    "/:sensorCode/history",
+    AuthMiddleware.authanticateAccess,
     SensorControllers.getHistorySensorReading
 );
 
 sensorsRouter.get(
-    "/:sensorId/metrics", //?from=2025-12-01&to=2025-12-18&interval=5
-    //AuthMiddleware.authanticateAccess,
+    "/:sensorCode/metrics",
+    AuthMiddleware.authanticateAccess,
     SensorControllers.getMetricsSensorReading
 );
 

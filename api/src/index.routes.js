@@ -5,6 +5,6 @@ import sensorsRouter from "./modules/sensors/sensor.routes.js";
 const router = Router();
 
 router.use("/user", userRouter);
-router.use("/api/sensors", sensorsRouter);
+router.use("/sensors", sensorsRouter);
 
 export default router;

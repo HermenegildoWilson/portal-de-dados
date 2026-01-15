@@ -8,6 +8,8 @@ import {
 import { MdSpeed, MdEmail } from "react-icons/md";
 import { LuHistory, LuMail } from "react-icons/lu";
 import { Dashboard, People, Mail, Settings, Notifications, AccountCircle, Home, Login, Logout, PersonAdd, History, Person, Email, Phone,  } from "@mui/icons-material";
+import { FaCalendarAlt } from "react-icons/fa";
+import { Thermostat, WaterDrop, Air, Speed } from "@mui/icons-material";
 
 export const iconMapper = {
     "id": FaIdCard,
@@ -31,4 +33,10 @@ export const iconMapper = {
     "people": People,
     "mail": Mail,
     "configuracoes": Settings,
+    "datacadastro": FaCalendarAlt,
+    "dispositivos": Settings,
+    "Temperatura": Thermostat,
+    "Humidade": WaterDrop,
+    "Pressão do Ar": Speed,
+    "Qualidade do Ar": Air,
 };

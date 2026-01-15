@@ -17,11 +17,6 @@ export default function sensor_readings(sequelize, DataTypes) {
                     key: "id",
                 },
             },
-            time: {
-                type: DataTypes.DATE,
-                allowNull: false,
-                defaultValue: Sequelize.Sequelize.fn("now"),
-            },
             temperature: {
                 type: DataTypes.REAL,
                 allowNull: true,
@@ -54,7 +49,7 @@ export default function sensor_readings(sequelize, DataTypes) {
                     name: "idx_sensor_readings_sensor_time",
                     fields: [
                         { name: "sensor_id" },
-                        { name: "time", order: "DESC" },
+                        { name: "created_at", order: "DESC" },
                     ],
                 },
                 {

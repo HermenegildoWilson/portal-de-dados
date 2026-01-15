@@ -21,7 +21,7 @@ export default function tokens(sequelize, DataTypes) {
                 type: DataTypes.TEXT,
                 allowNull: false,
             },
-            criado_em: {
+            created_at: {
                 type: DataTypes.DATE,
                 allowNull: true,
                 defaultValue: Sequelize.Sequelize.literal("CURRENT_TIMESTAMP"),

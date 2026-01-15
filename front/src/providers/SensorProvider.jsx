@@ -1,13 +1,15 @@
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { SensorContext } from "../context/SensorContext";
 import { socket } from "../services/socket";
-
+import { api } from "../api/axios";
+import AppLoader from "../components/feedback/AppLoader";
 const initialState = {
     sensors: {},
 };
 
 function sensorReducer(state, action) {
     console.log("🧠 Reducer UPDATE_SENSOR:", action.type);
+
     switch (action.type) {
         case "INIT_SENSORS":
             return {
@@ -20,8 +22,8 @@ function sensorReducer(state, action) {
                 ...state,
                 sensors: {
                     ...state.sensors,
-                    [action.sensorReading.sensor_id]: {
-                        ...state.sensors[action.sensorReading.sensor_id],
+                    [action.sensorReading.sensor_code]: {
+                        ...state.sensors[action.sensorReading.sensor_code],
                         ...action.sensorReading,
                     },
                 },
@@ -32,8 +34,45 @@ function sensorReducer(state, action) {
     }
 }
 
+export const getMySensors = async () => {
+    try {
+        const { data } = await api.get("/sensors/aloccation");
+        return data.data;
+    } catch (error) {
+        return {
+            esp32_01: {
+                pais: "Angola",
+                provincia: "Uíge",
+                cidade: "Uíge",
+            },
+            esp32_02: {
+                pais: "Angola",
+                provincia: "Uíge",
+                cidade: "Negage",
+            },
+            esp32_03: {
+                pais: "Angola",
+                provincia: "Uíge",
+                cidade: "Songo",
+            },
+        };
+    }
+};
+
 export default function SensorProvider({ children }) {
     const [state, dispatch] = useReducer(sensorReducer, initialState);
+    const [sensorCodes, setSensorCodes] = useState(null);
+    const [sensorLocation, setSensorLocation] = useState(null);
+    const getSensorsCode = async () => {
+        const response = await getMySensors();
+        const codes = Object.keys(response).map((code) => code);
+        setSensorLocation(response);
+        setSensorCodes(codes);
+    };
+
+    useEffect(() => {
+        getSensorsCode();
+    }, []);
 
     useEffect(() => {
         socket.connect();
@@ -41,7 +80,7 @@ export default function SensorProvider({ children }) {
             console.log("🟢 Socket conectado:", socket.id);
 
             socket.emit("subscribe", {
-                sensors: ["esp32_01"],
+                sensors: sensorCodes || [],
             });
         });
 
@@ -64,10 +103,21 @@ export default function SensorProvider({ children }) {
         });
 
         return () => socket.disconnect();
-    }, []);
+    }, [sensorCodes]);
+
+    if (!state.sensors || !sensorCodes || !sensorLocation) {
+        return (
+            <div className="border h-screen flex flex-col items-center justify-center gap-3">
+                <p>Carregando ...</p>
+                <AppLoader />
+            </div>
+        );
+    }
 
     return (
-        <SensorContext.Provider value={state}>
+        <SensorContext.Provider
+            value={{ sensors: state.sensors, sensorCodes, sensorLocation }}
+        >
             {children}
         </SensorContext.Provider>
     );

@@ -2,16 +2,80 @@ import SensorCache from "./sensor.cache.js";
 import SensorService from "./sensor.service.js";
 
 class classSensorControllers {
-    receiveSensorReading = async (req, res, next) => {
+    registerLocation = async (req, res, next) => {
         try {
             const data = req.body;
-            console.log(`Dados do sensor:${data.sensor_id} recebidos...`);
+            // Validação mínima (pode evoluir depois)
+            if (!data?.pais || !data?.provincia || !data?.cidade) {
+                throw new Error("Dados da região incompletos!");
+            }
+            const response = await SensorService.registerLocation(data, req);
 
-            const result = await SensorService.storeSensorReading(data, req);
+            if (response?.success) {
+                return res.status(response.status).json({
+                    ...response,
+                });
+            }
 
             return res.status(201).json({
                 success: true,
-                data: result,
+                data: response,
+            });
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    registerSensor = async (req, res, next) => {
+        try {
+            const data = req.body;
+            // Validação mínima (pode evoluir depois)
+            if (!data?.sensor_code || !data?.id_location) {
+                throw new Error("Dados do sensor incompletos!");
+            }
+            const response = await SensorService.registerSensor(data, req);
+
+            if (response?.success) {
+                return res.status(response.status).json({
+                    ...response,
+                });
+            }
+
+            return res.status(201).json({
+                success: true,
+                data: response,
+            });
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    receiveSensorReading = async (req, res, next) => {
+        try {
+            const data = req.body;
+            // Validação mínima (pode evoluir depois)
+            if (
+                !data?.sensor_code ||
+                !data?.temperature ||
+                !data?.humidity ||
+                !data?.pressure ||
+                !data?.air_quality
+            ) {
+                throw new Error("Dados do sensor inválidos!");
+            }
+
+            console.log(`Dados do sensor:${data?.sensor_code} recebidos...`);
+            const response = await SensorService.storeSensorReading(data, req);
+
+            if (response?.success) {
+                return res.status(response.status).json({
+                    ...response,
+                });
+            }
+
+            return res.status(201).json({
+                success: true,
+                data: response,
             });
         } catch (error) {
             next(error);
@@ -39,27 +103,17 @@ class classSensorControllers {
 
     getHistorySensorReading = async (req, res, next) => {
         try {
-            const { sensorId } = req.params;
-            if (!sensorId)
+            const { sensorCode } = req.params;
+            if (!sensorCode)
                 return res
                     .status(400)
-                    .json({ error: "SensorId é obrigatório" });
+                    .json({ error: "O código do sensor é obrigatório" });
 
-            const data = await SensorService.getHistoryReading(
-                sensorId,
-                req.query
-            );
-
-            if (!data) {
-                return res.status(404).json({
-                    success: false,
-                    message: "Sem dados para este sensor",
-                });
-            }
+            const data = await SensorService.getHistoryReading(sensorCode, req.query);
 
             return res
                 .status(200)
-                .json({ success: true, data: data.data, meta: data.meta });
+                .json({ success: true, ...data });
         } catch (error) {
             next(error);
         }

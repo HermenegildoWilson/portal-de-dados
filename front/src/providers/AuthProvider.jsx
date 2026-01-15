@@ -19,12 +19,11 @@ export default function AuthProvider({ children }) {
     }
 
     async function logout() {
-        try {
-            await userService.logout(user);
-        } finally {
-            setUser(null);
-            setAccessToken(null);
-        }
+        const res = await userService.logout(user);
+
+        setUser(null);
+        setAccessToken(null);
+        return res.data;
     }
 
     async function restoreSession() {

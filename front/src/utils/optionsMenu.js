@@ -4,7 +4,7 @@ export const menuItems = {
         { text: "Dashboard", path: "/", icon: iconMapper.dashboard },
         { text: "Histórico", path: "/historico", icon: iconMapper.chart,},
         { text: "Usuários", path: "/usuarios", icon: iconMapper.people },
-        //{ text: "Configurações", path: "/configuracoes", icon: iconMapper.configuracoes, },
+        { text: "Dispositivos", path: "/dispositivos", icon: iconMapper.dispositivos, },
         { text: "Notificações", path: "/notificacoes", icon: iconMapper.bell },
         { text: "Perfil", path: "/perfil", icon: iconMapper.perfil, },
         { text: "Sair", path: "/logout", icon: iconMapper.logout, },

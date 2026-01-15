@@ -43,7 +43,7 @@ class classUserServices {
             nome: usuario.nome,
             telefone: usuario.telefone,
             email: usuario.email,
-            role: "admin",
+            role: "visitor",
             senha: senhaHash,
         });
 
@@ -154,7 +154,7 @@ class classUserServices {
                 "telefone",
                 "email",
                 "role",
-                ["data_criacao", "dataCadastro"],
+                ["created_at", "dataCadastro"],
             ],
             where: idCondition,
         });

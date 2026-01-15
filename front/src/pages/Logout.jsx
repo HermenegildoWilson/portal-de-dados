@@ -9,8 +9,9 @@ export default function Logout() {
 
     useEffect(() => {
         const Logout = async () => {
-            const response = await logout();
-            const data = response.data;
+            const data = await logout();
+            console.log(data);
+            
 
             if (data.success) {
                 return setAlert({

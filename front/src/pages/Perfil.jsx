@@ -30,12 +30,12 @@ export default function Perfil() {
             const people = data.data[0];
 
             if (people) {
-                return setUserPerfil(data.data[0]);
+                return setUserPerfil(people);
             } else {
-                return setUserPerfil(null);
+                return setUserPerfil([]);
             }
         } catch (error) {
-            setUserPerfil(null);
+            setUserPerfil([]);
         } finally {
             setPageState("done");
         }
@@ -52,7 +52,7 @@ export default function Perfil() {
 
     if (pageState === "loading") {
         return (
-            <div className="flex-1 flex flex-col items-center justify-center gap-3">
+            <div className="flex-1 flex flex-col items-center justify-center gap-2">
                 <p>Carregando ...</p>
                 <AppLoader />
             </div>
@@ -67,13 +67,14 @@ export default function Perfil() {
             return key[0].charAt(0).toUpperCase() + key.slice(1);
         });
         perfilObject.values = Object.values(userPerfil).map((value) => value);
+
         formDelete = "Excluir perfil";
     }
 
     return (
         <div className="flex-1 " style={{ margin: 0, padding: 0 }}>
-            <div className="flex-auto flex relative justify-center mt-2">
-                <div className="rounded-full w-30 h-30 flex justify-center items-center text-7xl bg-(--color-primary) text-[#f4f6f8] mt-4 mb-2">
+            <div className="flex-auto flex relative justify-center mt-1">
+                <div className="rounded-full w-30 h-30 flex justify-center items-center text-7xl bg-(--color-primary) text-[#f4f6f8] mt-3">
                     {userPerfil?.nome[0] || <FaQuestionCircle />}
                 </div>
                 <div className="absolute right-0">
@@ -83,7 +84,7 @@ export default function Perfil() {
                     />
                 </div>
             </div>
-            <div className="flex justify-center mt-8">
+            <div className="flex justify-center mt-3">
                 <List sx={{ padding: 0, margin: 0 }}>
                     {userPerfil ? (
                         <PeoplePerfilItem
@@ -107,20 +108,27 @@ export function PeoplePerfilItem({ values, keys }) {
             {values.map((value, index) => {
                 const Icon = iconMapper[keys[index].toLowerCase()];
                 return (
-                    <ListItem sx={{ p: 0, marginBottom: "2px" }} key={keys[index]}>
+                    <ListItem
+                        sx={{ p: 0, marginBottom: "2px" }}
+                        key={keys[index]}
+                    >
                         <ListItemButton sx={{ borderRadius: 2 }}>
                             <ListItemIcon>
-                                <Icon
-                                    size={20}
-                                    className="text-gray-600"
-                                />
+                                <Icon size={20} className="text-gray-600" />
                             </ListItemIcon>
                             <div className="-ml-5">
                                 <p>{keys[index]}</p>
-                                <ListItemText
-                                    sx={{ margin: 0 }}
-                                    primary={value}
-                                />
+                                {keys[index] === "DataCadastro" ? (
+                                    <ListItemText
+                                        sx={{ margin: 0 }}
+                                        primary={new Date(value).toLocaleString("pt-BR")}
+                                    />
+                                ) : (
+                                    <ListItemText
+                                        sx={{ margin: 0 }}
+                                        primary={value}
+                                    />
+                                )}
                             </div>
                         </ListItemButton>
                     </ListItem>

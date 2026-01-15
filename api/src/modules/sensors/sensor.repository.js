@@ -1,74 +1,63 @@
-import { Op, fn, col, literal, QueryTypes } from "sequelize";
+import { Op, fn, col, literal, QueryTypes, where } from "sequelize";
 import { getModels } from "../../config/postgresqlClient.js";
-const { sensor_readings: sensor_readings_model } = getModels();
+const {
+    sensor_readings: sensor_readings_model,
+    sensors: sensor_model,
+    sensor_location: location_model,
+} = getModels();
 
 const SensorRepository = {
-    async create(data) {
+    async selectHistory(sensor_code, data) {
         try {
-            const result = await sensor_readings_model.create(data);
-            return result;
-        } catch (error) {
-            console.error("ERRO DETALHADO DO POSTGRES:", error.parent); // Isso mostrará o erro real do SQL
-            console.error("ERRO DE VALIDAÇÃO:", error.errors); // Caso seja erro do Sequelize
-            throw error;
-        }
-    },
-
-    async select(condition) {
-        const dados_encontrados = await sensor_readings_model.findAll({
-            where: condition,
-            raw: true,
-        });
-
-        return dados_encontrados;
-    },
-
-    async selectHistory(sensor_id, startDate, endDate, minuteInterval = 5) {
-        try {
-            const intervalSeconds = minuteInterval * 60; // 5 minutos
-
-            const rows = await sensor_readings_model.findAll({
-                attributes: [
-                    [
-                        literal(
-                            `to_timestamp(floor(extract('epoch' from "created_at")/${intervalSeconds})*${intervalSeconds})`
-                        ),
-                        "timestamp",
+            const sensor = await sensor_model.findOne({
+                attributes: {
+                    include: [
+                        [col("sensors.sensor_code"), "sensor_code"],
+                        [col("id_location_sensor_location.pais"), "pais"],
+                        [
+                            col("id_location_sensor_location.provincia"),
+                            "provincia",
+                        ],
+                        [col("id_location_sensor_location.cidade"), "cidade"],
+                        [
+                            col("id_location_sensor_location.latitude"),
+                            "latitude",
+                        ],
+                        [
+                            col("id_location_sensor_location.longitude"),
+                            "longitude",
+                        ],
                     ],
-                    [
-                        literal(`ROUND(AVG("temperature")::numeric, 2)`),
-                        "Temperatura",
-                    ],
-                    [literal(`ROUND(AVG("humidity")::numeric, 2)`), "Humidade"],
-                    [
-                        literal(`ROUND(AVG("air_quality")::numeric, 2)`),
-                        "Qualidade do Ar",
-                    ],
-                    [
-                        literal(`ROUND(AVG("pressure")::numeric, 2)`),
-                        "Pressão do Ar",
-                    ],
-                ],
-                where: {
-                    sensor_id,
-                    created_at: { [Op.between]: [startDate, endDate] },
                 },
-                group: [
-                    literal(
-                        `to_timestamp(floor(extract('epoch' from "created_at")/${intervalSeconds})*${intervalSeconds})`
-                    ),
-                ],
-                order: [
-                    [
-                        literal(
-                            `to_timestamp(floor(extract('epoch' from "created_at")/${intervalSeconds})*${intervalSeconds})`
-                        ),
-                        "ASC",
-                    ],
-                ],
+                include: {
+                    model: location_model,
+                    as: "id_location_sensor_location",
+                    attributes: [],
+                },
+                where: { sensor_code: sensor_code },
+                raw: true,
             });
 
-            return rows;
+            const history = await sensor_readings_model.findAll({
+                attributes: [
+                    ["temperature", "Temperatura"],
+                    ["humidity", "Humidade"],
+                    ["pressure", "Pressão do Ar"],
+                    ["air_quality", "Qualidade do Ar"],
+                    ["created_at", "timestamp"],
+                ],
+                where: {
+                    [Op.and]: [
+                        where(col("created_at"), {
+                            [Op.between]: [new Date(data), new Date()],
+                        }),
+                        where(col("sensor_id"), sensor.id),
+                    ],
+                },
+                raw: true,
+            });
+
+            return { history, location: sensor };
         } catch (error) {
             console.error("ERRO DETALHADO DO POSTGRES:", error.parent); // Isso mostrará o erro real do SQL
             console.error("ERRO DE VALIDAÇÃO:", error.errors); // Caso seja erro do Sequelize

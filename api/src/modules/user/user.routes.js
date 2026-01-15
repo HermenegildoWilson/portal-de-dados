@@ -31,6 +31,7 @@ userRouter.post(
 userRouter.get(
     "/usuarios", //?id=Number
     AuthMiddleware.authanticateAccess,
+    AuthMiddleware.verifyRole(["admin"]),
     UserControllers.getUsuarios
 );
 
