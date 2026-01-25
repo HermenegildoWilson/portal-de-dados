@@ -2,7 +2,7 @@
     "name": "api",
     "version": "1.0.0",
     "description": "Implementação de um portal de coleta de dados meteorológicos",
-    "main": "app.js",
+    "main": "server.js",
     "type": "module",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
