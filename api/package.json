@@ -1,29 +1,27 @@
 {
     "name": "api",
     "version": "1.0.0",
-    "description": "Implementação de um sistema de gestão de notas.",
-    "main": "server.js",
+    "description": "Implementação de um portal de coleta de dados meteorológicos",
+    "main": "app.js",
     "type": "module",
     "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
         "dev": "nodemon server.js",
         "start": "node server.js"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/HermenegildoWilson/GradeManager-api.git"
+        "url": "git+https://github.com/HermenegildoWilson/portal-de-dados.git"
     },
-    "keywords": [],
-    "author": "",
+    "author": "Hermenegildo Wilson",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/HermenegildoWilson/GradeManager-api/issues"
+        "url": "https://github.com/HermenegildoWilson/portal-de-dados/issues"
     },
-    "homepage": "https://github.com/HermenegildoWilson/GradeManager-api#readme",
+    "homepage": "https://github.com/HermenegildoWilson/portal-de-dados#readme",
     "dependencies": {
         "@supabase/supabase-js": "^2.76.1",
         "argon2": "^0.44.0",
-        "axios": "^1.13.0",
-        "body-parser": "^2.2.0",
         "cookie-parser": "^1.4.7",
         "cors": "^2.8.5",
         "express": "^5.1.0",
