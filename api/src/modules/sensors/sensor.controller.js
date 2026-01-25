@@ -84,12 +84,13 @@ class classSensorControllers {
 
     getSensors = async (req, res, next) => {
         try {
-            const response = await SensorService.getSensors();
+            const { id = null } = req.query;
+            const response = await SensorService.getSensors({ id: id });
 
             if (!response) {
                 return res.status(404).json({
                     success: false,
-                    message: "Sem dados para este sensor",
+                    message: "Sensor não encontrado",
                 });
             }
 
@@ -126,11 +127,12 @@ class classSensorControllers {
                     .status(400)
                     .json({ error: "O código do sensor é obrigatório" });
 
-            const data = await SensorService.getHistoryReading(sensorCode, req.query);
+            const data = await SensorService.getHistoryReading(
+                sensorCode,
+                req.query,
+            );
 
-            return res
-                .status(200)
-                .json({ success: true, ...data });
+            return res.status(200).json({ success: true, ...data });
         } catch (error) {
             next(error);
         }
@@ -147,7 +149,7 @@ class classSensorControllers {
 
             const data = await SensorService.getMetricsReading(
                 sensorId,
-                req.query
+                req.query,
             );
 
             if (!data) {

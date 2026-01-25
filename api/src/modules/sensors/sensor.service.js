@@ -1,7 +1,7 @@
 import SensorRepository from "./sensor.repository.js";
 import SensorCache from "./sensor.cache.js";
 import { getModels } from "../../config/postgresqlClient.js";
-import { col } from "sequelize";
+import { col, Op, where } from "sequelize";
 const {
     sensor_readings: sensor_readings_model,
     sensors: sensor_model,
@@ -141,9 +141,14 @@ class classSensorService {
         };
     }
 
-    async getSensors() {
+    async getSensors({ id = null }) {
+        const idCondition = id && where(col("sensors.id"), id);
+
         const data = await sensor_model.findAll({
             attributes: ["sensor_code", "id"],
+            where: {
+                [Op.and]: [idCondition],
+            },
             include: [
                 {
                     model: location_model,

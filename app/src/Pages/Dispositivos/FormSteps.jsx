@@ -202,7 +202,7 @@ export default function FormSteps({ children }) {
                         </Typography>
 
                         <StyledInput
-                            icon={<Cpu />}
+                            icon={<Activity />}
                             label="Código do Sensor (ID Único)"
                             value={formData.sensor_code}
                             placeholder="Ex: ESP32-SENS-001"

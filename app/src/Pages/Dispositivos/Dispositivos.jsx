@@ -13,8 +13,7 @@ export default function Dispositivos() {
 
     async function getDispositivos() {
         try {
-            const url = "/sensors/sensors";
-            const { data } = await api.get(url);
+            const { data } = await api.get("/sensors/sensors");
             const disps = data?.data;
 
             // Fallback seguro para strings de localização
