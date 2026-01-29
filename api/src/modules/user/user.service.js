@@ -26,7 +26,7 @@ class classUserServices {
         }
 
         const responseTelefone = await this.verifyUserTelefone(
-            usuario.telefone
+            usuario.telefone,
         );
 
         if (responseTelefone.success) {
@@ -37,7 +37,9 @@ class classUserServices {
             };
         }
 
-        const senhaHash = await this.createHash(usuario?.senha || usuario.telefone);
+        const senhaHash = await this.createHash(
+            usuario?.senha || usuario.telefone,
+        );
 
         const usuario_criado = await user_model.create({
             nome: usuario.nome,
@@ -61,6 +63,8 @@ class classUserServices {
     }
 
     async login(credencials, res) {
+        console.log(cookieOptions);
+        
         const responseEmail = await this.verifyUserEmail(credencials.email);
 
         if (!responseEmail.success) {
@@ -73,7 +77,7 @@ class classUserServices {
 
         const responseSenha = await this.verifyHash(
             responseEmail.data.senha,
-            credencials.senha
+            credencials.senha,
         );
 
         if (!responseSenha) {
@@ -90,18 +94,19 @@ class classUserServices {
             nome: responseEmail.data.nome,
             telefone: responseEmail.data.telefone,
             role: responseEmail.data.role,
+            dataCadastro: responseEmail.data.created_at,
         };
 
         const ACCESS_TOKEN = await this.createToken(
             payload,
             env.access_token_secret,
-            env.access_token_expiration
+            env.access_token_expiration,
         );
 
         const REFRESH_TOKEN = await this.createToken(
             payload,
             env.refresh_token_secret,
-            env.refresh_token_expiration
+            env.refresh_token_expiration,
         );
 
         token_model.create({

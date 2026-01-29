@@ -317,7 +317,7 @@ export default function LandingPage() {
                                 <Avatar
                                     sx={{
                                         bgcolor: "primary.light",
-                                        color: "primary.main",
+                                        color: "background.paper",
                                         width: 60,
                                         height: 60,
                                     }}

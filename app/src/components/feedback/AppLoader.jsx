@@ -5,5 +5,5 @@ export default function AppLoader({ type }) {
         return <CircularProgress sx={{ ml: 1, color: "divider" }} size={20} />;
     }
 
-    return <CircularProgress enableTrackSlot size={40} />;
+    return <CircularProgress thickness={5} enableTrackSlot size={40} />;
 }

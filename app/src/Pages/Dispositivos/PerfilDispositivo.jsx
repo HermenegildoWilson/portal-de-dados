@@ -148,18 +148,22 @@ export default function PerfilDispositivo() {
                 pt: 2,
                 pb: 2,
                 flex: "1",
-                margin: "auto"
+                margin: "auto",
             }}
         >
             <Container
-                sx={{ display: "flex", flexFlow: {xs: "wrap", md: "nowrap"}, gap: 2 }}
+                sx={{
+                    display: "flex",
+                    flexFlow: { xs: "wrap", md: "nowrap" },
+                    gap: 2,
+                }}
             >
                 {/* Painel de Informações do Sensor */}
                 <Card
                     elevation={0}
                     sx={{
                         p: 3,
-                        minWidth: 330
+                        minWidth: 330,
                     }}
                 >
                     <Box
@@ -175,7 +179,7 @@ export default function PerfilDispositivo() {
                             sx={{
                                 width: 80,
                                 height: 80,
-                                bgcolor: "primary.50",
+                                bgcolor: "#e3f2fd",
                                 color: "primary.main",
                                 mb: 1.5,
                                 borderRadius: 4,
@@ -417,7 +421,16 @@ export default function PerfilDispositivo() {
                                 Últimas Leituras
                             </Typography>
                         </Box>
-                        <Box sx={{ display: "grid", gridTemplateColumns: {xs: "1fr 1fr", md: "1fr 1fr 1fr 1fr"}, gap: 1 }}>
+                        <Box
+                            sx={{
+                                display: "grid",
+                                gridTemplateColumns: {
+                                    xs: "1fr 1fr",
+                                    md: "1fr 1fr 1fr 1fr",
+                                },
+                                gap: 1,
+                            }}
+                        >
                             {[
                                 {
                                     label: "Temperatura",

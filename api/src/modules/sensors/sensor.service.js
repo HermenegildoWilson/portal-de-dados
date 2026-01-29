@@ -76,16 +76,16 @@ class classSensorService {
             attributes: {
                 include: [
                     [col("sensors.sensor_code"), "sensor_code"],
-                    [col("id_location_sensor_location.pais"), "pais"],
-                    [col("id_location_sensor_location.provincia"), "provincia"],
-                    [col("id_location_sensor_location.cidade"), "cidade"],
-                    [col("id_location_sensor_location.latitude"), "latitude"],
-                    [col("id_location_sensor_location.longitude"), "longitude"],
+                    [col("sensor_location.pais"), "pais"],
+                    [col("sensor_location.provincia"), "provincia"],
+                    [col("sensor_location.cidade"), "cidade"],
+                    [col("sensor_location.latitude"), "latitude"],
+                    [col("sensor_location.longitude"), "longitude"],
                 ],
             },
             include: {
                 model: location_model,
-                as: "id_location_sensor_location",
+                as: "sensor_location",
                 attributes: [],
             },
             where: { sensor_code: sensor_code },
