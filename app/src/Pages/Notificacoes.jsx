@@ -1,11 +1,11 @@
-import { Box, Typography } from "@mui/material";
+import SmartView from "../components/shower/SmartView";
+import SmartList from "../components/shower/SmartList";
+import { Bell } from "lucide-react";
 
 export default function Notificacoes() {
     return (
-        <Box sx={{height: "80vh", margin: "auto"}}>
-            <>
-                <Typography variant="h4">Sem Notificações</Typography>
-            </>
-        </Box>
+        <SmartView title="Notificações" subTitle="Notificações">
+            <SmartList nameItem="Notificações" ItemAvatar={Bell} />
+        </SmartView>
     );
 }

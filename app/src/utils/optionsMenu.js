@@ -9,11 +9,12 @@ import {
     People,
     PersonAdd,
 } from "@mui/icons-material";
-import { Cpu } from "lucide-react";
+import { Cpu, HomeIcon } from "lucide-react";
 
 export const menuItems = {
     admin: [
-        { text: "Dashboard", path: "/", icon: Dashboard },
+        { text: "Home", path: "/", icon: HomeIcon },
+        { text: "Dashboard", path: "/dashboard", icon: Dashboard },
         { text: "Histórico", path: "/historico", icon: History },
         { text: "Usuários", path: "/usuarios", icon: People },
         { text: "Dispositivos", path: "/dispositivos", icon: Cpu },
@@ -22,7 +23,8 @@ export const menuItems = {
         { text: "Sair", path: "/logout", icon: Logout },
     ],
     visitor: [
-        { text: "Dashboard", path: "/", icon: Dashboard },
+        { text: "Home", path: "/", icon: HomeIcon },
+        { text: "Dashboard", path: "/dashboard", icon: Dashboard },
         { text: "Histórico", path: "/historico", icon: History },
         { text: "Notificações", path: "/notificacoes", icon: Notifications },
         { text: "Perfil", path: "/perfil", icon: AccountCircle },

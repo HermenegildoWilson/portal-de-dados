@@ -4,7 +4,7 @@ import AppLayout from "../../Layout/AppLayout";
 import ProtectedRoute from "./ProtectedRoute";
 
 import NotFound from "../../Pages/NotFound";
-import Home from "../../Pages/Home";
+import Home from "../../Pages/LandingPage/Home";
 import Login from "../../Pages/Login";
 import Cadastrar from "../../Pages/Cadastrar";
 
@@ -17,6 +17,8 @@ import Usuarios from "../../Pages/Usuarios";
 import Dispositivos from "../../Pages/Dispositivos/Dispositivos";
 import NovoDispositivo from "../../Pages/Dispositivos/NovoDispositivo";
 import PerfilDispositivo from "../../Pages/Dispositivos/PerfilDispositivo";
+import Teste from "../../Pages/LandingPage/Teste";
+import Main from "../../Pages/Main";
 
 export default function AppRoutes() {
     return (
@@ -25,8 +27,13 @@ export default function AppRoutes() {
                 <Route path="/cadastrar" element={<Cadastrar />} />
 
                 <Route element={<ProtectedRoute />}>
-                    <Route index element={<RealTime />} />
+                    <Route index element={<Main />} />
+
+                    <Route path="/dashboard" element={<RealTime />} />
+
                     <Route path="/historico" element={<History />} />
+
+                    <Route path="/usuarios" element={<Usuarios />} />
 
                     <Route path="/usuarios" element={<Usuarios />} />
 
@@ -45,12 +52,17 @@ export default function AppRoutes() {
                         element={<NovoDispositivo />}
                     />
 
-                    <Route path="/dispositivo/:id" element={<PerfilDispositivo />} />
+                    <Route
+                        path="/dispositivo/:id"
+                        element={<PerfilDispositivo />}
+                    />
 
                     <Route path="*" element={<NotFound />} />
                 </Route>
 
                 <Route path="/home" element={<Home />} />
+
+                {/* <Route path="/home2" element={<Teste />} /> */}
 
                 <Route path="/login" element={<Login />} />
 

@@ -63,8 +63,6 @@ class classUserServices {
     }
 
     async login(credencials, res) {
-        console.log(cookieOptions);
-        
         const responseEmail = await this.verifyUserEmail(credencials.email);
 
         if (!responseEmail.success) {

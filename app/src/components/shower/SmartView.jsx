@@ -66,7 +66,7 @@ export default function SmartView({
                         </Typography>
                     </Box>
 
-                    {!isMobile && (
+                    {(!isMobile && handleCreateNew ) && (
                         <Button
                             variant="contained"
                             startIcon={<Plus size={25} />}

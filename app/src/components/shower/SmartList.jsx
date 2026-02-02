@@ -17,7 +17,7 @@ export default function SmartList({
     keys = [],
     handleCreateNew,
     ItemAvatar = QuestionMark,
-    handleItemClick
+    handleItemClick,
 }) {
     return (
         <>
@@ -52,13 +52,15 @@ export default function SmartList({
                         >
                             Sem {nameItem.toLocaleLowerCase()}
                         </Typography>
-                        <Button
-                            variant="outlined"
-                            onClick={handleCreateNew}
-                            sx={{ borderRadius: 3, mt: 2 }}
-                        >
-                            Adicionar {nameItem.toLocaleLowerCase()}
-                        </Button>
+                        {handleCreateNew && (
+                            <Button
+                                variant="outlined"
+                                onClick={handleCreateNew}
+                                sx={{ borderRadius: 3, mt: 2 }}
+                            >
+                                Adicionar {nameItem.toLocaleLowerCase()}
+                            </Button>
+                        )}
                     </Box>
                 </Fade>
             ) : (
@@ -84,6 +86,7 @@ export default function SmartList({
 function SmartListItem({
     item = {},
     keys = [],
+    // eslint-disable-next-line no-unused-vars
     ItemAvatar = QuestionMark,
     handleItemClick,
 }) {

@@ -12,13 +12,14 @@ export default function ScrollTop({ target }) {
         const resolved =
             typeof target === "function" ? target() : target;
 
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         if (resolved) setScrollTarget(resolved);
     }, [target]);
 
     const trigger = useScrollTrigger({
         target: scrollTarget || undefined,
         disableHysteresis: true,
-        threshold: 60,
+        threshold: 800,
     });
 
     const handleClick = () => {

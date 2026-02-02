@@ -66,7 +66,7 @@ export default function SensorMonitorBase({
                 display: "flex",
                 flexDirection: "column",
                 flex: "1",
-                p: { xs: 0.5, md: 2 },
+                p: { xs: 0.5, md: 1 },
             }}
         >
             {/* ================= CABEÇALHO ================= */}
@@ -77,8 +77,8 @@ export default function SensorMonitorBase({
                         border: "1px solid",
                         borderColor: "divider",
                         boxShadow: "0 10px 40px -10px rgba(0,0,0,0.05)",
-                        py: { xs: 1, md: 2 },
-                        px: { xs: 1, md: 2 },
+                        py: { xs: 1, md: 1.8 },
+                        px: { xs: 1, md: 1.8 },
                         borderRadius: 2,
                         display: "flex",
                         flexWrap: "wrap",
