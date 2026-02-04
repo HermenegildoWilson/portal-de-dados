@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, LinearProgress, Typography } from "@mui/material";
 import AppLoader from "../components/feedback/AppLoader";
 import { useAuth } from "../hooks/useAuth";
 
@@ -12,15 +12,26 @@ export default function AuthGate({ children }) {
                     height: "89.9vh",
                     display: "flex",
                     flexFlow: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
                     gap: 2,
                 }}
             >
-                <Typography variant="body1" fontSize={"1.3rem"}>
-                    Carregando...
-                </Typography>
-                <AppLoader />
+                <div className="w-screen border">
+                    <LinearProgress sx={{ height: 4 }} />
+                </div>
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flexFlow: "column",
+                        flexGrow: 1
+                    }}
+                >
+                    <Typography variant="body1" fontSize={"1rem"} mb={1}>
+                        Carregando...
+                    </Typography>
+                    <AppLoader />
+                </Box>
             </Box>
         );
     }

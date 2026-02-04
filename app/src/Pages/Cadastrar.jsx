@@ -110,10 +110,10 @@ export default function Register() {
         }
     };
 
-    if (status === STATUS.SUCCESS) {
+    if (status === STATUS.SUCCESS || (user && user?.role !== "admin")) {
         return <Navigate to={"/"} />;
     }
-    
+
     const Fields = [
         {
             label: "Nome completo",
@@ -144,7 +144,7 @@ export default function Register() {
         },
     ];
 
-    !user &&
+    !(user?.role === "admin") &&
         Fields.push({
             label: "Senha",
             name: "senha",
@@ -155,7 +155,9 @@ export default function Register() {
             required: true,
         });
 
-    const title = !user ? "Criar conta" : "Cadastrar Usuário";
+    const title = !(user?.role === "admin")
+        ? "Criar conta"
+        : "Cadastrar Usuário";
 
     return (
         <Box

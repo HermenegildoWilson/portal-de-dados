@@ -20,7 +20,7 @@ export default function SmartView({
     handleCreateNew,
     pageState = "",
     children,
-    titleButton = "Adicionar"
+    titleButton = "Adicionar",
 }) {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -66,7 +66,7 @@ export default function SmartView({
                         </Typography>
                     </Box>
 
-                    {(!isMobile && handleCreateNew ) && (
+                    {!isMobile && handleCreateNew && (
                         <Button
                             variant="contained"
                             startIcon={<Plus size={25} />}
@@ -112,7 +112,7 @@ export default function SmartView({
                 </Card>
             </Container>
 
-            {isMobile && (
+            {isMobile && handleCreateNew && (
                 <Fab
                     color="primary"
                     onClick={handleCreateNew}

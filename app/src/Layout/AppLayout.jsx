@@ -39,7 +39,7 @@ export default function AppLayout() {
                     flexDirection: "column",
                     background: "linear-gradient(135deg, #f6f9fc 0%, #eef2f5 100%)",
                     flexGrow: 1,
-                    mt: 8,
+                    mt: 7,
                     overflowY: "scroll",
                     transition: theme.transitions.create(["margin"], {
                         easing: theme.transitions.easing.sharp,

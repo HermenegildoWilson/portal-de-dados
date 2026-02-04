@@ -105,7 +105,7 @@ export default function App() {
 
     if (loading) {
         return (
-            <Box sx={{ width: "100%", mt: 0 }}>
+            <Box sx={{ width: "100%", mt: 0, pt: .3 }}>
                 <LinearProgress sx={{ height: 4 }} />
                 <Box sx={{ p: 4, textAlign: "center" }}>
                     <Typography color="text.secondary">
