@@ -27,6 +27,7 @@ export default function RealTime() {
     const [history, setHistory] = useState({});
 
     // leitura atual do sensor ativo
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const actualReading = sensors?.[sensorCode] ?? {};
 
     /* ===================== HISTÓRICO CIRCULAR ===================== */

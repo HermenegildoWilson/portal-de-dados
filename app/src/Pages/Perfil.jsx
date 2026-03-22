@@ -71,6 +71,7 @@ export default function Perfil() {
 
     useEffect(() => {
         getPeople();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
 
     if (pageState === "loading") {
@@ -172,13 +173,13 @@ export default function Perfil() {
                                 <MiniMenu options={["Editar", "Deletar"]} />
                             </Box>
 
-                            <Box
+                            {/* <Box
                                 sx={{ position: "absolute", top: 20, left: 20 }}
                             >
                                 <IconButton onClick={() => navigate(-1)}>
                                     <ArrowLeft size={20} />
                                 </IconButton>
-                            </Box>
+                            </Box> */}
 
                             <Avatar
                                 sx={{

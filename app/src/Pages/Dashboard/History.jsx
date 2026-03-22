@@ -14,7 +14,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 const MAX_POINTS = 24;
 
 export default function History() {
-    const { sensors, sensorCodes, sensorLocation } = useSensors();
+    const { sensorCodes, sensorLocation } = useSensors();
 
     const [getNewHistory, setGetNewHistory] = useState(1);
     const [sensorCode, setSensorCode] = useState(sensorCodes[0]);
@@ -71,7 +71,7 @@ export default function History() {
         }
 
         if (sensorCode && date) fetchHistory();
-    }, [getNewHistory]);
+    }, [date, getNewHistory, sensorCode]);
 
     const fieldDate = (
         <LocalizationProvider dateAdapter={AdapterDayjs}>

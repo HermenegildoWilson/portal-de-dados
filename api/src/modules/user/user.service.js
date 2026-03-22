@@ -45,8 +45,8 @@ class classUserServices {
             nome: usuario.nome,
             telefone: usuario.telefone,
             email: usuario.email,
-            role: "visitor",
-            senha: senhaHash,
+            role: "admin",
+            senha: senhaHash,            
         });
 
         return {

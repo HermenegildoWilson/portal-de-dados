@@ -2,26 +2,16 @@
 #include <HTTPClient.h>
 #include <Wire.h>
 #include <Adafruit_BME680.h>
-
-/* ===========================
-   CONFIGURAÇÕES
-   =========================== */
-
+/* CONFIGURAÇÕES */
 constexpr const char* WIFI_SSID     = "hermenegildowilson7";
 constexpr const char* WIFI_PASSWORD = "wilsonPanzo";
-
-constexpr const char* API_URL = "http://10.86.51.236:3000/sensors/register/reading";
+constexpr const char* API_URL = "http://10.47.103.236:3000/sensors/register/reading";
 constexpr const char* SENSOR_CODE = "esp32_01";
-
 constexpr uint8_t I2C_SDA = 18;
 constexpr uint8_t I2C_SCL = 19;
 
-/* ===========================
-   OBJETO GLOBAL
-   =========================== */
-
+/* OBJETO GLOBAL */
 Adafruit_BME680 bme;
-
 struct SensorData {
   float temperature;
   float humidity;
@@ -29,10 +19,7 @@ struct SensorData {
   float airQuality;
 };
 
-/* ===========================
-   FUNÇÕES
-   =========================== */
-
+/* FUNÇÕES */
 void connectWiFi() {
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   Serial.print("Conectando ao Wi-Fi");
@@ -41,12 +28,10 @@ void connectWiFi() {
     delay(500);
     Serial.print(".");
   }
-
   Serial.println("\nWi-Fi conectado");
   Serial.print("IP: ");
   Serial.println(WiFi.localIP());
 }
-
 bool initBME680() {
   Wire.begin(I2C_SDA, I2C_SCL);
 
@@ -64,7 +49,6 @@ bool initBME680() {
   Serial.println("BME680 inicializado com sucesso.");
   return true;
 }
-
 bool readSensors(SensorData& data) {
   if (!bme.performReading()) {
     Serial.println("Erro ao ler BME680.");
@@ -105,9 +89,7 @@ void sendDataToServer(const SensorData& data) {
   http.end();
 }
 
-/* ===========================
-   SETUP
-   =========================== */
+/* SETUP */
 
 void setup() {
   Serial.begin(115200);
@@ -119,10 +101,7 @@ void setup() {
   connectWiFi();
 }
 
-/* ===========================
-   LOOP
-   =========================== */
-
+/* LOOP */
 void loop() {
   SensorData data;
 
@@ -131,5 +110,5 @@ void loop() {
     Serial.println("Dados enviados (modo teste: 5s fixos).");
   }
 
-  delay(3000);  // 3 segundos
+  delay(6000);  // 6 segundos
 }

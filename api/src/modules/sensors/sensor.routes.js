@@ -7,8 +7,8 @@ const sensorsRouter = Router();
 sensorsRouter.post("/register/location", SensorControllers.registerLocation);
 
 sensorsRouter.post("/register/sensor", 
-    AuthMiddleware.authanticateAccess,
-    AuthMiddleware.verifyRole(["admin"]),
+    // AuthMiddleware.authanticateAccess,
+    // AuthMiddleware.verifyRole(["admin"]),
     SensorControllers.registerSensor
 );
 

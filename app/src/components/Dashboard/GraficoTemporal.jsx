@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import ReactECharts from "echarts-for-react";
 
 const GraficoTemporal = React.memo(({ labels, values, config }) => (
