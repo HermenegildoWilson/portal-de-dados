@@ -62,7 +62,7 @@ export default function Header({ open, toggleDrawer, isMobile }) {
                 )}
 
                 <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>
-                    Portal de Dados
+                    Angothingnetwork
                 </Typography>
 
                 <Box sx={{ display: "flex" }}>
