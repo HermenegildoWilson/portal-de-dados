@@ -5,7 +5,7 @@
 /* CONFIGURAÇÕES */
 constexpr const char* WIFI_SSID     = "hermenegildowilson7";
 constexpr const char* WIFI_PASSWORD = "wilsonPanzo";
-constexpr const char* API_URL = "http://10.47.103.236:3000/sensors/register/reading";
+constexpr const char* API_URL = "https://angothingnetwork.onrender.com/sensors/register/reading";
 constexpr const char* SENSOR_CODE = "esp32_01";
 constexpr uint8_t I2C_SDA = 18;
 constexpr uint8_t I2C_SCL = 19;
@@ -110,5 +110,5 @@ void loop() {
     Serial.println("Dados enviados (modo teste: 5s fixos).");
   }
 
-  delay(6000);  // 6 segundos
+  delay(5000);  // 5 segundos
 }
