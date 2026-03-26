@@ -12,9 +12,7 @@ export const envValidationSchema = Joi.object({
   DATABASE_URL: Joi.string().optional(),
 
   // CORS | App Configuration
-  APP_HOST: Joi.string().required(),
-  APP_PORT: Joi.string().required(),
-  APP_DEEP_LINKING: Joi.string().required(),
+  APP_URL: Joi.string().uri().required(),
 
   // Security
   JWT_ACCESS_SECRET: Joi.string().required(),
@@ -25,13 +23,4 @@ export const envValidationSchema = Joi.object({
   // Mais Service
   MAIL_USER: Joi.string().email().required(),
   MAIL_PASS: Joi.string().required(),
-
-  SWAGGER_ENABLED: Joi.string().valid('true', 'false').required(),
-  SWAGGER_PATH: Joi.string().required(),
-
-  RATE_LIMIT_TTL: Joi.number().integer().min(1).required(),
-  RATE_LIMIT_LIMIT: Joi.number().integer().min(1).required(),
-  AUTH_RATE_LIMIT_TTL: Joi.number().integer().min(1).required(),
-  AUTH_RATE_LIMIT_LIMIT: Joi.number().integer().min(1).required(),
-  RATE_LIMIT_BLOCK_DURATION: Joi.number().integer().min(1).required(),
 });

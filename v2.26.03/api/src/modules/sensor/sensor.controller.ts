@@ -49,6 +49,6 @@ export class SensorController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.sensorService.remove({ where: { id } });
+    return this.sensorService.remove({ id });
   }
 }

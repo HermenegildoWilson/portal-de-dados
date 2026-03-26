@@ -47,38 +47,10 @@ export class EnvService {
   }
 
   get jwtAccessExpiresIn(): StringValue {
-    return this.config.get<string>('jwt.accessExpiresIn') as StringValue;
+    return this.config.get<string>('jwt.accessExpiresIn')!;
   }
 
   get jwtRefreshExpiresIn(): StringValue {
-    return this.config.get<string>('jwt.refreshExpiresIn') as StringValue;
-  }
-
-  get swaggerEnabled(): boolean {
-    return this.config.get<boolean>('swagger.enabled') ?? true;
-  }
-
-  get swaggerPath(): string {
-    return this.config.get<string>('swagger.path') ?? 'docs';
-  }
-
-  get rateLimitTtl(): number {
-    return this.config.get<number>('throttler.ttl') ?? 60;
-  }
-
-  get rateLimitLimit(): number {
-    return this.config.get<number>('throttler.limit') ?? 100;
-  }
-
-  get authRateLimitTtl(): number {
-    return this.config.get<number>('throttler.authTtl') ?? 60;
-  }
-
-  get authRateLimitLimit(): number {
-    return this.config.get<number>('throttler.authLimit') ?? 5;
-  }
-
-  get rateLimitBlockDuration(): number {
-    return this.config.get<number>('throttler.blockDuration') ?? 180000;
+    return this.config.get<string>('jwt.refreshExpiresIn')!;
   }
 }

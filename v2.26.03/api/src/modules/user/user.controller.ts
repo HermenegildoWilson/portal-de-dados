@@ -41,7 +41,7 @@ export class UserController {
   findAll() {
     return this.userService.findAll({
       omit: {
-        password: true,
+        passwordHash: true,
       },
     });
   }
@@ -51,7 +51,7 @@ export class UserController {
     return this.userService.findOne({
       where: { id },
       omit: {
-        password: true,
+        passwordHash: true,
       },
     });
   }

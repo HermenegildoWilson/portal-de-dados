@@ -7,12 +7,12 @@ import SigOutAuthDto from './dto/sig-out-auth.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post()
+  @Post('sigin')
   sigIn(@Body() sigInAuthDto: SigInAuthDto) {
     return this.authService.sigIn(sigInAuthDto);
   }
 
-  @Post()
+  @Post('sigout')
   sigOut() {
     const sigOutAuthDto: SigOutAuthDto = {
       userId: 'Pegar o id do usuario logado no momento da requisição.',
@@ -22,7 +22,7 @@ export class AuthController {
     return this.authService.sigOut(sigOutAuthDto);
   }
 
-  @Post()
+  @Post('refresh')
   refresh() {
     const refreshAuthDto = {
       refreshToken: 'Pegar o refreshToken do cookie da requisição atual',

@@ -3,6 +3,7 @@ import {
   ConflictException,
   Injectable,
 } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 import CreateUserDto, {
   ClearRegisterTokenTokenDto,
   GenerateRegisterTokenDto,
@@ -16,6 +17,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { Prisma } from '@/generated/prisma/client';
 import { randomBytes } from 'crypto';
 import { TEN_MINUTES_IN_MS } from '@/common/utils/date';
+import { MailService } from '../mail/mail.service';
 
 const toDbTimestamp = (date: Date) =>
   // Stores local wall-clock time into TIMESTAMP WITHOUT TZ.
@@ -24,7 +26,10 @@ const toDbTimestamp = (date: Date) =>
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly mailService: MailService,
+  ) {}
 
   async generateRegisterToken(
     generateRegisterTokenDto: GenerateRegisterTokenDto,
@@ -32,7 +37,7 @@ export class UserService {
     const { password, ...data } = generateRegisterTokenDto;
 
     const emailAllreadyExist = await this.prisma.user.findUnique({
-      where: { email },
+      where: { email: data.email },
     });
 
     if (emailAllreadyExist) {
@@ -42,7 +47,7 @@ export class UserService {
     }
 
     const phoneAllreadyExist = await this.prisma.user.findUnique({
-      where: { phone },
+      where: { phone: data.phone },
     });
 
     if (phoneAllreadyExist) {
@@ -56,7 +61,7 @@ export class UserService {
 
     const existingToken = await this.prisma.pendingUser.findFirst({
       where: {
-        email,
+        email: data.email,
         expiresAt: { gt: toDbTimestamp(new Date()) },
         used: false,
       },
@@ -69,11 +74,18 @@ export class UserService {
     }
     const token = randomBytes(32).toString('hex');
 
+    const validationToken = randomBytes(32).toString('hex');
+
+    await this.mailService.sendUserConfirmation({
+      to: data.email,
+      token: validationToken,
+    });
+
     const passwordHash = password; // Gerar hash
     const username = await this.generateUsername(data.name);
     const expiresAt = toDbTimestamp(new Date(Date.now() + TEN_MINUTES_IN_MS));
 
-    this.prisma.pendingUser.create({
+    await this.prisma.pendingUser.create({
       data: {
         ...data,
         expiresAt,
@@ -109,12 +121,14 @@ export class UserService {
     ) {
       throw new BadRequestException('Chave de registro invalida ou expirada.');
     }
-    const { token, ...data } = pendingUser;
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { token: lol, ...data } = pendingUser;
 
     const createdUser = await this.prisma.user.create({
-      data: { data },
+      data,
       omit: {
-        password: true,
+        passwordHash: true,
       },
     });
 
@@ -125,8 +139,8 @@ export class UserService {
     return createdUser;
   }
 
-  findAll(args?: Prisma.UserFindManyArgs) {
-    return this.prisma.user.findMany(args);
+  async findAll(args?: Prisma.UserFindManyArgs) {
+    return await this.prisma.user.findMany(args);
   }
 
   findOne(args: Prisma.UserFindUniqueArgs) {
