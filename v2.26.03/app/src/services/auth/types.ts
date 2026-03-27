@@ -1,3 +1,5 @@
+import type { UserDto } from "@/services/user/types";
+
 export class deviceDto {
   deviceId!: string;
   userAgent?: string;
@@ -20,3 +22,15 @@ export class SignInDto {
   };
   deviceDto: deviceDto;
 }
+
+export type AuthResponse = {
+  message: string;
+  user: UserDto;
+  accessToken: string;
+};
+
+export type AuthState = {
+  accessToken: string | null;
+  user: UserDto | null;
+  status: "loading" | "authenticated" | "unauthenticated";
+};

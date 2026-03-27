@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { createHash } from 'crypto';
+import { JwtService } from '@nestjs/jwt';
 import SigInAuthDto from './dto/sig-in-auth.dto';
 import SigOutAuthDto from './dto/sig-out-auth.dto';
 import RefreshAuthDto from './dto/refresh-auth.dto';
@@ -12,9 +13,31 @@ import { PrismaService } from '../prisma/prisma.service';
 import { EnvService } from '@/config/env/env.service';
 import { MailService } from '../mail/mail.service';
 import { User } from '@/generated/prisma/client';
-import { JwtTokenType } from './types';
-import { AuthUserPayload } from './types/payload';
-import { parseDurationToMs, signJwt, verifyJwt } from './utils/utils-service';
+import {
+  AuthUserPayload,
+  JwtPayload,
+  JwtTokenType,
+  isJwtPayload,
+} from './auth.jwt';
+
+const parseDurationToMs = (value: string | number) => {
+  if (typeof value === 'number') return value;
+  const trimmed = value.trim();
+  const match = /^(\d+(?:\.\d+)?)(ms|s|m|h|d|w|y)?$/i.exec(trimmed);
+  if (!match) return NaN;
+  const amount = Number(match[1]);
+  const unit = (match[2] ?? 's').toLowerCase();
+  const multipliers: Record<string, number> = {
+    ms: 1,
+    s: 1000,
+    m: 60_000,
+    h: 3_600_000,
+    d: 86_400_000,
+    w: 604_800_000,
+    y: 31_536_000_000,
+  };
+  return amount * (multipliers[unit] ?? 1000);
+};
 
 @Injectable()
 export class AuthService {
@@ -22,6 +45,7 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly env: EnvService,
     private readonly mailService: MailService,
+    private readonly jwtService: JwtService,
   ) {}
 
   async sigIn(data: SigInAuthDto) {
@@ -47,9 +71,7 @@ export class AuthService {
     const accessToken = this.signAccessToken(payload);
     const refreshToken = this.signRefreshToken(payload);
     const refreshTokenHash = this.hashToken(refreshToken);
-    const refreshExpiresAt = this.getExpiresAt(
-      this.env.jwtRefreshExpiresIn as string,
-    );
+    const refreshExpiresAt = this.getExpiresAt(this.env.jwtRefreshExpiresIn);
 
     await this.prisma.token.create({
       data: {
@@ -147,7 +169,7 @@ export class AuthService {
   }
 
   getRefreshTokenTtlMs() {
-    return this.parseExpiresIn(this.env.jwtRefreshExpiresIn as string);
+    return this.parseExpiresIn(this.env.jwtRefreshExpiresIn);
   }
 
   private buildUserPayload(user: User): AuthUserPayload {
@@ -164,13 +186,23 @@ export class AuthService {
   }
 
   private signAccessToken(payload: AuthUserPayload) {
-    const ttlMs = this.parseExpiresIn(this.env.jwtAccessExpiresIn as string);
-    return signJwt(payload, this.env.jwtAccessSecret, ttlMs, 'access');
+    return this.jwtService.sign(
+      { tokenType: 'access', payload },
+      {
+        secret: this.env.jwtAccessSecret,
+        expiresIn: this.env.jwtAccessExpiresIn,
+      },
+    );
   }
 
   private signRefreshToken(payload: AuthUserPayload) {
-    const ttlMs = this.parseExpiresIn(this.env.jwtRefreshExpiresIn as string);
-    return signJwt(payload, this.env.jwtRefreshSecret, ttlMs, 'refresh');
+    return this.jwtService.sign(
+      { tokenType: 'refresh', payload },
+      {
+        secret: this.env.jwtRefreshSecret,
+        expiresIn: this.env.jwtRefreshExpiresIn,
+      },
+    );
   }
 
   private verifyToken(
@@ -180,8 +212,8 @@ export class AuthService {
     errorMessage: string,
   ) {
     try {
-      const decoded = verifyJwt(token, secret);
-      if (decoded.tokenType !== expectedType) {
+      const decoded = this.jwtService.verify<JwtPayload>(token, { secret });
+      if (!isJwtPayload(decoded) || decoded.tokenType !== expectedType) {
         throw new UnauthorizedException(errorMessage);
       }
       return decoded.payload;

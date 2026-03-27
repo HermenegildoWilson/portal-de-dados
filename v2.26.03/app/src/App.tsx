@@ -1,40 +1,13 @@
-import { Box, Typography } from "@mui/material";
+import { BrowserRouter } from "react-router-dom";
+import { AuthProvider } from "./providers/AuthProvider";
+import AppRoutes from "./Partials/routes/AppRoutes";
 
 export default function App() {
   return (
-    <Box>
-      <Typography variant="h3">Ola Mundo</Typography>
-    </Box>
+    <AuthProvider>
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
-
-/**
- * import { BrowserRouter } from "react-router-dom";
-import { ThemeProvider } from "@mui/material";
-
-import theme from "./theme";
-import AlertProvider from "./providers/AlertProvider";
-import AuthProvider from "./providers/AuthProvider";
-import AuthenticatedProviders from "./providers/AuthenticatedProviders";
-import AppRoutes from "./Partials/routes/AppRoutes";
-import AuthGate from "./gates/AuthGate";
-
-export default function App() {
-    return (
-        <ThemeProvider theme={theme}>
-            <AlertProvider>
-                <AuthProvider>
-                    <AuthGate>
-                        <AuthenticatedProviders>
-                            <BrowserRouter>
-                                <AppRoutes />
-                            </BrowserRouter>
-                        </AuthenticatedProviders>
-                    </AuthGate>
-                </AuthProvider>
-            </AlertProvider>
-        </ThemeProvider>
-    );
-}
- * 
- */

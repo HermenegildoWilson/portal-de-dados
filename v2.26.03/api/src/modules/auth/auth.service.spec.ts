@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { EnvService } from '@/config/env/env.service';
 import { MailService } from '../mail/mail.service';
+import { JwtService } from '@nestjs/jwt';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -22,6 +23,7 @@ describe('AuthService', () => {
           },
         },
         { provide: MailService, useValue: { sendSecurityAlert: jest.fn() } },
+        { provide: JwtService, useValue: { sign: jest.fn(), verify: jest.fn() } },
       ],
     }).compile();
 

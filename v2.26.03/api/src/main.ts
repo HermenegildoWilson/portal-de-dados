@@ -4,6 +4,7 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
+import fastifyCookie from '@fastify/cookie';
 import { AppModule } from './app.module';
 import { EnvService } from './config/env/env.service';
 
@@ -33,6 +34,7 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter(),
   );
+  await app.register(fastifyCookie);
   app.useGlobalPipes(
     new ValidationPipe({
       stopAtFirstError: true,

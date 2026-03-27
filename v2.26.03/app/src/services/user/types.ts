@@ -4,6 +4,9 @@ export class UserDto {
   email: string;
   phone: string;
   username: string;
+  role?: "ADMIN" | "CLIENT" | "VISITOR";
+  photoUrl?: string | null;
+  createdAt?: string;
 }
 
 export default class CreateUserDto {

@@ -47,14 +47,10 @@ export class EnvService {
   }
 
   get jwtAccessExpiresIn(): StringValue {
-    return this.config.get<string>('jwt.accessExpiresIn')!;
+    return this.config.get<StringValue>('jwt.accessExpiresIn')!;
   }
 
   get jwtRefreshExpiresIn(): StringValue {
-    return this.config.get<string>('jwt.refreshExpiresIn')!;
-  }
-
-  get cookieRefreshName(): StringValue {
-    return this.config.get<string>('cookie.refreshName')!;
+    return this.config.get<StringValue>('jwt.refreshExpiresIn')!;
   }
 }

@@ -3,8 +3,9 @@ import type { ReactNode } from "react";
 
 import { AuthContext } from "@/context/AuthContext";
 import { api } from "@/config/api";
-import { Inteceptors } from "@/services/auth/auth.interceptors";
+import { setupAuthInterceptors } from "@/services/auth/auth.interceptors";
 import { authService } from "@/services/auth/auth.service";
+import { authStore } from "@/services/auth/auth.store";
 import type { UserDto } from "@/services/user/types";
 import type { SignInDto } from "@/services/auth/types";
 import { Container, Typography } from "@mui/material";
@@ -14,67 +15,87 @@ type AuthProviderProps = {
 };
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [loading, setLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<UserDto | null>(null);
+  const initialState = authStore.getState();
+  const [appState, setAppState] = useState<
+    "loading" | "authenticated" | "unauthenticated"
+  >(initialState.status);
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    Boolean(initialState.user),
+  );
+  const [user, setUser] = useState<UserDto | null>(initialState.user);
 
   const value = useMemo(
     () => ({
+      appState,
       isAuthenticated,
       user,
       signIn: async (data: SignInDto) => {
         const result = await authService.signIn(data);
-        if (result.success) {
-          setIsAuthenticated(true);
-          setUser(result.data.user);
+        if (result.success && result.data) {
+          authStore.setSession({
+            accessToken: result.data.accessToken,
+            user: result.data.user,
+          });
+        } else {
+          authStore.setUnauthenticated();
         }
         return result;
       },
       signOut: async () => {
         const result = await authService.signOut();
-        if (result.success) {
-          setIsAuthenticated(false);
-          setUser(null);
-        }
+        authStore.setUnauthenticated();
         return result;
       },
       refresh: async () => {
         const result = await authService.refresh();
-        if (result.success) {
-          setIsAuthenticated(true);
-          setUser(result.data.user);
+        if (result.success && result.data) {
+          authStore.setSession({
+            accessToken: result.data.accessToken,
+            user: result.data.user,
+          });
         } else {
-          setIsAuthenticated(false);
-          setUser(null);
+          authStore.setUnauthenticated();
         }
         return result;
       },
     }),
-    [isAuthenticated, user],
+    [appState, isAuthenticated, user],
   );
 
-  async function restoreSession() {
-    try {
-      return await value.refresh();
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
   useEffect(() => {
-    Inteceptors.accesTokenInteceptor(api);
-    Inteceptors.refreshTokenInteceptor(api);
-    Inteceptors.netWorkErrorInteceptor(api);
+    setupAuthInterceptors(api);
   }, []);
 
   useEffect(() => {
-    restoreSession();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const bootstrap = async () => {
+      try {
+        const result = await authService.refresh();
+        if (result.success && result.data) {
+          authStore.setSession({
+            accessToken: result.data.accessToken,
+            user: result.data.user,
+          });
+        } else {
+          authStore.setUnauthenticated();
+        }
+      } catch (error) {
+        console.log(error);
+        authStore.setUnauthenticated();
+      }
+    };
+
+    void bootstrap();
   }, []);
 
-  if (loading) {
+  useEffect(() => {
+    return authStore.subscribe((state) => {
+      setUser(state.user);
+      setIsAuthenticated(Boolean(state.user));
+      setAppState(state.status);
+    });
+  }, []);
+
+  if (appState === "loading") {
     return (
       <Container>
         <Typography variant="body1" sx={{ marginTop: 45, opacity: 1 }}>

@@ -7,19 +7,16 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import type { FastifyReply, FastifyRequest } from 'fastify';
+import type { CookieSerializeOptions } from '@fastify/cookie';
 import { AuthService } from './auth.service';
 import SigInAuthDto from './dto/sig-in-auth.dto';
 import { Public } from './decorators/public.decorator';
-import { EnvService } from '@/config/env/env.service';
-import { CookieOptions } from './types/cookie-options';
-import { parseCookies, serializeCookie } from './utils/utils-controller';
+
+const REFRESH_COOKIE_NAME = 'refreshToken';
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly env: EnvService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Post('sigin')
   @Public()
@@ -105,54 +102,27 @@ export class AuthController {
   }
 
   private getRefreshToken(request: FastifyRequest) {
-    const cookieHeader = request.headers.cookie;
-    const cookies = parseCookies(
-      typeof cookieHeader === 'string' ? cookieHeader : undefined,
-    );
-
-    return (
-      cookies[this.env.cookieRefreshName as string] ?? cookies.refresh_token
-    );
+    const cookies = request.cookies as Record<string, string> | undefined;
+    return cookies?.[REFRESH_COOKIE_NAME] ?? cookies?.refresh_token;
   }
 
-  private getCookieOptions(): CookieOptions {
+  private getCookieOptions(): CookieSerializeOptions {
     const isProd = process.env.NODE_ENV === 'production';
+    const sameSite: 'none' | 'lax' = isProd ? 'none' : 'lax';
     return {
       httpOnly: true,
       secure: isProd,
-      sameSite: isProd ? 'none' : 'lax',
+      sameSite,
       path: '/',
-      maxAge: this.authService.getRefreshTokenTtlMs(),
+      maxAge: Math.floor(this.authService.getRefreshTokenTtlMs() / 1000),
     };
   }
 
   private setRefreshCookie(reply: FastifyReply, refreshToken: string) {
-    const cookie = serializeCookie(
-      this.env.cookieRefreshName as string,
-      refreshToken,
-      this.getCookieOptions(),
-    );
-    this.appendSetCookieHeader(reply, cookie);
+    reply.setCookie(REFRESH_COOKIE_NAME, refreshToken, this.getCookieOptions());
   }
 
   private clearRefreshCookie(reply: FastifyReply) {
-    const options = this.getCookieOptions();
-    const cookie = serializeCookie(this.env.cookieRefreshName as string, '', {
-      ...options,
-      maxAge: 0,
-      expires: new Date(0),
-    });
-    this.appendSetCookieHeader(reply, cookie);
-  }
-
-  private appendSetCookieHeader(reply: FastifyReply, cookie: string) {
-    const existing = reply.getHeader('Set-Cookie');
-    if (!existing) {
-      reply.header('Set-Cookie', cookie);
-      return;
-    }
-
-    const values = Array.isArray(existing) ? existing : [String(existing)];
-    reply.header('Set-Cookie', [...values, cookie]);
+    reply.clearCookie(REFRESH_COOKIE_NAME, { path: '/' });
   }
 }

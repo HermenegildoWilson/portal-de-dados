@@ -47,7 +47,7 @@ export default function Footer() {
                 </Typography>
             </Stack>
             <Typography variant="body2" color="text.secondary">
-                © {new Date().getFullYear()} HyperCrest. Tecnologia para um
+                © {new Date().getFullYear()} Herme.tech. Tecnologia para um
                 futuro consciente.
             </Typography>
         </Box>

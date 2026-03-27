@@ -1,9 +1,12 @@
 import { api } from "@/config/api";
-import type { SignInDto } from "./types";
+import type { AuthResponse, SignInDto } from "./types";
+import type { functionDefaultReturn } from "@/types/functionDefaultReturn";
 
-const signIn = async (data: SignInDto) => {
+const signIn = async (
+  data: SignInDto,
+): Promise<functionDefaultReturn<AuthResponse>> => {
   try {
-    const response = await api.post("/auth/signin", data);
+    const response = await api.post<AuthResponse>("/auth/sigin", data);
 
     return {
       success: true,
@@ -17,9 +20,11 @@ const signIn = async (data: SignInDto) => {
   }
 };
 
-const signOut = async () => {
+const signOut = async (): Promise<
+  functionDefaultReturn<{ message: string }>
+> => {
   try {
-    const response = await api.post("/auth/signout");
+    const response = await api.post("/auth/sigout");
 
     return {
       success: true,
@@ -33,9 +38,9 @@ const signOut = async () => {
   }
 };
 
-const refresh = async () => {
+const refresh = async (): Promise<functionDefaultReturn<AuthResponse>> => {
   try {
-    const response = await api.post("/auth/refresh");
+    const response = await api.post<AuthResponse>("/auth/refresh");
 
     return {
       success: true,
