@@ -75,7 +75,7 @@ model Sensor {
   updatedAt        DateTime          @updatedAt
   deletedAt        DateTime?
   sensorAllocation SensorAllocation?
-  sensorReadings   SensorReadings[]
+  sensorReading   SensorReading[]
 }
 
 model SensorAllocation {
@@ -90,7 +90,7 @@ model SensorAllocation {
   deletedAt DateTime?
 }
 
-model SensorReadings {
+model SensorReading {
   id          String @id @default(cuid())
   sensorId    String
   temperature Float

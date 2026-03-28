@@ -17,6 +17,7 @@ export default () => {
       host: apiHost,
       url: isDev ? `http://${localIp}:${apiPort}` : `https://${apiHost}`,
       isDev: isDev,
+      redisUrl: process.env.REDIS_URL,
     },
 
     app: {

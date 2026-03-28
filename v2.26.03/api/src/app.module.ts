@@ -5,6 +5,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { PrismaModule } from './modules/prisma/prisma.module';
 import { EnvModule } from './config/env/env.module';
 import { MailModule } from './modules/mail/mail.module';
+import { SensorreadingModule } from './modules/sensorreading/sensorreading.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { MailModule } from './modules/mail/mail.module';
     PrismaModule,
     EnvModule,
     MailModule,
+    SensorreadingModule,
   ],
   controllers: [],
   providers: [],

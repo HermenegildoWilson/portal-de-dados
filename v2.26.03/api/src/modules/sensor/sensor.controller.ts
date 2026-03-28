@@ -10,8 +10,7 @@ import {
 import { SensorService } from './sensor.service';
 import CreateSensorDto from './dto/create-sensor.dto';
 import UpdateSensorDto from './dto/update-sensor.dto';
-import CreateSensorReadingDto from './dto/create-sensor-reading.dto';
-import CreateSensorAllocationDto from './dto/create-sensor-allocation.dto';
+import CreateSensorAllocationDto from './dto/create-sensorallocation.dto';
 
 @Controller('sensor')
 export class SensorController {
@@ -20,11 +19,6 @@ export class SensorController {
   @Post()
   create(@Body() data: CreateSensorDto) {
     return this.sensorService.create(data);
-  }
-
-  @Post('reading')
-  reading(@Body() data: CreateSensorReadingDto) {
-    return this.sensorService.reading(data);
   }
 
   @Post('allocate')

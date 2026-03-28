@@ -3,8 +3,7 @@ import CreateSensorDto from './dto/create-sensor.dto';
 import UpdateSensorDto from './dto/update-sensor.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma } from '@/generated/prisma/client';
-import CreateSensorReadingDto from './dto/create-sensor-reading.dto';
-import CreateSensorAllocationDto from './dto/create-sensor-allocation.dto';
+import CreateSensorAllocationDto from './dto/create-sensorallocation.dto';
 
 @Injectable()
 export class SensorService {
@@ -12,20 +11,6 @@ export class SensorService {
 
   create(data: CreateSensorDto) {
     return this.prisma.sensor.create({ data });
-  }
-
-  async reading(data: CreateSensorReadingDto) {
-    const { sensorCode, ...reading } = data;
-
-    const isSensorValid = await this.findOne({ where: { sensorCode } });
-
-    if (!isSensorValid) {
-      throw new BadRequestException('Sensor inválido.');
-    }
-
-    return this.prisma.sensorReadings.create({
-      data: { ...reading, sensorId: isSensorValid.id },
-    });
   }
 
   async allocate(data: CreateSensorAllocationDto) {

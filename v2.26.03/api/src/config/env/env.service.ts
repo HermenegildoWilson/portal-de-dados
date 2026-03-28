@@ -18,6 +18,10 @@ export class EnvService {
     return this.config.get<string>('api.host')!;
   }
 
+  get redisUrl(): string {
+    return this.config.get<string>('api.redisUrl')!;
+  }
+
   get appUrl(): string {
     return this.config.get<string>('app.url')!;
   }

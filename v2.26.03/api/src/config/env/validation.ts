@@ -7,6 +7,7 @@ export const envValidationSchema = Joi.object({
 
   API_PORT: Joi.number().required(),
   API_HOST: Joi.string().required(),
+  REDIS_URL: Joi.string().uri().required(),
 
   // Database (if needed in future)
   DATABASE_URL: Joi.string().optional(),
