@@ -22,7 +22,7 @@ enum UserRole {
 
 model User {
   id                String             @id @default(cuid())
-  name              String             @unique
+  name              String
   username          String             @unique
   email             String             @unique
   phone             String             @unique
@@ -70,7 +70,7 @@ model Token {
 
 model Sensor {
   id               String            @id @default(cuid())
-  sensorCode      String            @unique
+  sensorCode       String            @unique
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
   deletedAt        DateTime?

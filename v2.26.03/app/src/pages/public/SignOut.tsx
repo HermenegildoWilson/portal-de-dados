@@ -1,32 +1,46 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAlert } from "../../hooks/useAlert";
 import { useAuth } from "../../hooks/useAuth";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
+import Text from "@/components/ui/Text";
+import AppLoader from "@/components/feedback/AppLoader";
+import { Navigate } from "react-router-dom";
+import { STATUS } from "@/constants/status";
 
 export default function SignOut() {
   const { signOut } = useAuth();
   const { setAlert } = useAlert();
+  const [status, setStatus] = useState(STATUS.LOADING);
 
   useEffect(() => {
     const Logout = async () => {
-      const data = await signOut();
+      try {
+        const { data } = await signOut();
 
-      if (data.success) {
-        return setAlert({
+        if (data) {
+          return setAlert({
+            type: "SHOW",
+            text: data.message,
+            style: "success",
+          });
+        }
+
+        setAlert({
           type: "SHOW",
           text: data.message,
-          style: "success",
+          style: "warning",
         });
+      } finally {
+        setStatus(STATUS.IDLE);
       }
-      setAlert({
-        type: "SHOW",
-        text: data.message,
-        style: "warning",
-      });
     };
     Logout();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  if (status === STATUS.IDLE) {
+    return <Navigate to={"/"} />;
+  }
 
   return (
     <Box
@@ -39,9 +53,8 @@ export default function SignOut() {
         gap: 2,
       }}
     >
-      <Typography variant="body1" fontSize={"1.3rem"}>
-        Saindo...
-      </Typography>
+      <Text>Saindo...</Text>
+      <AppLoader />
     </Box>
   );
 }

@@ -19,20 +19,15 @@ import {
 import { Link, Navigate } from "react-router-dom";
 
 import FormFields from "@/components/form/FormFields";
-import { useAuth } from "@/hooks/useAuth";
 import { useAlert } from "@/hooks/useAlert";
 import type { GenerateRegisterTokenDto } from "@/services/user/types";
 import { userService } from "@/services/user/user.service";
 import type { StyledInputProps } from "@/components/form/types";
-
-const STATUS = {
-  IDLE: "idle",
-  LOADING: "loading",
-  SUCCESS: "success",
-};
+import AppLoader from "@/components/feedback/AppLoader";
+import Title from "@/components/ui/Title";
+import { STATUS } from "@/constants/status";
 
 export default function SignUp() {
-  const { user } = useAuth();
   const { setAlert } = useAlert();
   const [data, setData] = useState<GenerateRegisterTokenDto>({
     name: "",
@@ -40,6 +35,7 @@ export default function SignUp() {
     phone: "",
     password: "",
   });
+  const [message, setMessage] = useState("");
 
   const [status, setStatus] = useState(STATUS.IDLE);
 
@@ -49,7 +45,7 @@ export default function SignUp() {
     data.name.length >= 3 &&
     data.email.includes("@") &&
     data.phone.length >= 9 &&
-    (data.password.length >= 4 || !!user);
+    data.password.length >= 4;
 
   const handleChange = ({ target }) => {
     setData((prev) => ({
@@ -67,18 +63,27 @@ export default function SignUp() {
       if (response.data) {
         setAlert({
           type: "SHOW",
-          text: response?.data?.message ?? "",
+          text: response?.data.message,
           style: "success",
         });
+        setMessage(response?.data.message);
 
         setStatus(STATUS.SUCCESS);
+      } else {
+        setAlert({
+          type: "SHOW",
+          text: response?.message,
+          style: "warning",
+        });
+
+        setStatus(STATUS.IDLE);
       }
     } catch (error) {
       console.log(error);
 
       setAlert({
         type: "SHOW",
-        text: error.response?.data?.message,
+        text: error.response?.message,
         style: "warning",
       });
 
@@ -86,8 +91,8 @@ export default function SignUp() {
     }
   };
 
-  if (status === STATUS.SUCCESS || user) {
-    return <Navigate to={"/verify"} />;
+  if (status === STATUS.SUCCESS) {
+    return <Navigate to={"/signup/verify"} state={{ message }} />;
   }
 
   const Fields: StyledInputProps[] = [
@@ -143,17 +148,14 @@ export default function SignUp() {
           sx={{
             width: "100%",
             maxWidth: 460,
-            borderRadius: "24px",
-            boxShadow: "0 20px 40px rgba(0,0,0,.1)",
           }}
         >
-          {/* Header */}
-          <Box sx={{ p: 4, textAlign: "center" }}>
+          <Box sx={{ p: 2, textAlign: "center" }}>
             <Avatar
               variant="rounded"
               sx={{
                 margin: "auto",
-                bgcolor: "primary.main",
+                bgcolor: "secondary.main",
                 color: "primary.text",
                 width: 52,
                 height: 52,
@@ -164,15 +166,11 @@ export default function SignUp() {
               <PersonAdd />
             </Avatar>
 
-            <Typography variant="h5" fontWeight={700}>
+            <Title>
               Criar conta
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Preencha os dados para se cadastrar
-            </Typography>
+            </Title>
           </Box>
 
-          {/* data */}
           <Box component="form" onSubmit={handleSubmit} sx={{ px: 4, pb: 3 }}>
             <FormFields Fields={Fields}>
               <Button
@@ -184,39 +182,42 @@ export default function SignUp() {
                 sx={{
                   borderRadius: "12px",
                   py: 1.4,
-                  textTransform: "none",
                 }}
               >
-                {isLoading ? "Criando sua conta..." : "Criar conta"}
+                {isLoading ? (
+                  <>
+                    Criando sua conta...
+                    <AppLoader type={"small"} />
+                  </>
+                ) : (
+                  "Criar conta"
+                )}
               </Button>
             </FormFields>
 
-            {!user && (
-              <>
-                {" "}
-                <Box sx={{ my: 2 }}>
-                  <Divider />
-                </Box>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: 1.5,
-                  }}
-                >
-                  Já tem uma conta?{" "}
-                  <Typography component="span" color="primary" fontWeight={600}>
-                    <Link to={"/signin"} style={{ textDecoration: "none" }}>
-                      <Typography sx={{ color: "primary.main" }}>
-                        Entrar
-                      </Typography>
-                    </Link>
-                  </Typography>
+            <Box>
+              <Box sx={{ my: 1 }}>
+                <Divider />
+              </Box>
+              <Typography
+                variant="body2"
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: 1.5,
+                }}
+              >
+                Já tem uma conta?
+                <Typography component="span" color="primary" fontWeight={600}>
+                  <Link to={"/signin"} style={{ textDecoration: "none" }}>
+                    <Typography sx={{ color: "primary.main" }}>
+                      Entrar
+                    </Typography>
+                  </Link>
                 </Typography>
-              </>
-            )}
+              </Typography>
+            </Box>
           </Box>
         </Card>
       </Fade>

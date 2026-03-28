@@ -18,7 +18,7 @@ export const menuItems = {
         { text: "Usuários", path: "/usuarios", icon: People },
         { text: "Dispositivos", path: "/dispositivos", icon: Cpu },
         { text: "Notificações", path: "/notificacoes", icon: Notifications },
-        { text: "Perfil", path: "/perfil", icon: AccountCircle },
+        { text: "Perfil", path: "/profife", icon: AccountCircle },
         { text: "Sair", path: "/signout", icon: Logout },
     ],
     CLIENT: [
@@ -26,7 +26,7 @@ export const menuItems = {
         { text: "Dashboard", path: "/dashboard", icon: Dashboard },
         { text: "Histórico", path: "/historico", icon: History },
         { text: "Notificações", path: "/notificacoes", icon: Notifications },
-        { text: "Perfil", path: "/perfil", icon: AccountCircle },
+        { text: "Perfil", path: "/profife", icon: AccountCircle },
         { text: "Sair", path: "/signout", icon: Logout },
     ],
     VISITOR: [
@@ -34,7 +34,7 @@ export const menuItems = {
         { text: "Dashboard", path: "/dashboard", icon: Dashboard },
         { text: "Histórico", path: "/historico", icon: History },
         { text: "Notificações", path: "/notificacoes", icon: Notifications },
-        { text: "Perfil", path: "/perfil", icon: AccountCircle },
+        { text: "Perfil", path: "/profife", icon: AccountCircle },
         { text: "Sair", path: "/signout", icon: Logout },
     ],
     PUBLIC: [

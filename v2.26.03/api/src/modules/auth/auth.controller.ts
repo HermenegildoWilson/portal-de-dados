@@ -9,7 +9,7 @@ import {
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import type { CookieSerializeOptions } from '@fastify/cookie';
 import { AuthService } from './auth.service';
-import SigInAuthDto from './dto/sig-in-auth.dto';
+import SignInAuthDto from './dto/sign-in-auth.dto';
 import { Public } from './decorators/public.decorator';
 
 const REFRESH_COOKIE_NAME = 'refreshToken';
@@ -18,14 +18,14 @@ const REFRESH_COOKIE_NAME = 'refreshToken';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('sigin')
+  @Post('signin')
   @Public()
-  async sigIn(
-    @Body() sigInAuthDto: SigInAuthDto,
+  async signIn(
+    @Body() signInAuthDto: SignInAuthDto,
     @Res({ passthrough: true }) reply: FastifyReply,
   ) {
     const { accessToken, refreshToken, user } =
-      await this.authService.sigIn(sigInAuthDto);
+      await this.authService.signIn(signInAuthDto);
 
     this.setRefreshCookie(reply, refreshToken);
 
@@ -36,7 +36,7 @@ export class AuthController {
     };
   }
 
-  @Post('sigout')
+  @Post('signout')
   @Public()
   async sigOut(
     @Req() request: FastifyRequest,
@@ -63,7 +63,7 @@ export class AuthController {
       userId = this.authService.verifyRefreshToken(refreshToken).id;
     }
 
-    await this.authService.sigOut({ userId, refreshToken });
+    await this.authService.signOut({ userId, refreshToken });
     this.clearRefreshCookie(reply);
 
     return {

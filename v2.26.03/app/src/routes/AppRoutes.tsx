@@ -8,8 +8,15 @@ import Home from "@/pages/public/Home";
 import SignIn from "@/pages/public/SignIn";
 import SignUp from "@/pages/public/SignUp";
 import SignOut from "@/pages/public/SignOut";
+import VerifyEmail from "@/pages/public/VerifyEmail";
+import ValidateSignUp from "@/pages/public/ValidateSignUp";
+import Main from "@/pages/screens";
+import Profife from "@/pages/screens/Perfil";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function AppRoutes() {
+  const { user } = useAuth();
+
   return (
     <Routes>
       <Route path="/" element={<AppLayout />}>
@@ -17,6 +24,8 @@ export default function AppRoutes() {
          * PROTECTED PAGES (ROUTES)
          */}
         <Route element={<ProtectedRoute />}>
+          <Route path="/" element={<Main />} />
+          <Route path="/profife" element={<Profife user={user} />} />
           <Route path="*" element={<NotFound />} />
         </Route>
 
@@ -26,8 +35,9 @@ export default function AppRoutes() {
         <Route path="/home" element={<Home />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/signup/verify" element={<VerifyEmail />} />
+        <Route path="/signup/validate" element={<ValidateSignUp />} />
         <Route path="/signout" element={<SignOut />} />
-        <Route path="*" element={<NotFound />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

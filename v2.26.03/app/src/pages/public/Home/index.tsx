@@ -18,8 +18,8 @@ export default function Home() {
     <Box
       sx={{
         bgcolor: "background.default",
-        pt: 1.4,
         flex: "1",
+        overflowX: "hidden",
       }}
     >
       {/* HERO SECTION COM ANIMAÇÃO */}

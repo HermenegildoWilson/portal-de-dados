@@ -56,12 +56,12 @@ export default function Header({ open, toggleDrawer }) {
           {user ? (
             <>
               <Link to={"/notificacoes"}>
-                <IconButton color="inherit">
+                <IconButton >
                   <NotificationsIcon />
                 </IconButton>
               </Link>
-              <Link to={"/perfil"}>
-                <IconButton color="inherit">
+              <Link to={"/profife"}>
+                <IconButton >
                   <AccountCircle />
                 </IconButton>
               </Link>
@@ -70,7 +70,7 @@ export default function Header({ open, toggleDrawer }) {
             <>
               <Button
                 sx={{ backgroundColor: "white" }}
-                onClick={() => navigate("/login")}
+                onClick={() => navigate("/signin")}
               >
                 Entrar
               </Button>

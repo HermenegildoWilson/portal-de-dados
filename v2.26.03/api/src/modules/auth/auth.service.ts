@@ -6,8 +6,8 @@ import {
 import * as bcrypt from 'bcrypt';
 import { createHash } from 'crypto';
 import { JwtService } from '@nestjs/jwt';
-import SigInAuthDto from './dto/sig-in-auth.dto';
-import SigOutAuthDto from './dto/sig-out-auth.dto';
+import SignInAuthDto from './dto/sign-in-auth.dto';
+import SignOutAuthDto from './dto/sign-out-auth.dto';
 import RefreshAuthDto from './dto/refresh-auth.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { EnvService } from '@/config/env/env.service';
@@ -48,7 +48,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async sigIn(data: SigInAuthDto) {
+  async signIn(data: SignInAuthDto) {
     const { userFields } = data;
     const { email } = userFields;
 
@@ -97,7 +97,7 @@ export class AuthService {
     };
   }
 
-  async sigOut(data: SigOutAuthDto) {
+  async signOut(data: SignOutAuthDto) {
     const { userId, refreshToken } = data;
     const tokenHash = this.hashToken(refreshToken);
 

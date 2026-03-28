@@ -35,29 +35,34 @@ export class UserService {
     generateRegisterTokenDto: GenerateRegisterTokenDto,
   ) {
     const { password, ...data } = generateRegisterTokenDto;
+    // Não aguardar a limpeza para não bloquear a resposta ao usuário
+    await this.cleanExpiredTokens();
 
-    const emailAllreadyExist = await this.prisma.user.findUnique({
+    const userEmailAllreadyExist = await this.prisma.user.findUnique({
       where: { email: data.email },
     });
-
-    if (emailAllreadyExist) {
+    const pendingUserEmailAllreadyExist =
+      await this.prisma.pendingUser.findUnique({
+        where: { email: data.email },
+      });
+    if (userEmailAllreadyExist || pendingUserEmailAllreadyExist) {
       throw new ConflictException(
         'Por favor faça login, ou use um email diferente.',
       );
     }
 
-    const phoneAllreadyExist = await this.prisma.user.findUnique({
+    const userPhoneAllreadyExist = await this.prisma.user.findUnique({
       where: { phone: data.phone },
     });
-
-    if (phoneAllreadyExist) {
+    const pendingUserPhoneAllreadyExist =
+      await this.prisma.pendingUser.findUnique({
+        where: { phone: data.phone },
+      });
+    if (userPhoneAllreadyExist || pendingUserPhoneAllreadyExist) {
       throw new ConflictException(
         'Por favor faça login, ou use um telefone diferente.',
       );
     }
-
-    // Não aguardar a limpeza para não bloquear a resposta ao usuário
-    await this.cleanExpiredTokens();
 
     const existingToken = await this.prisma.pendingUser.findFirst({
       where: {
@@ -74,12 +79,11 @@ export class UserService {
     }
     const token = randomBytes(32).toString('hex');
 
-    const validationToken = randomBytes(32).toString('hex');
-
     await this.mailService.sendUserConfirmation({
       to: data.email,
-      token: validationToken,
+      token,
     });
+    console.log('Email sent...');
 
     const passwordHash = password; // Gerar hash
     const username = await this.generateUsername(data.name);
@@ -123,7 +127,7 @@ export class UserService {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { token: lol, ...data } = pendingUser;
+    const { token: lol, createdAt, expiresAt, used, ...data } = pendingUser;
 
     const createdUser = await this.prisma.user.create({
       data,

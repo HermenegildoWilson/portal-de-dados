@@ -11,18 +11,14 @@ import {
 import { MailOutline, LockOutlined, ArrowForward } from "@mui/icons-material";
 import { Link, Navigate } from "react-router-dom";
 
-import { useAlert } from "../../hooks/useAlert";
-import { useAuth } from "../../hooks/useAuth";
+import { useAlert } from "@/hooks/useAlert";
+import { useAuth } from "@/hooks/useAuth";
 import FormFields from "@/components/form/FormFields";
 import type { SignInDto } from "@/services/auth/types";
 import type { StyledInputProps } from "@/components/form/types";
-
-const STATUS = {
-  IDLE: "idle",
-  LOADING: "loading",
-  SUCCESS: "success",
-};
-
+import AppLoader from "@/components/feedback/AppLoader";
+import Title from "@/components/ui/Title";
+import { STATUS } from "@/constants/status";
 export default function SignIn() {
   const { signIn, user } = useAuth();
   const { setAlert } = useAlert();
@@ -53,25 +49,26 @@ export default function SignIn() {
         setStatus(STATUS.SUCCESS);
         return setAlert({
           type: "SHOW",
-          text: response.message,
+          text: response.data.message,
           style: "success",
-        });
-      }
-    } catch (error) {
-      console.log(error);
-      if (error.code === "ERR_NETWORK") {
-        setAlert({
-          type: "SHOW",
-          text: error.message,
-          style: "error",
         });
       } else {
         setAlert({
           type: "SHOW",
-          text: error.response?.data?.message,
+          text: response.message,
           style: "warning",
         });
+
+        setStatus(STATUS.IDLE);
       }
+    } catch (error) {
+      console.log(error);
+
+      setAlert({
+        type: "SHOW",
+        text: error.response?.message,
+        style: "warning",
+      });
 
       setStatus(STATUS.IDLE);
     }
@@ -107,17 +104,17 @@ export default function SignIn() {
       sx={{
         height: "100%",
         display: "flex",
-        alignItems: "center",
         justifyContent: "center",
+        alignItems: "center",
+        p: 2,
+        mb: 10,
       }}
     >
       <Fade in timeout={600}>
         <Card
           sx={{
             width: "100%",
-            maxWidth: 440,
-            borderRadius: "24px",
-            boxShadow: "0 20px 40px rgba(0,0,0,.1)",
+            maxWidth: 460,
           }}
         >
           <Box sx={{ p: 4, textAlign: "center" }}>
@@ -125,7 +122,7 @@ export default function SignIn() {
               variant="rounded"
               sx={{
                 margin: "auto",
-                bgcolor: "primary.main",
+                bgcolor: "secondary.main",
                 color: "primary.text",
                 width: 52,
                 height: 52,
@@ -136,12 +133,7 @@ export default function SignIn() {
               <LockOutlined />
             </Avatar>
 
-            <Typography variant="h4" fontWeight={700}>
-              Bem-vindo
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Acesse sua conta para continuar
-            </Typography>
+            <Title>Bem-vindo</Title>
           </Box>
 
           <Box component="form" onSubmit={handleSubmit} sx={{ px: 4, pb: 3 }}>
@@ -153,37 +145,43 @@ export default function SignIn() {
                 disabled={!isFormValid || isLoading}
                 endIcon={!isLoading && <ArrowForward />}
                 sx={{
-                  borderRadius: "8px",
+                  borderRadius: "12px",
                   py: 1.4,
-                  textTransform: "none",
                 }}
               >
-                {isLoading ? "Entrando..." : "Entrar na plataforma"}
+                {isLoading ? (
+                  <>
+                    Entrando... <AppLoader type="small" />
+                  </>
+                ) : (
+                  <>Entrar na plataforma</>
+                )}
               </Button>
             </FormFields>
 
-            <Box sx={{ my: 2 }}>
-              <Divider>OU</Divider>
-            </Box>
-
-            <Typography
-              variant="body2"
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: 1.5,
-              }}
-            >
-              Não tem uma conta?{" "}
-              <Typography component="span" color="primary" fontWeight={600}>
-                <Link to={"/signup"} style={{ textDecoration: "none" }}>
-                  <Typography sx={{ color: "primary.main" }}>
-                    Cadastre-se agora
-                  </Typography>
-                </Link>
+            <Box>
+              <Box sx={{ my: 1 }}>
+                <Divider />
+              </Box>
+              <Typography
+                variant="body2"
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: 1.5,
+                }}
+              >
+                Não tem uma conta?
+                <Typography component="span" color="primary" fontWeight={600}>
+                  <Link to={"/signup"} style={{ textDecoration: "none" }}>
+                    <Typography sx={{ color: "primary.main" }}>
+                      Cadastre-se
+                    </Typography>
+                  </Link>
+                </Typography>
               </Typography>
-            </Typography>
+            </Box>
           </Box>
         </Card>
       </Fade>

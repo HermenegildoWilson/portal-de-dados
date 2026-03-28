@@ -9,22 +9,25 @@ import {
   Tooltip,
 } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import theme from "@/theme";
 import { menuItems } from "@/constants/menuItems";
 
 const drawerWidth = 240;
 
-function ListItemsMenu({ open, isMobile, opcoesMenu, navigate, location }) {
+function ListItemsMenu({
+  open,
+  isMobile,
+  opcoesMenu,
+  navigate,
+  location,
+  toggleDrawer,
+}) {
   return (
     <List>
       {opcoesMenu.map((item) => {
         // === CONTROLE DO ESTADO DE ACTIVAÇÃO DA OPÇÃO DO MENU
         const active = location.pathname === item.path;
-
-        function toggleDrawer() {
-          throw new Error("Function not implemented.");
-        }
 
         return (
           <ListItem key={item.text} disablePadding sx={{ display: "block" }}>
@@ -127,6 +130,7 @@ export default function Sidebar({ open, toggleDrawer, isMobile }) {
         opcoesMenu={opcoesMenu}
         navigate={navigate}
         location={location}
+        toggleDrawer={toggleDrawer}
       />
     </Drawer>
   );

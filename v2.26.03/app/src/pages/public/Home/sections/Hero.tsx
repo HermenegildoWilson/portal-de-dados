@@ -33,31 +33,69 @@ export default function Hero({ impactRef }: HeroProps) {
     return (
         <Box
             sx={{
-                background: `linear-gradient(135deg, ${theme.palette.primary.light}22 0%, ${theme.palette.background.default} 100%)`,
+                position: "relative",
+                overflow: "hidden",
+                py: { xs: 1, md: 2 },
+                background: `radial-gradient(1200px 600px at -10% -20%, ${theme.palette.primary.light}33 0%, transparent 60%),
+                  radial-gradient(900px 500px at 110% 0%, ${theme.palette.secondary.main}22 0%, transparent 55%),
+                  linear-gradient(135deg, ${theme.palette.primary.light}11 0%, ${theme.palette.background.default} 100%)`,
             }}
         >
-            <Container maxWidth="lg">
+            <MotionBox
+                aria-hidden
+                animate={{ y: [0, 18, 0], x: [0, -10, 0] }}
+                transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+                sx={{
+                    position: "absolute",
+                    top: { xs: -120, md: -160 },
+                    right: { xs: -120, md: -160 },
+                    width: { xs: 260, md: 420 },
+                    height: { xs: 260, md: 420 },
+                    borderRadius: "50%",
+                    bgcolor: theme.palette.primary.main,
+                    opacity: 0.15,
+                    filter: "blur(45px)",
+                }}
+            />
+            <MotionBox
+                aria-hidden
+                animate={{ y: [0, -16, 0], x: [0, 12, 0] }}
+                transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
+                sx={{
+                    position: "absolute",
+                    bottom: { xs: -140, md: -180 },
+                    left: { xs: -120, md: -140 },
+                    width: { xs: 240, md: 380 },
+                    height: { xs: 240, md: 380 },
+                    borderRadius: "50%",
+                    bgcolor: theme.palette.secondary.main,
+                    opacity: 0.12,
+                    filter: "blur(45px)",
+                }}
+            />
+
+            <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
                 <Grid
                     container
                     spacing={{ xs: 4, md: 8 }}
                     justifyContent="center"
                     alignItems="center"
                 >
-                    <Grid item xs={12} md={7}>
+                    <Grid>
                         <MotionBox
                             initial={{ opacity: 0, x: -50 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.8 }}
                             sx={{
                                 mb: { xs: 0, md: -4 },
-                                textAlign: "left",
+                                textAlign: "left" ,
                             }}
                         >
                             <Stack
                                 direction="row"
                                 spacing={1}
                                 alignItems="center"
-                                justifyContent={"flex-start"}
+                                justifyContent={"flex-start" }
                                 sx={{ mb: 3 }}
                             >
                                 <Box
@@ -130,14 +168,17 @@ export default function Hero({ impactRef }: HeroProps) {
                                     xs: "center",
                                     md: "flex-start",
                                 }}
+                                alignItems={{ xs: "center", md: "flex-start" }}
                             >
                                 <Button
-                                    fullWidth={{ xs: true, sm: false }}
-                                    onClick={() => navigate("/cadastrar")}
+                                    size="large"
+                                    onClick={() => navigate("/signup")}
                                     endIcon={<ArrowForward />}
                                     sx={{
                                         borderRadius: 2,
                                         fontSize: "1.1rem",
+                                        width: { xs: "100%", sm: "auto" },
+                                        px: { xs: 3, md: 4 },
                                         boxShadow:
                                             "0 10px 20px rgba(26, 115, 232, 0.3)",
                                         background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
@@ -148,12 +189,14 @@ export default function Hero({ impactRef }: HeroProps) {
                                 </Button>
 
                                 <Button
-                                    fullWidth={{ xs: true, sm: false }}
+                                    size="large"
                                     onClick={() => rolarParaSecao(impactRef)}
                                     variant="outlined"
                                     sx={{
                                         borderRadius: 2,
                                         fontSize: "1.1rem",
+                                        width: { xs: "100%", sm: "auto" },
+                                        px: { xs: 3, md: 4 },
                                         borderWidth: 2,
                                         "&:hover": { borderWidth: 2 },
                                     }}
@@ -164,11 +207,12 @@ export default function Hero({ impactRef }: HeroProps) {
                         </MotionBox>
                     </Grid>
 
-                    <Grid item xs={12} md={5}>
+                    <Grid size={{ xs: 12, md: 7 }}>
                         <MotionBox
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 1 }}
+                            whileHover={{ y: -6 }}
                         >
                             <Paper
                                 elevation={0}
@@ -179,6 +223,7 @@ export default function Hero({ impactRef }: HeroProps) {
                                     mx: "auto",
                                     background: "rgba(255, 255, 255, 0.6)",
                                     backdropFilter: "blur(20px)",
+                                    border: "1px solid rgba(255,255,255,0.4)",
                                 }}
                             >
                                 <Box

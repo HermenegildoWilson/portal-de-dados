@@ -45,7 +45,7 @@ export default function AppAlert() {
       onClose={handleClose}
       autoHideDuration={alert.duration ?? 6000}
       TransitionComponent={SlideTransition}
-      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       sx={{ mt: 2, mr: 1 }}
     >
       <Alert
@@ -65,11 +65,11 @@ export default function AppAlert() {
           minWidth: { xs: 280, sm: 360 },
           maxWidth: 460,
           borderRadius: 2.5,
-          border: `1px solid ${alpha(accentColor, 0.35)}`,
-          bgcolor: alpha(accentColor, 0.12),
+          border: `.2px solid ${alpha(accentColor, 0.15)}`,
+          bgcolor: alpha(accentColor, 0.13),
           color: theme.palette.text.primary,
-          boxShadow: `0 16px 40px ${alpha(accentColor, 0.28)}`,
-          backdropFilter: "blur(10px)",
+          boxShadow: `0 10px 25px ${alpha(accentColor, 0.18)}`,
+          backdropFilter: "blur(1px)",
           alignItems: "center",
           "& .MuiAlert-icon": {
             color: accentColor,

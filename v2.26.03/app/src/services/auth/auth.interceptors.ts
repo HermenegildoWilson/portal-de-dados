@@ -87,7 +87,7 @@ const accessTokenInterceptor = (api: AxiosInstance) => {
 
 const isAuthRoute = (url?: string) =>
   Boolean(
-    url && (url.includes("/auth/refresh") || url.includes("/auth/sigin")),
+    url && (url.includes("/auth/refresh") || url.includes("/auth/signin")),
   );
 
 // Interceptor para tratar erro global/401 / Refresco automático do token

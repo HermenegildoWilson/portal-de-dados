@@ -5,7 +5,6 @@ import { Outlet } from "react-router-dom";
 import theme from "../theme";
 import Header from "../Partials/Header/Header";
 import Sidebar from "../Partials/Sidebar/Sidebar";
-import ScrollTop from "../Partials/ScrollTop";
 
 const drawerWidth = 0;
 const closedWidth = -22; //`calc(${theme.spacing(7)} + 1px)`;
@@ -32,7 +31,7 @@ export default function AppLayout() {
           background: "linear-gradient(135deg, #f6f9fc 0%, #eef2f5 100%)",
           flexGrow: 1,
           mt: 7,
-          overflowY: "scroll",
+          overflowY: "auto",
           transition: theme.transitions.create(["margin"], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.standard,
@@ -41,7 +40,6 @@ export default function AppLayout() {
         }}
       >
         <Outlet />
-        <ScrollTop target={() => boxRef.current} />
       </Box>
     </Box>
   );

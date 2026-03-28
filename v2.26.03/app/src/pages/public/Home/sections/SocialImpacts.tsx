@@ -11,8 +11,8 @@ type SocialImpactsProps = object;
 const SocialImpacts = forwardRef<HTMLDivElement, SocialImpactsProps>(
   function SocialImpacts(_props, ref) {
     return (
-      <Container maxWidth="lg" sx={{ py: 8 }} ref={ref}>
-        <Box sx={{ textAlign: "center", mb: 5 }}>
+      <Container maxWidth="lg" sx={{ py: { xs: 8, md: 10 } }} ref={ref}>
+        <Box sx={{ textAlign: "center", mb: { xs: 4, md: 6 } }}>
           <Typography variant="h4" fontWeight="800" gutterBottom>
             Um sistema, infinitas possibilidades.
           </Typography>
@@ -29,16 +29,19 @@ const SocialImpacts = forwardRef<HTMLDivElement, SocialImpactsProps>(
         <Box
           sx={{
             display: "grid",
-            gap: 4,
-            gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+            gap: { xs: 3, md: 4 },
+            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
           }}
         >
           {socialImpactItems.map((impact, idx) => (
             <MotionPaper
               key={idx}
-              whileHover={{ y: -10 }}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              whileHover={{ y: -8 }}
               sx={{
-                p: { xs: 2, md: 4 },
+                p: { xs: 2.5, md: 3.5 },
                 borderRadius: 6,
                 borderColor: "divider",
                 display: "flex",
@@ -46,17 +49,19 @@ const SocialImpacts = forwardRef<HTMLDivElement, SocialImpactsProps>(
                 gap: 3,
                 height: "100%",
                 width: "100%",
+                background: "rgba(255,255,255,0.9)",
+                backdropFilter: "blur(8px)",
               }}
             >
               <Avatar
                 sx={{
-                  bgcolor: "primary.light",
+                  bgcolor: "primary.main",
                   color: "background.paper",
-                  width: 60,
-                  height: 60,
+                  width: 56,
+                  height: 56,
                 }}
               >
-                {impact.icon}
+                <impact.Icon />
               </Avatar>
               <Box>
                 <Typography variant="h6" fontWeight="800" gutterBottom>

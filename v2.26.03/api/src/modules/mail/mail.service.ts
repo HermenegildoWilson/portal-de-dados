@@ -42,7 +42,7 @@ export class MailService {
   }): Promise<any> {
     const { to, token } = params;
 
-    const url = `${this.env.apiUrl}/signup?token=${token}`;
+    const url = `${this.env.appUrl}/signup/validate?token=${token}`;
 
     return this.sendTemplateEmail({
       to,
