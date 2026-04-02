@@ -6,8 +6,8 @@ import type { StringValue } from 'ms';
 export class EnvService {
   constructor(private readonly config: ConfigService) {}
 
-  get apiUrl(): number {
-    return this.config.get<number>('api.url')!;
+  get apiUrl(): string {
+    return this.config.get<string>('api.url')!;
   }
 
   get apiPort(): number {

@@ -1,13 +1,15 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import CreateSensorReadingDto from './dto/create-sensorreading.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { SensorsGateway } from './sensorreading.gateway';
+import { SensorsGateway } from './webSocketGateway';
+import { RedisService } from '@/config/redis/redis.service';
 
 @Injectable()
 export class SensorreadingService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly gateway: SensorsGateway,
+    private readonly redis: RedisService,
   ) {}
 
   async create(data: CreateSensorReadingDto) {
@@ -32,12 +34,20 @@ export class SensorreadingService {
   }
 
   // Chamado sempre que um sensor muda (via MQTT, polling, webhook, etc.)
-  onSensorStateChange(sensorId: string, newState: CreateSensorReadingDto) {
+  async onSensorStateChange(
+    sensorId: string,
+    newState: CreateSensorReadingDto,
+  ) {
     // 1. Persiste no teu DB se necessário
     // await this.repo.save({ sensorId, state: newState });
 
+    // 1.1 Cache no Redis (último estado)
+    await this.redis.setSensorState(sensorId, newState);
+
     // 2. Emite apenas para a sala desse sensor
     this.gateway.emitSensorUpdate(sensorId, newState);
+
+    return newState;
   }
 
   findAll() {

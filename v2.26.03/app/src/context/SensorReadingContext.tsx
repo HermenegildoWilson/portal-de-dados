@@ -1,4 +1,12 @@
 import type { SensorReadingDto } from "@/services/sensor/types";
 import { createContext } from "react";
 
-export const SensorReadingContext = createContext<SensorReadingDto[]>(null);
+type typeSensorReadingContext = {
+  connected: boolean;
+  subscribe: (sensorId: string) => void;
+  unsubscribe: (sensorId: string) => void;
+  SensorReadingDto: SensorReadingDto[];
+};
+
+export const SensorReadingContext =
+  createContext<typeSensorReadingContext>(null);

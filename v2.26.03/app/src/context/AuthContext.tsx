@@ -5,6 +5,7 @@ import type { functionDefaultReturn } from "@/types/functionDefaultReturn";
 import { createContext } from "react";
 
 type AuthContextType = {
+  sensorIds: string[];
   appState: "loading" | "authenticated" | "unauthenticated";
   isAuthenticated: boolean;
   user: UserDto | null;

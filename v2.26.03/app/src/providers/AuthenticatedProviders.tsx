@@ -1,5 +1,5 @@
 import { useAuth } from "../hooks/useAuth";
-import SensorsReadingProvider from "./SensorsReadingProvider";
+import SensorsReadingProvider from "./SensorsProvider";
 
 export default function AuthenticatedProviders({ children }) {
   const { user } = useAuth();

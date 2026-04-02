@@ -58,6 +58,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         }
         return result;
       },
+      sensorIds: ["cmnd31bt000006hi03lutoimd"],
     }),
     [appState, isAuthenticated, user],
   );

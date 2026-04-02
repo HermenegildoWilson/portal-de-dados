@@ -2,28 +2,17 @@ import fastifyCookie from '@fastify/cookie';
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { EnvService } from '../env/env.service';
 import { buildValidationPipe } from './validation';
-
-// import { IoAdapter } from '@nestjs/platform-socket.io';
-import { createAdapter } from '@socket.io/redis-adapter';
-import { createClient } from 'redis';
-import { RedisIoAdapter } from '@/modules/sensorreading/redis-io.adapter';
+import { RedisIoAdapter } from '@/config/redis/redis-io.adapter';
 
 export const setupApp = async (app: NestFastifyApplication) => {
   const env = app.get(EnvService);
 
   const allowedOrigins = [env.appUrl].filter(Boolean);
 
-  // Socket
-  const pubClient = createClient({ url: env.redisUrl });
-  const subClient = pubClient.duplicate();
-  await Promise.all([pubClient.connect(), subClient.connect()]);
-
-  const redisAdapter = createAdapter(pubClient, subClient);
-
-  // Aplica o adapter ao Socket.IO server
-  // const ioAdapter = app.get(IoAdapter);
-  // Alternativa mais limpa: custom adapter
-  app.useWebSocketAdapter(new RedisIoAdapter(app, redisAdapter));
+  // Socket (Redis adapter)
+  const redisIoAdapter = new RedisIoAdapter(app);
+  await redisIoAdapter.connectToRedis(env.redisUrl);
+  app.useWebSocketAdapter(redisIoAdapter);
 
   app.enableCors({
     origin: (origin, callback) => {
