@@ -13,7 +13,7 @@ import Title from "@/components/ui/Title";
 import { useAuth } from "@/hooks/useAuth";
 import { Grass, Person } from "@mui/icons-material";
 import { Cpu } from "lucide-react";
-import CardsTelemetria from "./Devices/CardsTelemetria";
+import TemporalCards from "../../components/Dashboard/TemporalCards";
 import { useNavigate } from "react-router-dom";
 
 // Lista de sensores disponíveis/solicitados
@@ -48,7 +48,7 @@ export default function Main() {
           <Text>Eis o resumo do seu ecossistema para hoje.</Text>
         </Box>
 
-        <CardsTelemetria />
+        <TemporalCards />
 
         <Box
           sx={{

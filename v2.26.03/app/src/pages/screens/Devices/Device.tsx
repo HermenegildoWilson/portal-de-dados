@@ -18,7 +18,7 @@ import type { SensorDto } from "@/services/sensor/types";
 import DialogDeleteDevice from "./DialogDeleteDevice";
 import FullLoader from "@/components/feedback/loader/FullLoader";
 import { useAlert } from "@/hooks/useAlert";
-import CardsTelemetria from "./CardsTelemetria";
+import TemporalCards from "@/components/Dashboard/TemporalCards";
 
 export default function Device() {
   const { id } = useParams();
@@ -320,12 +320,12 @@ export default function Device() {
               </Typography>
             </Box>
             <>
-              <CardsTelemetria
+              <TemporalCards
                 boxProps={{
                   sx: {
                     gridTemplateColumns: "repeat(2, minmax(100px, 160px))",
                     gap: 1,
-                    justifyContent: "center"
+                    justifyContent: "center",
                   },
                 }}
               />

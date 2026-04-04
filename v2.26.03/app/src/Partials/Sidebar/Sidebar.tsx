@@ -11,7 +11,7 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import theme from "@/theme";
-import { menuItems } from "@/constants/menuItems";
+import { SidebarItems } from "@/Partials/Sidebar/SidebarItems";
 
 const drawerWidth = 240;
 
@@ -83,7 +83,7 @@ function ListItemsMenu({
 
 export default function Sidebar({ open, toggleDrawer, isMobile }) {
   const { user } = useAuth();
-  const opcoesMenu = menuItems[user?.role || "PUBLIC"];
+  const opcoesMenu = SidebarItems[user?.role || "PUBLIC"];
   const navigate = useNavigate();
   const location = useLocation();
 

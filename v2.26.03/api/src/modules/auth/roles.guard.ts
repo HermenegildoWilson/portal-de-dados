@@ -8,6 +8,8 @@ import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from './decorators/role.decorator';
 import { UserRole } from '@/generated/prisma/client';
 import { IS_PUBLIC_KEY } from './decorators/public.decorator';
+import { isAuthUserPayload } from './auth.jwt';
+import type { Request } from 'express';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -32,10 +34,10 @@ export class RolesGuard implements CanActivate {
       return true;
     }
 
-    const request = context.switchToHttp().getRequest();
-    const user = request?.user;
+    const request = context.switchToHttp().getRequest<Request>();
+    const user = request?.user as unknown;
 
-    if (!user?.role) {
+    if (!isAuthUserPayload(user)) {
       throw new ForbiddenException('Acesso negado.');
     }
 

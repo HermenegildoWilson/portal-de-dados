@@ -113,7 +113,7 @@ export default function SensorMonitorBase({
               :&nbsp;
               {actualReading?.timestamp
                 ? new Date(actualReading?.timestamp).toLocaleString()
-                : "DD/MM/AAA, hh:ss:ms"}{" "}
+                : "DD/MM/AAA, hh:ss:ms"}
             </Typography>
 
             <Typography
@@ -242,12 +242,12 @@ export default function SensorMonitorBase({
                 <b>
                   {config.warning_value}
                   {config.unit}
-                </b>{" "}
-                (Aviso) |{" "}
+                </b>
+                (Aviso) |
                 <b>
                   {config.high_value}
                   {config.unit}
-                </b>{" "}
+                </b>
                 (Crítico)
               </Typography>
             </Box>

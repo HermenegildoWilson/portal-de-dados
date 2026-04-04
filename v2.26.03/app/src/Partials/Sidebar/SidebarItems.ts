@@ -10,10 +10,10 @@ import {
   PersonAdd,
 } from "@mui/icons-material";
 import { Cpu, HomeIcon } from "lucide-react";
-export const menuItems = {
+export const SidebarItems = {
   ADMIN: [
     { text: "Home", path: "/", icon: HomeIcon },
-    { text: "Dashboard", path: "/dashboard", icon: Dashboard },
+    { text: "Dashboard", path: "/realtime", icon: Dashboard },
     { text: "Histórico", path: "/history", icon: History },
     { text: "Usuários", path: "/users", icon: People },
     { text: "Dispositivos", path: "/devices", icon: Cpu },
@@ -23,7 +23,7 @@ export const menuItems = {
   ],
   CLIENT: [
     { text: "Home", path: "/", icon: HomeIcon },
-    { text: "Dashboard", path: "/dashboard", icon: Dashboard },
+    { text: "Dashboard", path: "/realtime", icon: Dashboard },
     { text: "Histórico", path: "/history", icon: History },
     { text: "Dispositivos", path: "/devices", icon: Cpu },
     { text: "Notificações", path: "/notifications", icon: Notifications },
@@ -32,7 +32,7 @@ export const menuItems = {
   ],
   VISITOR: [
     { text: "Home", path: "/", icon: HomeIcon },
-    { text: "Dashboard", path: "/dashboard", icon: Dashboard },
+    { text: "Dashboard", path: "/realtime", icon: Dashboard },
     { text: "Histórico", path: "/history", icon: History },
     { text: "Notificações", path: "/notifications", icon: Notifications },
     { text: "Perfil", path: "/profile", icon: AccountCircle },

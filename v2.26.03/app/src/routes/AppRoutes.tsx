@@ -16,8 +16,8 @@ import Users from "@/pages/screens/user/Users";
 import Profile from "@/pages/screens/user/Profile";
 import Device from "@/pages/screens/Devices/Device";
 import Notifications from "@/pages/screens/Notifications/Notifications";
-import Dashboard from "@/pages/screens/Dashboard/Dashboard";
-import History from "@/pages/screens/Dashboard/History";
+import RealTime from "@/pages/screens/SensorMetrics/RealTime";
+import History from "@/pages/screens/SensorMetrics/History";
 
 export default function AppRoutes() {  
 
@@ -29,7 +29,7 @@ export default function AppRoutes() {
          */}
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<Main />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/realtime" element={<RealTime />} />
           <Route path="/history" element={<History />} />
 
           <Route path="/users" element={<Users />} />

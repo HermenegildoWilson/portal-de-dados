@@ -8,17 +8,16 @@ import {
   Typography,
   type BoxProps,
 } from "@mui/material";
-import parameterOptions from "@/config/sensor/parameterOptions";
-import type { parameterOptionsField } from "@/config/sensor/types";
 import { ArrowDownward, ArrowUpward } from "@mui/icons-material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { SensorReadingDto } from "@/services/sensor/types";
 import { useSensorsReading } from "@/hooks/useSensors";
+import type { parameterOptionsName } from "@/config/sensor/types";
+import parameterOptions from "@/config/sensor/parameterOptions";
 
-// KPIs rápidas
 const stats = (actualReading: SensorReadingDto) =>
   ["Temperatura", "Qualidade do Ar", "Humidade", "Pressão do Ar"].map(
-    (key: parameterOptionsField) => {
+    (key: parameterOptionsName) => {
       const formatReading = (value, unit) => {
         if (value === null || value === undefined || value === "") return "--";
         const numericValue = Number(value);
@@ -63,10 +62,16 @@ const stats = (actualReading: SensorReadingDto) =>
     },
   );
 
-export default function CardsTelemetria(props: { boxProps?: BoxProps }) {
-  const { SensorReadingDto } = useSensorsReading();
-  //setActualReading
-  const [actualReading] = useState<SensorReadingDto>(SensorReadingDto?.[0]);
+export default function TemporalCards(props: { boxProps?: BoxProps }) {
+  const { SensorReading } = useSensorsReading();
+  const [actualReading, setActualReading] = useState<SensorReadingDto>(
+    SensorReading?.[0],
+  );
+  
+
+  useEffect(() => {
+    setActualReading(SensorReading[0]);
+  }, [SensorReading]);
 
   return (
     <Box
@@ -115,7 +120,7 @@ export default function CardsTelemetria(props: { boxProps?: BoxProps }) {
                   size="small"
                   sx={{
                     bgcolor: "#ecfdf5",
-                    color: "#10b981",
+                    color: stat.statusColor,
                     fontWeight: 800,
                     fontSize: "0.65rem",
                   }}

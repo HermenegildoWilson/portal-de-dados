@@ -48,26 +48,26 @@ const parameterOptions: parameterOptionsDto = {
   },
 };
 
-export const initialHistory = Object.keys(parameterOptions).reduce(
-  (acc, key) => ({ ...acc, [key]: [] }),
-  { labels: [] },
-);
-
 export default parameterOptions;
 
-export const parametersKey = {
-  esp_amb: {
-    parameters: {
-      Temperatura: "",
-      Humidade: "",
-      "Pressão do Ar": "",
-      "Qualidade do Ar": "",
-    },
-  },
-  esp_agu: {
-    parameters: {
-      Ph: "",
-      Oxigênio: "",
-    },
-  },
-};
+// export const initialHistory = Object.keys(parameterOptions).reduce(
+//   (acc, key) => ({ ...acc, [key]: [] }),
+//   { labels: [] },
+// );
+
+// export const parametersKey = {
+//   esp_amb: {
+//     parameters: {
+//       Temperatura: "",
+//       Humidade: "",
+//       "Pressão do Ar": "",
+//       "Qualidade do Ar": "",
+//     },
+//   },
+//   esp_agu: {
+//     parameters: {
+//       Ph: "",
+//       Oxigênio: "",
+//     },
+//   },
+// };

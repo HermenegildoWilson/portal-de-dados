@@ -10,7 +10,7 @@ import { useAuth } from "@/hooks/useAuth";
 import type { SensorReadingDto } from "@/services/sensor/types";
 
 export default function SensorsReadingProvider({ children }) {
-  const { sensorIds, user } = useAuth();
+  const { sensor, user } = useAuth();
   const [connected, setConnected] = useState(false);
   const subscribedRef = useRef<Set<string>>(new Set());
   const [sensorData, dispatchSensorData] = useReducer(
@@ -19,13 +19,13 @@ export default function SensorsReadingProvider({ children }) {
   );
 
   useEffect(() => {
-    if (sensorIds.length === 0) return;
+    if (sensor.ids.length === 0) return;
 
-    const socket = getSocket(sensorIds, user?.id);
+    const socket = getSocket(sensor.ids, user?.id);
 
     socket.on("connect", () => {
       setConnected(true);
-      sensorIds.forEach((id) => subscribedRef.current.add(id));
+      sensor.ids.forEach((id) => subscribedRef.current.add(id));
     });
 
     socket.on("disconnect", () => setConnected(false));
@@ -54,7 +54,7 @@ export default function SensorsReadingProvider({ children }) {
       socket.off("sensor:update");
       destroySocket();
     };
-  }, [sensorIds, user?.id]);
+  }, [sensor, user?.id]);
 
   // Subscrever um sensor adicional em runtime
   const subscribe = useCallback(
@@ -78,16 +78,13 @@ export default function SensorsReadingProvider({ children }) {
     [user?.id],
   );
 
-  console.log(sensorData);
-  
-
   return (
     <SensorReadingContext.Provider
       value={{
         connected,
         subscribe,
         unsubscribe,
-        SensorReadingDto: sensorData,
+        SensorReading: sensorData,
       }}
     >
       {children}

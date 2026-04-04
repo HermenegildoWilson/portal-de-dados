@@ -7,7 +7,7 @@ import { RedisIoAdapter } from '@/config/redis/redis-io.adapter';
 export const setupApp = async (app: NestFastifyApplication) => {
   const env = app.get(EnvService);
 
-  const allowedOrigins = [env.appUrl].filter(Boolean);
+  const allowedOrigins = [env.appUrl];
 
   // Socket (Redis adapter)
   const redisIoAdapter = new RedisIoAdapter(app);

@@ -5,7 +5,7 @@ type typeSensorReadingContext = {
   connected: boolean;
   subscribe: (sensorId: string) => void;
   unsubscribe: (sensorId: string) => void;
-  SensorReadingDto: SensorReadingDto[];
+  SensorReading: SensorReadingDto[];
 };
 
 export const SensorReadingContext =

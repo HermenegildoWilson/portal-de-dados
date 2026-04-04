@@ -58,7 +58,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         }
         return result;
       },
-      sensorIds: ["cmnd31bt000006hi03lutoimd"],
+      sensor: {ids: ["cmnd31bt000006hi03lutoimd"], codes: ["Esp-32-001"]},
     }),
     [appState, isAuthenticated, user],
   );

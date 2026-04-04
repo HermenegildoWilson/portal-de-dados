@@ -1,5 +1,7 @@
 import { api } from "@/config/api/api";
 import type { SensorReadingDto } from "./types";
+import parameterOptions from "@/config/sensor/parameterOptions";
+import type { parameterOptionsField } from "@/config/sensor/types";
 
 const find = {
   one: async (id: string) => {
@@ -33,6 +35,7 @@ const find = {
     }
   },
 };
+export const sensorReadingService = { find };
 
 export const initialSensorReading = [
   {
@@ -52,8 +55,6 @@ export function sensorReadingReducer(
     reading: { new?: SensorReadingDto; init?: SensorReadingDto[] };
   },
 ) {
-  console.log(state);
-  
   switch (action.type) {
     case "INIT_SENSORS_READING":
       return action.reading.init;
@@ -71,4 +72,37 @@ export function sensorReadingReducer(
   }
 }
 
-export const sensorReadingService = { find };
+export const initialHistoryReading = {
+  labels: [],
+  Temperatura: [],
+  Humidade: [],
+  "Pressão do Ar": [],
+  "Qualidade do Ar": [],
+};
+
+export function normalizeHistoryReading(
+  readings: SensorReadingDto[],
+  maxPoints?: number,
+) {
+  const history: typeof initialHistoryReading = initialHistoryReading;
+
+  readings.forEach((reading) => {
+    history.labels.push(
+      new Date(reading.timestamp).toLocaleTimeString("pt-PT", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    );
+
+    Object.keys(parameterOptions).forEach((param: parameterOptionsField) => {
+      const config = parameterOptions[param];
+      history[param].push(Number(reading[config.field] ?? 0));
+    });
+  });
+
+  Object.keys(history).map((param) => {
+    history[param] = history[param].slice(-maxPoints);
+  });
+
+  return history;
+}
