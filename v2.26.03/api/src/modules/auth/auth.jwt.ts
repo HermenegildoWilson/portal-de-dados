@@ -27,9 +27,7 @@ const isUserRole = (value: unknown): value is UserRole =>
   typeof value === 'string' &&
   (Object.values(UserRole) as string[]).includes(value);
 
-export const isAuthUserPayload = (
-  value: unknown,
-): value is AuthUserPayload => {
+export const isAuthUserPayload = (value: unknown): value is AuthUserPayload => {
   if (!isRecord(value)) return false;
   if (typeof value.id !== 'string') return false;
   if (typeof value.name !== 'string') return false;

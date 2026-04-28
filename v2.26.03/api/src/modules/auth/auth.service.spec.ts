@@ -23,7 +23,10 @@ describe('AuthService', () => {
           },
         },
         { provide: MailService, useValue: { sendSecurityAlert: jest.fn() } },
-        { provide: JwtService, useValue: { sign: jest.fn(), verify: jest.fn() } },
+        {
+          provide: JwtService,
+          useValue: { sign: jest.fn(), verify: jest.fn() },
+        },
       ],
     }).compile();
 

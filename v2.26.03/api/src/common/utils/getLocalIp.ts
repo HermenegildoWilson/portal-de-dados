@@ -14,5 +14,5 @@ export function getLocalIp(): string | null {
     }
   }
 
-  return null;
+  return 'localhost';
 }

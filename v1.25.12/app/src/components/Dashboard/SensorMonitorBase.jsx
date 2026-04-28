@@ -25,7 +25,7 @@ import {
 import { useState, useMemo } from "react";
 
 import { parameterOptions } from "./config";
-import MedidorIndividual from "./MedidorIndividual";
+import MedidorTemporal from "./MedidorTemporal";
 import GraficoTemporal from "./GraficoTemporal";
 
 export default function SensorMonitorBase({
@@ -226,7 +226,7 @@ export default function SensorMonitorBase({
                 {config.name}
               </Typography>
 
-              <MedidorIndividual
+              <MedidorTemporal
                 value={actualReading?.[activeParam] ?? 0}
                 config={config}
               />
