@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import CreateSensorReadingDto from './dto/create-sensorreading.dto';
+import CreatesDto from './dto/create-sensorreading.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { SensorsGateway } from './webSocketGateway';
 import { RedisService } from '@/config/redis/redis.service';
@@ -12,7 +12,7 @@ export class SensorreadingService {
     private readonly redis: RedisService,
   ) {}
 
-  async create(data: CreateSensorReadingDto) {
+  async create(data: CreatesDto) {
     const { sensorCode, ...reading } = data;
 
     const isSensorValid = await this.prisma.sensor.findUnique({
@@ -23,7 +23,7 @@ export class SensorreadingService {
       throw new BadRequestException('Sensor inválido.');
     }
 
-    const crestedReading = await this.prisma.sensorReading.create({
+    const crestedReading = await this.prisma.sensorReadings.create({
       data: { ...reading, sensorId: isSensorValid.id },
     });
 
@@ -36,7 +36,7 @@ export class SensorreadingService {
   // Chamado sempre que um sensor muda (via MQTT, polling, webhook, etc.)
   async onSensorStateChange(
     sensorId: string,
-    newState: CreateSensorReadingDto,
+    newState: CreatesDto,
   ) {
     // 1. Persiste no teu DB se necessário
     // await this.repo.save({ sensorId, state: newState });
@@ -51,18 +51,18 @@ export class SensorreadingService {
   }
 
   findAll() {
-    return `This action returns all sensorreading`;
+    return `This action returns all s`;
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} sensorreading`;
+    return `This action returns a #${id} s`;
   }
 
   update() {
-    return `This action updates sensorreading`;
+    return `This action updates s`;
   }
 
   remove(id: number) {
-    return `This action removes a #${id} sensorreading`;
+    return `This action removes a #${id} s`;
   }
 }

@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: angothingnetwork-api
+    runtime: node
+    rootDir: v2.26.03/api
+    buildCommand: npm install --include=dev && npm run build
+    startCommand: npm run start:prod
+    envVars:
+      - key: NODE_VERSION
+        value: 22.22.0
