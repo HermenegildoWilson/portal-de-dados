@@ -21,7 +21,7 @@ export default () => {
     },
 
     app: {
-      url: isDev ? `http://${localIp}:${5173}` : `https://${appUrl}`,
+      url: isDev ? `http://${localIp}:${5174}` : `https://${appUrl}`,
     },
 
     database: {
